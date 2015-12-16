@@ -79,7 +79,7 @@ def get_surface(pdb_file, PDB_TO_XYZR="pdb_to_xyzr", MSMS="msms"):
     make_xyz = PDB_TO_XYZR % (pdb_file, xyz_tmp)
     os.system(make_xyz)
     assert os.path.isfile(xyz_tmp), \
-        "Failed to generate XYZR file using command:\n%s" % make_xyz
+        "Failed to generate XYZR file using command:\n{0!s}".format(make_xyz)
     # make surface
     surface_tmp = tempfile.mktemp()
     MSMS = MSMS + " -probe_radius 1.5 -if %s -of %s > " + tempfile.mktemp()
@@ -87,7 +87,7 @@ def get_surface(pdb_file, PDB_TO_XYZR="pdb_to_xyzr", MSMS="msms"):
     os.system(make_surface)
     surface_file = surface_tmp + ".vert"
     assert os.path.isfile(surface_file), \
-        "Failed to generate surface file using command:\n%s" % make_surface
+        "Failed to generate surface file using command:\n{0!s}".format(make_surface)
     # read surface vertices from vertex file
     surface = _read_vertex_array(surface_file)
     # clean up tmp files

@@ -50,7 +50,7 @@ class AlignmentColumn(list):
         list.__init__(self, [column_unit.column, None])
 
     def __repr__(self):
-        return "%s(%s, %s)" % (self.kind, self[0], self[1])
+        return "{0!s}({1!s}, {2!s})".format(self.kind, self[0], self[1])
 
     def append(self, column_unit):
         if self[1] is not None:
@@ -69,7 +69,7 @@ class ColumnUnit(object):
         self.kind = kind
 
     def __str__(self):
-        return "ColumnUnit(unit=%s, column=%s, %s)" % (self.unit, self.column, self.kind)
+        return "ColumnUnit(unit={0!s}, column={1!s}, {2!s})".format(self.unit, self.column, self.kind)
 
     __repr__ = __str__
 

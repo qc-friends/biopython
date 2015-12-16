@@ -72,8 +72,7 @@ class MotifFinder(object):
             # if we are working with alphabets, make sure we are consistent
             if alphabet is not None:
                 assert seq_record.seq.alphabet == alphabet, \
-                       "Working with alphabet %s and got %s" % \
-                       (alphabet, seq_record.seq.alphabet)
+                       "Working with alphabet {0!s} and got {1!s}".format(alphabet, seq_record.seq.alphabet)
 
             # now start finding motifs in the sequence
             for start in range(len(seq_record.seq) - (motif_size - 1)):
@@ -171,8 +170,7 @@ class MotifCoder(object):
         self._motif_size = len(self._motifs[0])
         for motif in self._motifs:
             if len(motif) != self._motif_size:
-                raise ValueError("Motif %s given, expected motif size %s"
-                                 % (motif, self._motif_size))
+                raise ValueError("Motif {0!s} given, expected motif size {1!s}".format(motif, self._motif_size))
 
     def representation(self, sequence):
         """Represent a sequence as a set of motifs.

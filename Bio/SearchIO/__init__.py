@@ -416,7 +416,7 @@ def to_dict(qresults, key_function=lambda rec: rec.id):
     for qresult in qresults:
         key = key_function(qresult)
         if key in qdict:
-            raise ValueError("Duplicate key %r" % key)
+            raise ValueError("Duplicate key {0!r}".format(key))
         qdict[key] = qresult
     return qdict
 
@@ -485,8 +485,7 @@ def index(filename, format=None, key_function=None, **kwargs):
 
     from Bio.File import _IndexedSeqFileDict
     proxy_class = get_processor(format, _INDEXER_MAP)
-    repr = "SearchIO.index(%r, %r, key_function=%r)" \
-        % (filename, format, key_function)
+    repr = "SearchIO.index({0!r}, {1!r}, key_function={2!r})".format(filename, format, key_function)
     return _IndexedSeqFileDict(proxy_class(filename, **kwargs),
                                key_function, repr, "QueryResult")
 
@@ -558,8 +557,7 @@ def index_db(index_filename, filenames=None, format=None,
         filenames = [filenames]
 
     from Bio.File import _SQLiteManySeqFilesDict
-    repr = "SearchIO.index_db(%r, filenames=%r, format=%r, key_function=%r, ...)" \
-               % (index_filename, filenames, format, key_function)
+    repr = "SearchIO.index_db({0!r}, filenames={1!r}, format={2!r}, key_function={3!r}, ...)".format(index_filename, filenames, format, key_function)
 
     def proxy_factory(format, filename=None):
         """Given a filename returns proxy object, else boolean if format OK."""

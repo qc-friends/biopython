@@ -155,21 +155,21 @@ class PrankConversion(unittest.TestCase):
 
     def conversion(self, prank_number, prank_ext, format):
         """Get PRANK to do a conversion, and check it with SeqIO."""
-        filename = "%s.%s" % (self.output, prank_ext)
+        filename = "{0!s}.{1!s}".format(self.output, prank_ext)
         if os.path.isfile(filename):
             os.remove(filename)
         cmdline = PrankCommandline(prank_exe, d=self.input,
                                    convert=True, f=prank_number,
-                                   o='"%s"' % self.output)
+                                   o='"{0!s}"'.format(self.output))
         self.assertEqual(str(cmdline), _escape_filename(prank_exe)
-                         + ' -d=%s' % self.input
-                         + ' -o="%s"' % self.output
-                         + ' -f=%i' % prank_number
+                         + ' -d={0!s}'.format(self.input)
+                         + ' -o="{0!s}"'.format(self.output)
+                         + ' -f={0:d}'.format(prank_number)
                          + ' -convert')
         self.assertEqual(str(eval(repr(cmdline))), str(cmdline))
         message, error = cmdline()
         self.assertTrue("PRANK" in message, message)
-        self.assertTrue(("converting '%s' to '%s'" % (self.input, filename))
+        self.assertTrue(("converting '{0!s}' to '{1!s}'".format(self.input, filename))
                         in message, message)
         self.assertEqual(error, "")
         self.assertTrue(os.path.isfile(filename))

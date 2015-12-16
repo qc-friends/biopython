@@ -33,7 +33,7 @@ if not mafft_exe:
 
 
 def check_mafft_version(mafft_exe):
-    child = subprocess.Popen("%s --help" % mafft_exe,
+    child = subprocess.Popen("{0!s} --help".format(mafft_exe),
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              universal_newlines=True,

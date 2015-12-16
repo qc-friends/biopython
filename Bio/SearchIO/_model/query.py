@@ -302,46 +302,46 @@ class QueryResult(_BaseSearchObject):
     __nonzero__ = __bool__
 
     def __repr__(self):
-        return "QueryResult(id=%r, %r hits)" % (self.id, len(self))
+        return "QueryResult(id={0!r}, {1!r} hits)".format(self.id, len(self))
 
     def __str__(self):
         lines = []
 
         # set program and version line
-        lines.append('Program: %s (%s)' % (self.program, self.version))
+        lines.append('Program: {0!s} ({1!s})'.format(self.program, self.version))
 
         # set query id line
-        qid_line = '  Query: %s' % self.id
+        qid_line = '  Query: {0!s}'.format(self.id)
         if hasattr(self, 'seq_len'):
-            qid_line += ' (%i)' % self.seq_len
+            qid_line += ' ({0:d})'.format(self.seq_len)
         if self.description:
-            qid_line += trim_str('\n         %s' % self.description, 80, '...')
+            qid_line += trim_str('\n         {0!s}'.format(self.description), 80, '...')
         lines.append(qid_line)
 
         # set target line
-        lines.append(' Target: %s' % self.target)
+        lines.append(' Target: {0!s}'.format(self.target))
 
         # set hit lines
         if not self.hits:
             lines.append('   Hits: 0')
         else:
-            lines.append('   Hits: %s  %s  %s' % ('-' * 4, '-' * 5, '-' * 58))
+            lines.append('   Hits: {0!s}  {1!s}  {2!s}'.format('-' * 4, '-' * 5, '-' * 58))
             pattern = '%13s  %5s  %s'
             lines.append(pattern % ('#', '# HSP', 'ID + description'))
             lines.append(pattern % ('-' * 4, '-' * 5, '-' * 58))
             for idx, hit in enumerate(self.hits):
                 if idx < 30:
-                    hid_line = '%s  %s' % (hit.id, hit.description)
+                    hid_line = '{0!s}  {1!s}'.format(hit.id, hit.description)
                     if len(hid_line) > 58:
                         hid_line = hid_line[:55] + '...'
                     lines.append(pattern % (idx, str(len(hit)), hid_line))
                 elif idx > len(self.hits) - 4:
-                    hid_line = '%s  %s' % (hit.id, hit.description)
+                    hid_line = '{0!s}  {1!s}'.format(hit.id, hit.description)
                     if len(hid_line) > 58:
                         hid_line = hid_line[:55] + '...'
                     lines.append(pattern % (idx, str(len(hit)), hid_line))
                 elif idx == 30:
-                    lines.append('%14s' % '~~~')
+                    lines.append('{0:14!s}'.format('~~~'))
 
         return '\n'.join(lines)
 

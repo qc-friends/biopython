@@ -74,8 +74,7 @@ class SignatureFinder(object):
             # if we are working with alphabets, make sure we are consistent
             if alphabet is not None:
                 assert seq_record.seq.alphabet == alphabet, \
-                       "Working with alphabet %s and got %s" % \
-                       (alphabet, seq_record.seq.alphabet)
+                       "Working with alphabet {0!s} and got {1!s}".format(alphabet, seq_record.seq.alphabet)
 
             # now start finding signatures in the sequence
             largest_sig_size = sig_size * 2 + max_gap
@@ -148,16 +147,13 @@ class SignatureCoder(object):
             second_sig_size = len(self._signatures[0][1])
 
             assert first_sig_size == second_sig_size, \
-                   "Ends of the signature do not match: %s" \
-                   % self._signatures[0]
+                   "Ends of the signature do not match: {0!s}".format(self._signatures[0])
 
             for sig in self._signatures:
                 assert len(sig[0]) == first_sig_size, \
-                       "Got first part of signature %s, expected size %s" % \
-                       (sig[0], first_sig_size)
+                       "Got first part of signature {0!s}, expected size {1!s}".format(sig[0], first_sig_size)
                 assert len(sig[1]) == second_sig_size, \
-                       "Got second part of signature %s, expected size %s" % \
-                       (sig[1], second_sig_size)
+                       "Got second part of signature {0!s}, expected size {1!s}".format(sig[1], second_sig_size)
 
     def representation(self, sequence):
         """Convert a sequence into a representation of its signatures.

@@ -55,12 +55,12 @@ __docformat__ = "restructuredtext en"
 class PathwayData(object):
     """Convenience structure for testing pathway data"""
     def __init__(self, name, element_counts, show_pathway_image=False):
-        self.infilename = os.path.join("KEGG", "ko%s.xml" % name)
-        self.outfilename = os.path.join("KEGG", "ko%s.kgml" % name)
+        self.infilename = os.path.join("KEGG", "ko{0!s}.xml".format(name))
+        self.outfilename = os.path.join("KEGG", "ko{0!s}.kgml".format(name))
         self.element_counts = element_counts
-        self.pathway_image = os.path.join("KEGG", "map%s.png" % name)
+        self.pathway_image = os.path.join("KEGG", "map{0!s}.png".format(name))
         self.show_pathway_image = show_pathway_image
-        self.output_stem = "Graphics/map%s" % name
+        self.output_stem = "Graphics/map{0!s}".format(name)
 
 
 class KGMLPathwayTest(unittest.TestCase):

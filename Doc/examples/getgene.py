@@ -70,13 +70,13 @@ class DB_Index(object):
                 elif line[:2] == '//':
                     stop = fid.tell()
                     try:
-                        value = '%d %d' % (start, stop)
+                        value = '{0:d} {1:d}'.format(start, stop)
                         db[id] = value
                         db[acc] = value
                         id, acc, start, stop = None, None, None, None
                     except:
-                        print("AARRGGGG %d %d %s %s" % (start, stop, type(start), type(stop)))
-                        print("%s %s" % (id, acc))
+                        print("AARRGGGG {0:d} {1:d} {2!s} {3!s}".format(start, stop, type(start), type(stop)))
+                        print("{0!s} {1!s}".format(id, acc))
 
             db.close()
 
@@ -150,7 +150,7 @@ class DB_Index(object):
         elif kd == "Viridae" or kd == "Viruses":
             return "V"
         else:
-            print("%s UNKNOWN" % kd)
+            print("{0!s} UNKNOWN".format(kd))
             return "U"
 
     def Get_Gene(self, id):
@@ -228,7 +228,7 @@ class DB_Index(object):
 
         SQ = re.sub('[ \n]', '', SQ)
         if fasta:
-            SQ = '>%s\n%s' % (id, re.sub('(.{60})', '\\1\n', SQ))
+            SQ = '>{0!s}\n{1!s}'.format(id, re.sub('(.{60})', '\\1\n', SQ))
         return SQ
 
     def Get_XX(self, id, xx):
@@ -237,7 +237,7 @@ class DB_Index(object):
             return ""
         XX = ""
         for line in string.split(entry, '\n'):
-            if line[0:5] == '%s   ' % xx:
+            if line[0:5] == '{0!s}   '.format(xx):
                 XX = XX + string.strip(line[5:])
                 if XX[-1] == ".":
                     XX = XX[0:-1]
@@ -266,8 +266,8 @@ class DB_Index(object):
 
 def help(exit=0):
     name = os.path.basename(sys.argv[0])
-    print('Usage: %s <db> <gene ID>' % name)
-    print('  or   %s --index <db.dat>' % name)
+    print('Usage: {0!s} <db> <gene ID>'.format(name))
+    print('  or   {0!s} --index <db.dat>'.format(name))
     if exit:
         sys.exit(0)
 

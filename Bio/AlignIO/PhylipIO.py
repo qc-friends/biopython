@@ -121,7 +121,7 @@ class PhylipWriter(SequentialAlignmentWriter):
         # defined in the PHYLIP documentation, simply "These are in free
         # format, separated by blanks".  We'll use spaces to keep EMBOSS
         # happy.
-        handle.write(" %i %s\n" % (len(alignment), length_of_seqs))
+        handle.write(" {0:d} {1!s}\n".format(len(alignment), length_of_seqs))
         block = 0
         while True:
             for name, sequence in zip(names, seqs):
@@ -139,7 +139,7 @@ class PhylipWriter(SequentialAlignmentWriter):
                     # TODO - Force any gaps to be '-' character?  Look at the
                     # alphabet...
                     # TODO - How to cope with '?' or '.' in the sequence?
-                    handle.write(" %s" % seq_segment)
+                    handle.write(" {0!s}".format(seq_segment))
                     if i + 10 > length_of_seqs:
                         break
                 handle.write("\n")
@@ -218,8 +218,7 @@ class PhylipIterator(AlignmentIterator):
 
         if self.records_per_alignment is not None \
         and self.records_per_alignment != number_of_seqs:
-            raise ValueError("Found %i records in this alignment, told to expect %i"
-                             % (number_of_seqs, self.records_per_alignment))
+            raise ValueError("Found {0:d} records in this alignment, told to expect {1:d}".format(number_of_seqs, self.records_per_alignment))
 
         ids = []
         seqs = []
@@ -281,8 +280,7 @@ class RelaxedPhylipWriter(PhylipWriter):
         # Check inputs
         for name in (s.id.strip() for s in alignment):
             if any(c in name for c in string.whitespace):
-                raise ValueError("Whitespace not allowed in identifier: %s"
-                        % name)
+                raise ValueError("Whitespace not allowed in identifier: {0!s}".format(name))
 
         # Calculate a truncation length - maximum length of sequence ID plus a
         # single character for padding
@@ -348,7 +346,7 @@ class SequentialPhylipWriter(SequentialAlignmentWriter):
         # defined in the PHYLIP documentation, simply "These are in free
         # format, separated by blanks".  We'll use spaces to keep EMBOSS
         # happy.
-        handle.write(" %i %s\n" % (len(alignment), length_of_seqs))
+        handle.write(" {0:d} {1!s}\n".format(len(alignment), length_of_seqs))
         for name, record in zip(names, alignment):
             sequence = str(record.seq)
             if "." in sequence:
@@ -401,8 +399,7 @@ class SequentialPhylipIterator(PhylipIterator):
 
         if self.records_per_alignment is not None \
         and self.records_per_alignment != number_of_seqs:
-            raise ValueError("Found %i records in this alignment, told to expect %i"
-                             % (number_of_seqs, self.records_per_alignment))
+            raise ValueError("Found {0:d} records in this alignment, told to expect {1:d}".format(number_of_seqs, self.records_per_alignment))
 
         ids = []
         seqs = []
@@ -422,8 +419,7 @@ class SequentialPhylipIterator(PhylipIterator):
                     continue
                 s = "".join([s, line.strip().replace(" ", "")])
                 if len(s) > length_of_seqs:
-                    raise ValueError("Found a record of length %i, should be %i"
-                            % (len(s), length_of_seqs))
+                    raise ValueError("Found a record of length {0:d}, should be {1:d}".format(len(s), length_of_seqs))
             if "." in s:
                 raise ValueError("PHYLIP format no longer allows dots in sequence")
             seqs.append(s)

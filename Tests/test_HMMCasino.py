@@ -80,7 +80,7 @@ def _loaded_dice_roll(chance_num, cur_state):
         else:
             return '6'
     else:
-        raise ValueError("Unexpected cur_state %s" % cur_state)
+        raise ValueError("Unexpected cur_state {0!s}".format(cur_state))
 
 
 def generate_rolls(num_rolls):
@@ -161,7 +161,7 @@ def stop_training(log_likelihood_change, num_iterations):
     """Tell the training model when to stop.
     """
     if VERBOSE:
-        print("ll change: %f" % log_likelihood_change)
+        print("ll change: {0:f}".format(log_likelihood_change))
     if log_likelihood_change < 0.01:
         return 1
     elif num_iterations >= 10:
@@ -184,7 +184,7 @@ test_rolls, test_states = generate_rolls(300)
 
 predicted_states, prob = trained_mm.viterbi(test_rolls, DiceTypeAlphabet())
 if VERBOSE:
-    print("Prediction probability: %f" % prob)
+    print("Prediction probability: {0:f}".format(prob))
     Utilities.pretty_print_prediction(test_rolls, test_states, predicted_states)
 
 # -- Baum-Welch training without known state sequences
@@ -202,5 +202,5 @@ test_rolls, test_states = generate_rolls(300)
 
 predicted_states, prob = trained_mm.viterbi(test_rolls, DiceTypeAlphabet())
 if VERBOSE:
-    print("Prediction probability: %f" % prob)
+    print("Prediction probability: {0:f}".format(prob))
     Utilities.pretty_print_prediction(test_rolls, test_states, predicted_states)

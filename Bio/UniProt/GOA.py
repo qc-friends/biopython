@@ -361,7 +361,7 @@ def writerec(outrec, handle, fields=GAF20FIELDS):
         else:
             outstr += outrec[field] + '\t'
     outstr += outrec[fields[-1]] + '\n'
-    handle.write("%s" % outstr)
+    handle.write("{0!s}".format(outstr))
 
 
 def writebyproteinrec(outprotrec, handle, fields=GAF20FIELDS):

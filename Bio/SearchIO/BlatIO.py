@@ -231,8 +231,7 @@ def _reorient_starts(starts, blksizes, seqlen, strand):
 
     """
     assert len(starts) == len(blksizes), \
-            "Unequal start coordinates and block sizes list (%r vs %r)" \
-            % (len(starts), len(blksizes))
+            "Unequal start coordinates and block sizes list ({0!r} vs {1!r})".format(len(starts), len(blksizes))
     # see: http://genome.ucsc.edu/goldenPath/help/blatSpec.html
     # no need to reorient if it's already the positive strand
     if strand >= 0:
@@ -628,7 +627,7 @@ class BlatPslWriter(object):
         "\tT  \tblock\tblockSizes \tqStarts\t tStarts\n     " \
         "\tmatch\tmatch\t   \tcount\tbases\tcount\tbases\t      \tname     "
         "\tsize\tstart\tend\tname     \tsize\tstart\tend\tcount"
-        "\n%s\n" % ('-' * 159)
+        "\n{0!s}\n".format(('-' * 159))
 
         return header
 

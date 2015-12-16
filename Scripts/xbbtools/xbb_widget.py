@@ -277,7 +277,7 @@ class xbb_widget(object):
     def select(self, a, b):
         w = self.sequence_id
         w.selection_own()
-        w.tag_add('sel', '1.%d' % (a - 1), '1.%d' % b)
+        w.tag_add('sel', '1.{0:d}'.format((a - 1)), '1.{0:d}'.format(b))
         self.count_selection(None)
 
     def get_selection_or_sequence(self):
@@ -317,22 +317,22 @@ class xbb_widget(object):
             b = int(w.index('sel.last').split('.')[1])
             length = b - a + 1
 
-            self.position_ids['from_id'].configure(text='Start:%d' % a)
-            self.position_ids['to_id'].configure(text='Stop:%d' % b)
-            self.position_ids['length_id'].configure(text='%d nt' % length)
+            self.position_ids['from_id'].configure(text='Start:{0:d}'.format(a))
+            self.position_ids['to_id'].configure(text='Stop:{0:d}'.format(b))
+            self.position_ids['length_id'].configure(text='{0:d} nt'.format(length))
 
-            self.statistics_ids['length_id'].configure(text='Length=%d' % length)
+            self.statistics_ids['length_id'].configure(text='Length={0:d}'.format(length))
             seq = self.get_self_selection()
             for nt in ['A', 'C', 'G', 'T']:
                 n = seq.count(nt)
-                self.statistics_ids[nt].configure(text='%s=%d' % (nt, n))
+                self.statistics_ids[nt].configure(text='{0!s}={1:d}'.format(nt, n))
         except:
             pass
 
     def position(self, event):
         x = event.x
         y = event.y
-        pos = self.sequence_id.index('@%d,%d' % (x, y)).split('.')
+        pos = self.sequence_id.index('@{0:d},{1:d}'.format(x, y)).split('.')
         pos = int(pos[1]) + 1
         self.position_ids['id'].configure(text=str(pos))
 
@@ -365,7 +365,7 @@ class xbb_widget(object):
 
     def export(self):
         seq = self.get_self_selection()
-        print("%s %i" % (seq, len(seq)))
+        print("{0!s} {1:d}".format(seq, len(seq)))
 
     def gcframe(self):
         seq = self.get_selection_or_sequence()
@@ -388,11 +388,11 @@ class xbb_widget(object):
         if not seq:
             return
         aa_seq = self.translator.frame(seq, frame, self.current_codon_table_id)
-        print('>%s<' % aa_seq)
+        print('>{0!s}<'.format(aa_seq))
         aa_seq = re.sub('(.{50})', '\\1\n', str(aa_seq))
         np = NotePad()
         tid = np.text_id()
-        tid.insert(END, '>frame%d\n%s' % (frame, aa_seq))
+        tid.insert(END, '>frame{0:d}\n{1!s}'.format(frame, aa_seq))
 
     def statistics(self):
         seq = self.get_selection_or_sequence()
@@ -410,13 +410,13 @@ class xbb_widget(object):
         np = NotePad()
         tid = np.text_id()
 
-        tid.insert(END, """%s
+        tid.insert(END, """{0!s}
 
-Length = %d
-A=%d C=%d G=%d T=%d other=%d
-GC=%f
+Length = {1:d}
+A={2:d} C={3:d} G={4:d} T={5:d} other={6:d}
+GC={7:f}
 
-""" % (time.strftime('%y %b %d, %X\n', time.localtime(time.time())),
+""".format(time.strftime('%y %b %d, %X\n', time.localtime(time.time())),
                len(seq), aa['A'], aa['C'], aa['G'], aa['T'], aa['N'], GC)
                    )
 
@@ -503,12 +503,12 @@ GC=%f
                 return
 
         self.sequence_id.focus()
-        self.sequence_id.mark_set('insert', '1.%d' % pos)
+        self.sequence_id.mark_set('insert', '1.{0:d}'.format(pos))
 
     def mark(self, start, stop):
         self.sequence_id.focus()
-        self.sequence_id.mark_set('insert', '1.%d' % start)
-        self.sequence_id.tag_add(SEL, '1.%d' % start, '1.%d' % stop)
+        self.sequence_id.mark_set('insert', '1.{0:d}'.format(start))
+        self.sequence_id.tag_add(SEL, '1.{0:d}'.format(start), '1.{0:d}'.format(stop))
 
 if __name__ == '__main__':
     xbbtools = xbb_widget()

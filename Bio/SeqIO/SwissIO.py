@@ -53,7 +53,7 @@ def _make_position(location_string, offset=0):
             return SeqFeature.UncertainPosition(max(0, offset + int(location_string[1:])))
         except ValueError:
             pass
-    raise NotImplementedError("Cannot parse location '%s'" % location_string)
+    raise NotImplementedError("Cannot parse location '{0!s}'".format(location_string))
 
 
 def _make_seqfeature(name, from_res, to_res, description, ft_id):
@@ -96,7 +96,7 @@ def SwissIterator(handle):
             if len(cross_reference) < 2:
                 continue
             database, accession = cross_reference[:2]
-            dbxref = "%s:%s" % (database, accession)
+            dbxref = "{0!s}:{1!s}".format(database, accession)
             if dbxref not in record.dbxrefs:
                 record.dbxrefs.append(dbxref)
         annotations = record.annotations
@@ -123,7 +123,7 @@ def SwissIterator(handle):
             annotations['references'] = []
             for reference in swiss_record.references:
                 feature = SeqFeature.Reference()
-                feature.comment = " ".join("%s=%s;" % k_v for k_v in reference.comments)
+                feature.comment = " ".join("{0!s}={1!s};".format(*k_v) for k_v in reference.comments)
                 for key, value in reference.references:
                     if key == 'PubMed':
                         feature.pubmed_id = value
@@ -135,7 +135,7 @@ def SwissIterator(handle):
                         pass
                     else:
                         raise ValueError(
-                            "Unknown key %s found in references" % key)
+                            "Unknown key {0!s} found in references".format(key))
                 feature.authors = reference.authors
                 feature.title = reference.title
                 feature.journal = reference.location
@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
     import os
     if not os.path.isfile(example_filename):
-        print("Missing test file %s" % example_filename)
+        print("Missing test file {0!s}".format(example_filename))
     else:
         # Try parsing it!
         with open(example_filename) as handle:

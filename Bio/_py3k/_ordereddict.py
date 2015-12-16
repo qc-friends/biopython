@@ -27,7 +27,7 @@ class OrderedDict(dict, DictMixin):
 
     def __init__(self, *args, **kwds):
         if len(args) > 1:
-            raise TypeError('expected at most 1 arguments, got %d' % len(args))
+            raise TypeError('expected at most 1 arguments, got {0:d}'.format(len(args)))
         try:
             self.__end
         except AttributeError:
@@ -101,8 +101,8 @@ class OrderedDict(dict, DictMixin):
 
     def __repr__(self):
         if not self:
-            return '%s()' % (self.__class__.__name__,)
-        return '%s(%r)' % (self.__class__.__name__, self.items())
+            return '{0!s}()'.format(self.__class__.__name__)
+        return '{0!s}({1!r})'.format(self.__class__.__name__, self.items())
 
     def copy(self):
         return self.__class__(self)

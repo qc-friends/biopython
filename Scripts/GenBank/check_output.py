@@ -42,21 +42,19 @@ def do_comparison(good_record, test_record):
 
         if not(good_line):
             if good_line.strip():
-                raise AssertionError("Extra info in Test: `%s`" % test_line)
+                raise AssertionError("Extra info in Test: `{0!s}`".format(test_line))
         if not(test_line):
             if test_line.strip():
-                raise AssertionError("Extra info in Expected: `%s`"
-                                     % good_line)
+                raise AssertionError("Extra info in Expected: `{0!s}`".format(good_line))
 
         assert test_line == good_line, \
-               "Expected does not match Test.\nExpect:`%s`\nTest  :`%s`\n" % \
-               (good_line, test_line)
+               "Expected does not match Test.\nExpect:`{0!s}`\nTest  :`{1!s}`\n".format(good_line, test_line)
 
 
 def write_format(file):
     record_parser = GenBank.RecordParser(debug_level=2)
 
-    print("Testing GenBank writing for %s..." % os.path.basename(file))
+    print("Testing GenBank writing for {0!s}...".format(os.path.basename(file)))
     # be able to handle gzipped files
     if '.gz' in file:
         cur_handle = gzip.open(file, "r")
@@ -81,7 +79,7 @@ def write_format(file):
         try:
             do_comparison(compare_record, output_record)
         except AssertionError as msg:
-            print("\tTesting for %s" % cur_record.version)
+            print("\tTesting for {0!s}".format(cur_record.version))
             print(msg)
 
     cur_handle.close()

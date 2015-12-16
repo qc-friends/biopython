@@ -148,7 +148,7 @@ class DBServer(object):
         self.module_name = module_name
 
     def __repr__(self):
-        return self.__class__.__name__ + "(%r)" % self.adaptor.conn
+        return self.__class__.__name__ + "({0!r})".format(self.adaptor.conn)
 
     def __getitem__(self, name):
         return BioSeqDatabase(self.adaptor, name)
@@ -281,8 +281,8 @@ class DBServer(object):
             for sql_line in sql_parts[:-1]:
                 self.adaptor.cursor.execute(sql_line)
         else:
-            raise ValueError("Module %s not supported by the loader." %
-                             (self.module_name))
+            raise ValueError("Module {0!s} not supported by the loader.".format(
+                             (self.module_name)))
 
     def commit(self):
         """Commits the current transaction to the database."""
@@ -370,7 +370,7 @@ class Adaptor(object):
             (dbname,))
         rv = self.cursor.fetchall()
         if not rv:
-            raise KeyError("Cannot find biodatabase with name %r" % dbname)
+            raise KeyError("Cannot find biodatabase with name {0!r}".format(dbname))
         return rv[0][0]
 
     def fetch_seqid_by_display_id(self, dbid, name):
@@ -382,9 +382,9 @@ class Adaptor(object):
         self.execute(sql, fields)
         rv = self.cursor.fetchall()
         if not rv:
-            raise IndexError("Cannot find display id %r" % name)
+            raise IndexError("Cannot find display id {0!r}".format(name))
         if len(rv) > 1:
-            raise IndexError("More than one entry with display id %r" % name)
+            raise IndexError("More than one entry with display id {0!r}".format(name))
         return rv[0][0]
 
     def fetch_seqid_by_accession(self, dbid, name):
@@ -396,9 +396,9 @@ class Adaptor(object):
         self.execute(sql, fields)
         rv = self.cursor.fetchall()
         if not rv:
-            raise IndexError("Cannot find accession %r" % name)
+            raise IndexError("Cannot find accession {0!r}".format(name))
         if len(rv) > 1:
-            raise IndexError("More than one entry with accession %r" % name)
+            raise IndexError("More than one entry with accession {0!r}".format(name))
         return rv[0][0]
 
     def fetch_seqids_by_accession(self, dbid, name):
@@ -412,7 +412,7 @@ class Adaptor(object):
     def fetch_seqid_by_version(self, dbid, name):
         acc_version = name.split(".")
         if len(acc_version) > 2:
-            raise IndexError("Bad version %r" % name)
+            raise IndexError("Bad version {0!r}".format(name))
         acc = acc_version[0]
         if len(acc_version) == 2:
             version = acc_version[1]
@@ -427,9 +427,9 @@ class Adaptor(object):
         self.execute(sql, fields)
         rv = self.cursor.fetchall()
         if not rv:
-            raise IndexError("Cannot find version %r" % name)
+            raise IndexError("Cannot find version {0!r}".format(name))
         if len(rv) > 1:
-            raise IndexError("More than one entry with version %r" % name)
+            raise IndexError("More than one entry with version {0!r}".format(name))
         return rv[0][0]
 
     def fetch_seqid_by_identifier(self, dbid, identifier):
@@ -442,7 +442,7 @@ class Adaptor(object):
         self.execute(sql, fields)
         rv = self.cursor.fetchall()
         if not rv:
-            raise IndexError("Cannot find display id %r" % identifier)
+            raise IndexError("Cannot find display id {0!r}".format(identifier))
         return rv[0][0]
 
     def list_biodatabase_names(self):
@@ -472,7 +472,7 @@ class Adaptor(object):
         """Execute sql that returns 1 record, and return the record"""
         self.execute(sql, args or ())
         rv = self.cursor.fetchall()
-        assert len(rv) == 1, "Expected 1 response, got %d" % len(rv)
+        assert len(rv) == 1, "Expected 1 response, got {0:d}".format(len(rv))
         return rv[0]
 
     def execute(self, sql, args=None):
@@ -559,7 +559,7 @@ class BioSeqDatabase(object):
         self.dbid = self.adaptor.fetch_dbid_by_dbname(name)
 
     def __repr__(self):
-        return "BioSeqDatabase(%r, %r)" % (self.adaptor, self.name)
+        return "BioSeqDatabase({0!r}, {1!r})".format(self.adaptor, self.name)
 
     def get_Seq_by_id(self, name):
         """Gets a DBSeqRecord object by its name
@@ -705,8 +705,7 @@ class BioSeqDatabase(object):
             raise TypeError("single key/value parameter expected")
         k, v = list(kwargs.items())[0]
         if k not in _allowed_lookups:
-            raise TypeError("lookup() expects one of %r, not %r" %
-                            (list(_allowed_lookups.keys()), k))
+            raise TypeError("lookup() expects one of {0!r}, not {1!r}".format(list(_allowed_lookups.keys()), k))
         lookup_name = _allowed_lookups[k]
         lookup_func = getattr(self.adaptor, lookup_name)
         seqid = lookup_func(self.dbid, v)

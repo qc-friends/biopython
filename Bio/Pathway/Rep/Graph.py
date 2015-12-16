@@ -36,7 +36,7 @@ class Graph(object):
         for key in sorted(self._adjacency_list):
             values = sorted([(x, self._edge_map[(key, x)])
                       for x in self._adjacency_list[key].list()])
-            s += "(%r: %s)" % (key, ",".join(repr(v) for v in values))
+            s += "({0!r}: {1!s})".format(key, ",".join(repr(v) for v in values))
         return s + ">"
 
     def __str__(self):

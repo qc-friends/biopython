@@ -200,8 +200,8 @@ class StepMatrix(object):
         return self
 
     def smprint(self, name='your_name_here'):
-        matrix = 'usertype %s stepmatrix=%d\n' % (name, len(self.symbols))
-        matrix += '        %s\n' % '        '.join(self.symbols)
+        matrix = 'usertype {0!s} stepmatrix={1:d}\n'.format(name, len(self.symbols))
+        matrix += '        {0!s}\n'.format('        '.join(self.symbols))
         for x in self.symbols:
             matrix += '[%s]'.ljust(8) % x
             for y in self.symbols:
@@ -321,9 +321,9 @@ def _compact4nexus(orig_list):
                     shortlist.append(str(sub[0] + 1))
                 else:
                     if step == 1:
-                        shortlist.append('%d-%d' % (sub[0] + 1, sub[-1] + 1))
+                        shortlist.append('{0:d}-{1:d}'.format(sub[0] + 1, sub[-1] + 1))
                     else:
-                        shortlist.append('%d-%d\\%d' % (sub[0] + 1, sub[-1] + 1, step))
+                        shortlist.append('{0:d}-{1:d}\\{2:d}'.format(sub[0] + 1, sub[-1] + 1, step))
                 clist = clist[i:]
                 break
     return ' '.join(shortlist)
@@ -354,10 +354,10 @@ def combine(matrices):
 
     # rename taxon sets and character sets and name them with prefix
     for cn, cs in combined.charsets.items():
-        combined.charsets['%s.%s' % (name, cn)] = cs
+        combined.charsets['{0!s}.{1!s}'.format(name, cn)] = cs
         del combined.charsets[cn]
     for tn, ts in combined.taxsets.items():
-        combined.taxsets['%s.%s' % (name, tn)] = ts
+        combined.taxsets['{0!s}.{1!s}'.format(name, tn)] = ts
         del combined.taxsets[tn]
     # previous partitions usually don't make much sense in combined matrix
     # just initiate one new partition parted by single matrices
@@ -385,12 +385,12 @@ def combine(matrices):
                                     combined.alphabet)
         combined.taxlabels.extend(m_only)    # new taxon list
         for cn, cs in m.charsets.items():  # adjust character sets for new matrix
-            combined.charsets['%s.%s' % (n, cn)] = [x + combined.nchar for x in cs]
+            combined.charsets['{0!s}.{1!s}'.format(n, cn)] = [x + combined.nchar for x in cs]
         if m.taxsets:
             if not combined.taxsets:
                 combined.taxsets = {}
             # update taxon sets
-            combined.taxsets.update(dict(('%s.%s' % (n, tn), ts)
+            combined.taxsets.update(dict(('{0!s}.{1!s}'.format(n, tn), ts)
                                          for tn, ts in m.taxsets.items()))
         # update new charpartition
         combined.charpartitions['combined'][n] = list(range(combined.nchar, combined.nchar + m.nchar))
@@ -550,7 +550,7 @@ class Commandline(object):
                     for token in token_indices:
                         self.options[options[token].lower()] = None
                 except ValueError:
-                    raise NexusError('Incorrect formatting in line: %s' % line)
+                    raise NexusError('Incorrect formatting in line: {0!s}'.format(line))
 
 
 class Block(object):
@@ -629,7 +629,7 @@ class Nexus(object):
                 self.filename = 'input_string'
             else:
                 print(input.strip()[:50])
-                raise NexusError('Unrecognized input: %s ...' % input[:100])
+                raise NexusError('Unrecognized input: {0!s} ...'.format(input[:100]))
         file_contents = file_contents.strip()
         if file_contents.startswith('#NEXUS'):
             file_contents = file_contents[6:]
@@ -664,7 +664,7 @@ class Nexus(object):
                     inblock = True
                     title = cl.split()[1].lower()
                 else:
-                    raise NexusError('Illegal block nesting in block %s' % title)
+                    raise NexusError('Illegal block nesting in block {0!s}'.format(title))
             elif cl.lower().startswith('end'):
                 if inblock:
                     inblock = False
@@ -692,7 +692,7 @@ class Nexus(object):
             try:
                 getattr(self, '_' + line.command)(line.options)
             except AttributeError:
-                raise NexusError('Unknown command: %s ' % line.command)
+                raise NexusError('Unknown command: {0!s} '.format(line.command))
 
     def _title(self, options):
         pass
@@ -852,7 +852,7 @@ class Nexus(object):
             if c is None:
                 break
             elif c != ',':
-                raise NexusError('Missing \',\' in line %s.' % options)
+                raise NexusError('Missing \',\' in line {0!s}.'.format(options))
 
     def _charstatelabels(self, options):
         self.charlabels = {}
@@ -886,21 +886,21 @@ class Nexus(object):
             elif c != ',':
                 # Check if states are defined, otherwise report error
                 if c != '/':
-                    raise NexusError('Missing \',\' in line %s.' % options)
+                    raise NexusError('Missing \',\' in line {0!s}.'.format(options))
 
                 # Get the first state
                 state = quotestrip(opts.next_word())
 
                 if state is None:
                     raise NexusError(
-                        'Missing character state in line %s.' % options)
+                        'Missing character state in line {0!s}.'.format(options))
 
                 while True:
                     # Make sure current state does not exceed number of
                     # available symbols
                     if len(self.statelabels[identifier]) > len(self.symbols):
                         raise NexusError(
-                            'Character states exceed number of available symbols in line %s.' % options)
+                            'Character states exceed number of available symbols in line {0!s}.'.format(options))
 
                     # Add the character state to the statelabels
                     self.statelabels[identifier].append(state)
@@ -1019,8 +1019,7 @@ class Nexus(object):
         # check all sequences for length according to nchar
         for taxon in self.matrix:
             if len(self.matrix[taxon]) != self.nchar:
-                raise NexusError('Matrix Nchar %d does not match data length (%d) for taxon %s'
-                                 % (self.nchar, len(self.matrix[taxon]), taxon))
+                raise NexusError('Matrix Nchar {0:d} does not match data length ({1:d}) for taxon {2!s}'.format(self.nchar, len(self.matrix[taxon]), taxon))
         # check that taxlabels is identical with matrix.keys. If not, it's a problem
         matrixkeys = sorted(self.matrix)
         taxlabelssort = sorted(self.taxlabels[:])
@@ -1042,11 +1041,11 @@ class Nexus(object):
                 if c is None:
                     break
                 elif c != ',':
-                    raise NexusError('Missing \',\' in line %s.' % options)
+                    raise NexusError('Missing \',\' in line {0!s}.'.format(options))
             except NexusError:
                 raise
             except Exception:  # TODO: ValueError?
-                raise NexusError('Format error in line %s.' % options)
+                raise NexusError('Format error in line {0!s}.'.format(options))
 
     def _utree(self, options):
         """Some software (clustalx) uses 'utree' to denote an unrooted tree."""
@@ -1059,16 +1058,14 @@ class Nexus(object):
             dummy = opts.next_nonwhitespace()
         name = opts.next_word()
         if opts.next_nonwhitespace() != '=':
-            raise NexusError('Syntax error in tree description: %s'
-                             % options[:50])
+            raise NexusError('Syntax error in tree description: {0!s}'.format(options[:50]))
         rooted = False
         weight = 1.0
         while opts.peek_nonwhitespace() == '[':
             opts.next_nonwhitespace()  # discard opening bracket
             symbol = next(opts)
             if symbol != '&':
-                raise NexusError('Illegal special comment [%s...] in tree description: %s'
-                                 % (symbol, options[:50]))
+                raise NexusError('Illegal special comment [{0!s}...] in tree description: {1!s}'.format(symbol, options[:50]))
             special = next(opts)
             value = opts.next_until(']')
             next(opts)  # discard closing bracket
@@ -1086,8 +1083,7 @@ class Nexus(object):
                 try:
                     tree.node(n).data.taxon = safename(self.translate[int(tree.node(n).data.taxon)])
                 except (ValueError, KeyError):
-                    raise NexusError('Unable to substitute %s using \'translate\' data.'
-                                     % tree.node(n).data.taxon)
+                    raise NexusError('Unable to substitute {0!s} using \'translate\' data.'.format(tree.node(n).data.taxon))
         self.trees.append(tree)
 
     def _apply_block_structure(self, title, lines):
@@ -1111,7 +1107,7 @@ class Nexus(object):
         opts = CharBuffer(options)
         name = self._name_n_vector(opts)
         if not name:
-            raise NexusError('Formatting error in taxpartition: %s ' % options)
+            raise NexusError('Formatting error in taxpartition: {0!s} '.format(options))
         # now collect thesubbpartitions and parse them
         # subpartitons separated by commas - which unfortunately could be part of a quoted identifier...
         # this is rather unelegant, but we have to avoid double-parsing and potential change of special nexus-words
@@ -1142,7 +1138,7 @@ class Nexus(object):
         # mcclade calls it CodonPositions, but you never know...
         codonname = [n for n in self.charpartitions if n not in prev_partitions]
         if codonname == [] or len(codonname) > 1:
-            raise NexusError('Formatting Error in codonposset: %s ' % options)
+            raise NexusError('Formatting Error in codonposset: {0!s} '.format(options))
         else:
             self.codonposset = codonname[0]
 
@@ -1155,7 +1151,7 @@ class Nexus(object):
         opts = CharBuffer(options)
         name = self._name_n_vector(opts)
         if not name:
-            raise NexusError('Formatting error in charpartition: %s ' % options)
+            raise NexusError('Formatting error in charpartition: {0!s} '.format(options))
         # now collect the subpartitions and parse them
         # subpartitions separated by commas - which unfortunately could be part
         # of a quoted identifier...
@@ -1184,7 +1180,7 @@ class Nexus(object):
         name = self._name_n_vector(opts, separator=separator)
         indices = self._parse_list(opts, set_type=set_type)
         if indices is None:
-            raise NexusError('Formatting error in line: %s ' % options)
+            raise NexusError('Formatting error in line: {0!s} '.format(options))
         return name, indices
 
     def _name_n_vector(self, opts, separator='='):
@@ -1195,20 +1191,18 @@ class Nexus(object):
         if name == '*':
             name = opts.next_word()
         if not name:
-            raise NexusError('Formatting error in line: %s ' % rest)
+            raise NexusError('Formatting error in line: {0!s} '.format(rest))
         name = quotestrip(name)
         if opts.peek_nonwhitespace == '(':
             open = opts.next_nonwhitespace()
             qualifier = open.next_word()
             close = opts.next_nonwhitespace()
             if qualifier.lower() == 'vector':
-                raise NexusError('Unsupported VECTOR format in line %s'
-                                 % (opts))
+                raise NexusError('Unsupported VECTOR format in line {0!s}'.format((opts)))
             elif qualifier.lower() != 'standard':
-                raise NexusError('Unknown qualifier %s in line %s'
-                                 % (qualifier, opts))
+                raise NexusError('Unknown qualifier {0!s} in line {1!s}'.format(qualifier, opts))
         if opts.next_nonwhitespace() != separator:
-            raise NexusError('Formatting error in line: %s ' % rest)
+            raise NexusError('Formatting error in line: {0!s} '.format(rest))
         return name
 
     def _parse_list(self, options_buffer, set_type):
@@ -1240,8 +1234,7 @@ class Nexus(object):
                             plain_list.extend(range(start, end + 1, step))
                         else:
                             if isinstance(start, list) or isinstance(end, list):
-                                raise NexusError('Name if character sets not allowed in range definition: %s'
-                                                 % identifier)
+                                raise NexusError('Name if character sets not allowed in range definition: {0!s}'.format(identifier))
                             start = self.taxlabels.index(start)
                             end = self.taxlabels.index(end)
                             taxrange = self.taxlabels[start:end + 1]
@@ -1286,14 +1279,12 @@ class Nexus(object):
                 elif self.charsets and identifier in self.charsets:
                     return self.charsets[identifier]
                 else:
-                    raise NexusError('Unknown character identifier: %s'
-                                     % identifier)
+                    raise NexusError('Unknown character identifier: {0!s}'.format(identifier))
             else:
                 if n <= self.nchar:
                     return n - 1
                 else:
-                    raise NexusError('Illegal character identifier: %d>nchar (=%d).'
-                                     % (identifier, self.nchar))
+                    raise NexusError('Illegal character identifier: {0:d}>nchar (={1:d}).'.format(identifier, self.nchar))
         elif set_type == TAXSET:
             try:
                 n = int(identifier)
@@ -1304,16 +1295,14 @@ class Nexus(object):
                 elif self.taxsets and identifier in self.taxsets:
                     return self.taxsets[identifier]
                 else:
-                    raise NexusError('Unknown taxon identifier: %s'
-                                     % identifier)
+                    raise NexusError('Unknown taxon identifier: {0!s}'.format(identifier))
             else:
                 if n > 0 and n <= self.ntax:
                     return self.taxlabels[n - 1]
                 else:
-                    raise NexusError('Illegal taxon identifier: %d>ntax (=%d).'
-                                     % (identifier, self.ntax))
+                    raise NexusError('Illegal taxon identifier: {0:d}>ntax (={1:d}).'.format(identifier, self.ntax))
         else:
-            raise NexusError('Unknown set specification: %s.' % set_type)
+            raise NexusError('Unknown set specification: {0!s}.'.format(set_type))
 
     def _stateset(self, options):
         # Not implemented
@@ -1397,11 +1386,10 @@ class Nexus(object):
         if not filename:
             filename = self.filename
         if [t for t in delete if not self._check_taxlabels(t)]:
-            raise NexusError('Unknown taxa: %s'
-                             % ', '.join(set(delete).difference(set(self.taxlabels))))
+            raise NexusError('Unknown taxa: {0!s}'.format(', '.join(set(delete).difference(set(self.taxlabels)))))
         if interleave_by_partition:
             if interleave_by_partition not in self.charpartitions:
-                raise NexusError('Unknown partition: %r' % interleave_by_partition)
+                raise NexusError('Unknown partition: {0!r}'.format(interleave_by_partition))
             else:
                 partition = self.charpartitions[interleave_by_partition]
                 # we need to sort the partition names by starting position
@@ -1424,7 +1412,7 @@ class Nexus(object):
             if comment:
                 fh.write('[' + comment + ']\n')
             fh.write('begin data;\n')
-            fh.write('\tdimensions ntax=%d nchar=%d;\n' % (ntax_adjusted, nchar_adjusted))
+            fh.write('\tdimensions ntax={0:d} nchar={1:d};\n'.format(ntax_adjusted, nchar_adjusted))
             fh.write('\tformat datatype=' + self.datatype)
             if self.respectcase:
                 fh.write(' respectcase')
@@ -1447,7 +1435,7 @@ class Nexus(object):
                 newcharlabels = self._adjust_charlabels(exclude=exclude)
                 clkeys = sorted(newcharlabels)
                 fh.write('charlabels '
-                         + ', '.join("%s %s" % (k + 1, safename(newcharlabels[k])) for k in clkeys)
+                         + ', '.join("{0!s} {1!s}".format(k + 1, safename(newcharlabels[k])) for k in clkeys)
                          + ';\n')
             fh.write('matrix\n')
             if not blocksize:
@@ -1462,7 +1450,7 @@ class Nexus(object):
                 # to excluded characters
                 seek = 0
                 for p in names:
-                    fh.write('[%s: %s]\n' % (interleave_by_partition, p))
+                    fh.write('[{0!s}: {1!s}]\n'.format(interleave_by_partition, p))
                     if len(newpartition[p]) > 0:
                         for taxon in undelete:
                             fh.write(safename(taxon, mrbayes=mrbayes).ljust(namelength + 1))
@@ -1521,11 +1509,11 @@ class Nexus(object):
             for n, ns in self.charsets.items():
                 cset = [offlist[c] for c in ns if c not in exclude]
                 if cset:
-                    setsb.append('charset %s = %s' % (safename(n), _compact4nexus(cset)))
+                    setsb.append('charset {0!s} = {1!s}'.format(safename(n), _compact4nexus(cset)))
             for n, s in self.taxsets.items():
                 tset = [safename(t, mrbayes=mrbayes) for t in s if t not in delete]
                 if tset:
-                    setsb.append('taxset %s = %s' % (safename(n), ' '.join(tset)))
+                    setsb.append('taxset {0!s} = {1!s}'.format(safename(n), ' '.join(tset)))
         for n, p in self.charpartitions.items():
             if not include_codons and n == CODONPOSITIONS:
                 continue
@@ -1545,8 +1533,8 @@ class Nexus(object):
                     command = 'codonposset'
                 else:
                     command = 'charpartition'
-                setsb.append('%s %s = %s' % (command, safename(n),
-                                             ', '.join('%s: %s' % (sn, _compact4nexus(newpartition[sn]))
+                setsb.append('{0!s} {1!s} = {2!s}'.format(command, safename(n),
+                                             ', '.join('{0!s}: {1!s}'.format(sn, _compact4nexus(newpartition[sn]))
                                                        for sn in names if sn in newpartition)))
         # now write charpartititions, much easier than charpartitions
         for n, p in self.taxpartitions.items():
@@ -1557,8 +1545,8 @@ class Nexus(object):
                 if nsp:
                     newpartition[sn] = nsp
             if newpartition:
-                setsb.append('taxpartition %s = %s' % (safename(n),
-                             ', '.join('%s: %s' % (safename(sn),
+                setsb.append('taxpartition {0!s} = {1!s}'.format(safename(n),
+                             ', '.join('{0!s}: {1!s}'.format(safename(sn),
                                                    ' '.join(safename(x) for x in newpartition[sn]))
                                        for sn in names if sn in newpartition)))
         # add 'end' and return everything
@@ -1593,9 +1581,9 @@ class Nexus(object):
             else:
                 filename = self.filename + '.phy'
         with open(filename, 'w') as fh:
-            fh.write('%d %d\n' % (self.ntax, self.nchar))
+            fh.write('{0:d} {1:d}\n'.format(self.ntax, self.nchar))
             for taxon in self.taxlabels:
-                fh.write('%s %s\n' % (safename(taxon), str(self.matrix[taxon])))
+                fh.write('{0!s} {1!s}\n'.format(safename(taxon), str(self.matrix[taxon])))
         return filename
 
     def constant(self, matrix=None, delete=[], exclude=[]):
@@ -1686,8 +1674,7 @@ class Nexus(object):
         if not matrix:
             matrix = self.matrix
         if [t for t in delete if not self._check_taxlabels(t)]:
-            raise NexusError('Unknown taxa: %s'
-                             % ', '.join(set(delete).difference(self.taxlabels)))
+            raise NexusError('Unknown taxa: {0!s}'.format(', '.join(set(delete).difference(self.taxlabels))))
         if exclude != []:
             undelete = [t for t in self.taxlabels if t in matrix and t not in delete]
             if not undelete:
@@ -1777,7 +1764,7 @@ class Nexus(object):
             return set
 
         if pos < 0 or pos > self.nchar:
-            raise NexusError('Illegal gap position: %d' % pos)
+            raise NexusError('Illegal gap position: {0:d}'.format(pos))
         if n == 0:
             return
         sitesm = list(zip(*[str(self.matrix[t]) for t in self.taxlabels]))
@@ -1857,7 +1844,7 @@ class Nexus(object):
             else:
                 sequence = sequence[:end + 1] + missing * (length - end - 1)
                 sequence = start * missing + sequence[start:]
-            assert length == len(sequence), 'Illegal sequence manipulation in Nexus.terminal_gap_to_missing in taxon %s' % taxon
+            assert length == len(sequence), 'Illegal sequence manipulation in Nexus.terminal_gap_to_missing in taxon {0!s}'.format(taxon)
             self.matrix[taxon] = Seq(sequence, self.alphabet)
 
 
@@ -1873,7 +1860,7 @@ else:
         decommented = cnexus.scanfile(file_contents)
         # check for unmatched parentheses
         if decommented == '[' or decommented == ']':
-            raise NexusError('Unmatched %s' % decommented)
+            raise NexusError('Unmatched {0!s}'.format(decommented))
         # cnexus can't return lists, so in analogy we separate
         # commandlines with chr(7) (a character that shouldn't be part of a
         # nexus file under normal circumstances)

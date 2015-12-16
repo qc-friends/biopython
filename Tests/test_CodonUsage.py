@@ -27,4 +27,4 @@ print("The current index used:")
 X.print_index()
 
 print("-" * 60)
-print("codon adaptation index for test gene: %.2f" % X.cai_for_gene("ATGAAACGCATTAGCACCACCATTACCACCACCATCACCATTACCACAGGTAACGGTGCGGGCTGA"))
+print("codon adaptation index for test gene: {0:.2f}".format(X.cai_for_gene("ATGAAACGCATTAGCACCACCATTACCACCACCATCACCATTACCACAGGTAACGGTGCGGGCTGA")))

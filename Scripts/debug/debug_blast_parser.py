@@ -18,7 +18,7 @@ from Bio.Blast import NCBIStandalone
 
 CONTEXT = 5   # show 5 lines of context around the error in the format file
 
-USAGE = """%s [-h] [-v] [-p] [-n] [-o] <testfile>
+USAGE = """{0!s} [-h] [-v] [-p] [-n] [-o] <testfile>
 
 This script helps diagnose problems with the BLAST parser.
 
@@ -34,7 +34,7 @@ OPTIONS:
 
 -o    <testfile> is a BLAST output file.
 
-""" % sys.argv[0]
+""".format(sys.argv[0])
 
 
 class DebuggingConsumer(object):
@@ -83,8 +83,7 @@ def test_blast_output(outfile):
 
         parser_class = choose_parser(outfile)
         print("It looks like you have given output that should be parsed")
-        print("with %s.%s.  If I'm wrong, you can select the correct parser" %
-              (parser_class.__module__, parser_class.__name__))
+        print("with {0!s}.{1!s}.  If I'm wrong, you can select the correct parser".format(parser_class.__module__, parser_class.__name__))
         print("on the command line of this script (NOT IMPLEMENTED YET).")
     else:
         raise NotImplementedError("Biopython no longer has an HTML BLAST parser.")
@@ -134,12 +133,11 @@ def test_blast_output(outfile):
         traceback.print_exception(etype, value, tb)
         return 1
     else:
-        print("I found the problem in %s.%s.%s, line %d:" %
-              (class_found.__module__, class_found.__name__,
+        print("I found the problem in {0!s}.{1!s}.{2!s}, line {3:d}:".format(class_found.__module__, class_found.__name__,
                err_function, err_line))
-        print("    %s" % err_text)
-        print("This output caused an %s to be raised with the" % etype)
-        print("information %r." % exception_info)
+        print("    {0!s}".format(err_text))
+        print("This output caused an {0!s} to be raised with the".format(etype))
+        print("information {0!r}.".format(exception_info))
     print("")
 
     print("Let me find the line in the file that triggers the problem...")
@@ -153,7 +151,7 @@ def test_blast_output(outfile):
     else:
         print("Odd, the exception disappeared!  What happened?")
         return 3
-    print("It's caused by line %d:" % consumer.linenum)
+    print("It's caused by line {0:d}:".format(consumer.linenum))
     lines = open(outfile).readlines()
     start, end = consumer.linenum - CONTEXT, consumer.linenum + CONTEXT + 1
     if start < 0:
@@ -174,10 +172,9 @@ def test_blast_output(outfile):
     print("")
 
     if class_found == scanner_class:
-        print("Problems in %s are most likely caused by changed formats." %
-              class_found.__name__)
-        print("You can start to fix this by going to line %d in module %s." %
-              (err_line, class_found.__module__))
+        print("Problems in {0!s} are most likely caused by changed formats.".format(
+              class_found.__name__))
+        print("You can start to fix this by going to line {0:d} in module {1!s}.".format(err_line, class_found.__module__))
         print("Perhaps the scanner needs to be made more lenient by accepting")
         print("the changed format?")
         print("")
@@ -199,18 +196,17 @@ def test_blast_output(outfile):
         print("")
 
     elif class_found == consumer_class:
-        print("Problems in %s can be caused by two things:" %
-              class_found.__name__)
-        print("    - The format of the line parsed by '%s' changed." %
-              err_function)
+        print("Problems in {0!s} can be caused by two things:".format(
+              class_found.__name__))
+        print("    - The format of the line parsed by '{0!s}' changed.".format(
+              err_function))
         print("    - The scanner misidentified the line.")
-        print("Check to make sure '%s' should parse the line:" %
-              err_function)
-        s = "    %s" % chomp(lines[consumer.linenum])
+        print("Check to make sure '{0!s}' should parse the line:".format(
+              err_function))
+        s = "    {0!s}".format(chomp(lines[consumer.linenum]))
         s = s[:80]
         print(s)
-        print("If so, debug %s.%s.  Otherwise, debug %s." %
-              (class_found.__name__, err_function, scanner_class.__name__))
+        print("If so, debug {0!s}.{1!s}.  Otherwise, debug {2!s}.".format(class_found.__name__, err_function, scanner_class.__name__))
 
 
 VERBOSITY = 0
@@ -218,14 +214,14 @@ if __name__ == '__main__':
     try:
         optlist, args = getopt.getopt(sys.argv[1:], "hpnov")
     except getopt.error as x:
-        sys.stderr.write("%s\n" % x)
+        sys.stderr.write("{0!s}\n".format(x))
         sys.exit(-1)
     if len(args) != 1:
         sys.stderr.write(USAGE)
         sys.exit(-1)
     TESTFILE, = args
     if not os.path.exists(TESTFILE):
-        sys.stderr.write("I could not find file: %s\n" % TESTFILE)
+        sys.stderr.write("I could not find file: {0!s}\n".format(TESTFILE))
         sys.exit(-1)
 
     PROTEIN = NUCLEOTIDE = OUTPUT = None

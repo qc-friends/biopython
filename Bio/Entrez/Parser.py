@@ -60,7 +60,7 @@ class IntegerElement(int):
             attributes = self.attributes
         except AttributeError:
             return text
-        return "IntegerElement(%s, attributes=%s)" % (text, repr(attributes))
+        return "IntegerElement({0!s}, attributes={1!s})".format(text, repr(attributes))
 
 
 class StringElement(str):
@@ -70,7 +70,7 @@ class StringElement(str):
             attributes = self.attributes
         except AttributeError:
             return text
-        return "StringElement(%s, attributes=%s)" % (text, repr(attributes))
+        return "StringElement({0!s}, attributes={1!s})".format(text, repr(attributes))
 
 
 class UnicodeElement(unicode):
@@ -80,7 +80,7 @@ class UnicodeElement(unicode):
             attributes = self.attributes
         except AttributeError:
             return text
-        return "UnicodeElement(%s, attributes=%s)" % (text, repr(attributes))
+        return "UnicodeElement({0!s}, attributes={1!s})".format(text, repr(attributes))
 
 
 class ListElement(list):
@@ -90,7 +90,7 @@ class ListElement(list):
             attributes = self.attributes
         except AttributeError:
             return text
-        return "ListElement(%s, attributes=%s)" % (text, repr(attributes))
+        return "ListElement({0!s}, attributes={1!s})".format(text, repr(attributes))
 
 
 class DictionaryElement(dict):
@@ -100,7 +100,7 @@ class DictionaryElement(dict):
             attributes = self.attributes
         except AttributeError:
             return text
-        return "DictElement(%s, attributes=%s)" % (text, repr(attributes))
+        return "DictElement({0!s}, attributes={1!s})".format(text, repr(attributes))
 
 
 # A StructureElement is like a dictionary, but some of its keys can have
@@ -125,7 +125,7 @@ class StructureElement(dict):
             attributes = self.attributes
         except AttributeError:
             return text
-        return "DictElement(%s, attributes=%s)" % (text, repr(attributes))
+        return "DictElement({0!s}, attributes={1!s})".format(text, repr(attributes))
 
 
 class NotXMLError(ValueError):
@@ -133,7 +133,7 @@ class NotXMLError(ValueError):
         self.msg = message
 
     def __str__(self):
-        return "Failed to parse the XML data (%s). Please make sure that the input data are in XML format." % self.msg
+        return "Failed to parse the XML data ({0!s}). Please make sure that the input data are in XML format.".format(self.msg)
 
 
 class CorruptedXMLError(ValueError):
@@ -141,7 +141,7 @@ class CorruptedXMLError(ValueError):
         self.msg = message
 
     def __str__(self):
-        return "Failed to parse the XML data (%s). Please make sure that the input data are not corrupted." % self.msg
+        return "Failed to parse the XML data ({0!s}). Please make sure that the input data are not corrupted.".format(self.msg)
 
 
 class ValidationError(ValueError):
@@ -150,7 +150,7 @@ class ValidationError(ValueError):
         self.name = name
 
     def __str__(self):
-        return "Failed to find tag '%s' in the DTD. To skip all tags that are not represented in the DTD, please call Bio.Entrez.read or Bio.Entrez.parse with validate=False." % self.name
+        return "Failed to find tag '{0!s}' in the DTD. To skip all tags that are not represented in the DTD, please call Bio.Entrez.read or Bio.Entrez.parse with validate=False.".format(self.name)
 
 
 class DataHandler(object):
@@ -545,7 +545,7 @@ class DataHandler(object):
         try:
             handle = open(path, "wb")
         except IOError:
-            warnings.warn("Failed to save %s at %s" % (filename, path))
+            warnings.warn("Failed to save {0!s} at {1!s}".format(filename, path))
         else:
             handle.write(text)
             handle.close()
@@ -555,7 +555,7 @@ class DataHandler(object):
         try:
             handle = open(path, "wb")
         except IOError:
-            warnings.warn("Failed to save %s at %s" % (filename, path))
+            warnings.warn("Failed to save {0!s} at {1!s}".format(filename, path))
         else:
             handle.write(text)
             handle.close()
@@ -586,7 +586,7 @@ class DataHandler(object):
             # urls always have a forward slash, don't use os.path.join
             url = source.rstrip("/") + "/" + systemId
         else:
-            raise ValueError("Unexpected URL scheme %r" % (urlinfo[0]))
+            raise ValueError("Unexpected URL scheme {0!r}".format((urlinfo[0])))
         self.dtd_urls.append(url)
         # First, try to load the local version of the DTD file
         location, filename = os.path.split(systemId)
@@ -597,7 +597,7 @@ class DataHandler(object):
             try:
                 handle = _urlopen(url)
             except IOError:
-                raise RuntimeError("Failed to access %s at %s" % (filename, url))
+                raise RuntimeError("Failed to access {0!s} at {1!s}".format(filename, url))
             text = handle.read()
             handle.close()
             self.save_dtd_file(filename, text)

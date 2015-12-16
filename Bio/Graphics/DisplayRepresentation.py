@@ -76,7 +76,7 @@ class ChromosomeCounts(object):
         try:
             self._count_info[segment_name] += count
         except KeyError:
-            raise KeyError("Segment name %s not found." % segment_name)
+            raise KeyError("Segment name {0!s} not found.".format(segment_name))
 
     def scale_segment_value(self, segment_name, scale_value=None):
         """Divide the counts for a segment by some kind of scale value.
@@ -88,7 +88,7 @@ class ChromosomeCounts(object):
             self._count_info[segment_name] = \
               float(self._count_info[segment_name]) / float(scale_value)
         except KeyError:
-            raise KeyError("Segment name %s not found." % segment_name)
+            raise KeyError("Segment name {0!s} not found.".format(segment_name))
 
     def add_label(self, segment_name, label):
         """Add a label to a specfic segment.
@@ -98,7 +98,7 @@ class ChromosomeCounts(object):
         if segment_name in self._label_info:
             self._label_info[segment_name] = label
         else:
-            raise KeyError("Segment name %s not found." % segment_name)
+            raise KeyError("Segment name {0!s} not found.".format(segment_name))
 
     def set_scale(self, segment_name, scale):
         """Set the scale for a specific chromosome segment.
@@ -111,7 +111,7 @@ class ChromosomeCounts(object):
         if segment_name in self._label_info:
             self._scale_info[segment_name] = scale
         else:
-            raise KeyError("Segment name %s not found." % segment_name)
+            raise KeyError("Segment name {0!s} not found.".format(segment_name))
 
     def get_segment_info(self):
         """Retrieve the color and label info about the segments.
@@ -183,5 +183,4 @@ class ChromosomeCounts(object):
                 return self._color_scheme[(count_start, count_end)]
 
         # if we got here we didn't find a color for the count
-        raise ValueError("Count value %s was not found in the color scheme."
-                         % count)
+        raise ValueError("Count value {0!s} was not found in the color scheme.".format(count))

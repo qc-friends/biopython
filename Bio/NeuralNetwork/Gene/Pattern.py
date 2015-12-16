@@ -56,7 +56,7 @@ class PatternIO(object):
             else:
                 string_pattern = pattern
 
-            output_handle.write("%s\n" % string_pattern)
+            output_handle.write("{0!s}\n".format(string_pattern))
 
     def write_seq(self, seq_pattern_list, output_handle):
         """Convenience function to write Seq objects to a file.
@@ -74,7 +74,7 @@ class PatternIO(object):
             elif isinstance(seq_pattern, Seq):
                 all_patterns.append(str(seq_pattern))
             else:
-                raise ValueError("Unexpected pattern type %r" % seq_pattern)
+                raise ValueError("Unexpected pattern type {0!r}".format(seq_pattern))
 
         self.write(all_patterns, output_handle)
 
@@ -104,8 +104,7 @@ class PatternIO(object):
                 for pattern_item in test_pattern:
                     pattern_seq = Seq(pattern_item, self._alphabet)
                     if not(_verify_alphabet(pattern_seq)):
-                        raise ValueError("Pattern %s not matching alphabet %s"
-                                         % (cur_pattern, self._alphabet))
+                        raise ValueError("Pattern {0!s} not matching alphabet {1!s}".format(cur_pattern, self._alphabet))
 
             all_patterns.append(cur_pattern)
 

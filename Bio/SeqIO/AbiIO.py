@@ -356,7 +356,7 @@ def AbiIterator(handle, alphabet=None, trim=False):
         # handle empty file gracefully
         raise StopIteration
     if marker != _as_bytes('ABIF'):
-        raise IOError('File should start ABIF, not %r' % marker)
+        raise IOError('File should start ABIF, not {0!r}'.format(marker))
 
     # dirty hack for handling time information
     times = {'RUND1': '', 'RUND2': '', 'RUNT1': '', 'RUNT2': '', }
@@ -396,8 +396,8 @@ def AbiIterator(handle, alphabet=None, trim=False):
                 annot[_EXTRACT[key]] = tag_data
 
     # set time annotations
-    annot['run_start'] = '%s %s' % (times['RUND1'], times['RUNT1'])
-    annot['run_finish'] = '%s %s' % (times['RUND2'], times['RUNT2'])
+    annot['run_start'] = '{0!s} {1!s}'.format(times['RUND1'], times['RUNT1'])
+    annot['run_finish'] = '{0!s} {1!s}'.format(times['RUND2'], times['RUNT2'])
 
     # raw data (for advanced end users benefit)
     annot['abif_raw'] = raw

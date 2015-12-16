@@ -17,10 +17,10 @@ ids = ['O23729', 'O23730', 'O23731']
 for id in ids:
     handle = ExPASy.get_sprot_raw(id)
     record = SwissProt.read(handle)
-    print("description: %s" % record.description)
+    print("description: {0!s}".format(record.description))
     for ref in record.references:
-        print("authors: %s" % ref.authors)
-        print("title: %s" % ref.title)
+        print("authors: {0!s}".format(ref.authors))
+        print("title: {0!s}".format(ref.title))
 
-    print("classification: %s" % record.organism_classification)
+    print("classification: {0!s}".format(record.organism_classification))
     print("")

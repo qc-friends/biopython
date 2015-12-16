@@ -1001,7 +1001,7 @@ class IterationTests(unittest.TestCase):
 
     def test_get_atoms(self):
         """Yields all atoms from the structure, excluding duplicates and ALTLOCs which are not parsed."""
-        atoms = ["%12s" % str((atom.id, atom.altloc)) for atom in self.struc.get_atoms()]
+        atoms = ["{0:12!s}".format(str((atom.id, atom.altloc))) for atom in self.struc.get_atoms()]
         self.assertEqual(len(atoms), 756)
 
 

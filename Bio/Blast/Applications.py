@@ -105,8 +105,7 @@ class _NcbibaseblastCommandline(AbstractCommandline):
             if self._get_parameter(a):
                 for b in incompatibles[a]:
                     if self._get_parameter(b):
-                        raise ValueError("Options %s and %s are incompatible."
-                                         % (a, b))
+                        raise ValueError("Options {0!s} and {1!s} are incompatible.".format(a, b))
 
 
 class _NcbiblastCommandline(_NcbibaseblastCommandline):

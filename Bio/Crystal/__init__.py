@@ -27,7 +27,7 @@ class CrystalError(Exception):
 def wrap_line(line):
     output = ''
     for i in range(0, len(line), 80):
-        output += '%s\n' % line[i: i + 80]
+        output += '{0!s}\n'.format(line[i: i + 80])
     return output
 
 
@@ -65,10 +65,10 @@ class Hetero(object):
         return not self.__eq__(other)
 
     def __repr__(self):
-        return "%s" % self.data
+        return "{0!s}".format(self.data)
 
     def __str__(self):
-        return "%s" % self.data
+        return "{0!s}".format(self.data)
 
     def __len__(self):
         return len(self.data)
@@ -107,7 +107,7 @@ class Chain(object):
     def __str__(self):
         output = ''
         for element in self.data:
-            output = output + '%s ' % element
+            output = output + '{0!s} '.format(element)
         output = output.strip()
         output = wrap_line(output)
         return output
@@ -247,13 +247,13 @@ class Crystal(object):
     def __repr__(self):
         output = ''
         for key in sorted(self.data):
-            output += '%s : %s\n' % (key, self.data[key])
+            output += '{0!s} : {1!s}\n'.format(key, self.data[key])
         return output
 
     def __str__(self):
         output = ''
         for key in sorted(self.data):
-            output += '%s : %s\n' % (key, self.data[key])
+            output += '{0!s} : {1!s}\n'.format(key, self.data[key])
         return output
 
     def tostring(self):

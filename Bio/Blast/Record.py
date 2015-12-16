@@ -76,7 +76,7 @@ class Description(object):
         self.num_alignments = None
 
     def __str__(self):
-        return "%-66s %5s  %s" % (self.title, self.score, self.e)
+        return "{0:<66!s} {1:5!s}  {2!s}".format(self.title, self.score, self.e)
 
 
 class Alignment(object):
@@ -99,7 +99,7 @@ class Alignment(object):
 
     def __str__(self):
         lines = self.title.split('\n')
-        lines.append("Length = %s\n" % self.length)
+        lines.append("Length = {0!s}\n".format(self.length))
         return '\n           '.join(lines)
 
 
@@ -172,28 +172,23 @@ class HSP(object):
         self.sbjct_end = None
 
     def __str__(self):
-        lines = ["Score %i (%i bits), expectation %0.1e, alignment length %i"
-                 % (self.score, self.bits, self.expect, self.align_length)]
+        lines = ["Score {0:d} ({1:d} bits), expectation {2:0.1e}, alignment length {3:d}".format(self.score, self.bits, self.expect, self.align_length)]
         if self.align_length < 50:
-            lines.append("Query:%s %s %s" % (str(self.query_start).rjust(8),
+            lines.append("Query:{0!s} {1!s} {2!s}".format(str(self.query_start).rjust(8),
                                        str(self.query),
                                        str(self.query_end)))
-            lines.append("               %s"
-                         % (str(self.match)))
-            lines.append("Sbjct:%s %s %s" % (str(self.sbjct_start).rjust(8),
+            lines.append("               {0!s}".format((str(self.match))))
+            lines.append("Sbjct:{0!s} {1!s} {2!s}".format(str(self.sbjct_start).rjust(8),
                                        str(self.sbjct),
                                        str(self.sbjct_end)))
         else:
-            lines.append("Query:%s %s...%s %s"
-                         % (str(self.query_start).rjust(8),
+            lines.append("Query:{0!s} {1!s}...{2!s} {3!s}".format(str(self.query_start).rjust(8),
                             str(self.query)[:45],
                             str(self.query)[-3:],
                             str(self.query_end)))
-            lines.append("               %s...%s"
-                         % (str(self.match)[:45],
+            lines.append("               {0!s}...{1!s}".format(str(self.match)[:45],
                             str(self.match)[-3:]))
-            lines.append("Sbjct:%s %s...%s %s"
-                         % (str(self.sbjct_start).rjust(8),
+            lines.append("Sbjct:{0!s} {1!s}...{2!s} {3!s}".format(str(self.sbjct_start).rjust(8),
                             str(self.sbjct)[:45],
                             str(self.sbjct)[-3:],
                             str(self.sbjct_end)))

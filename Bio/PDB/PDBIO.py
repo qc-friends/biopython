@@ -73,7 +73,7 @@ class PDBIO(object):
         if atom.element:
             element = atom.element.strip().upper()
             if element.capitalize() not in atom_weights:
-                raise ValueError("Unrecognised element %r" % atom.element)
+                raise ValueError("Unrecognised element {0!r}".format(atom.element))
             element = element.rjust(2)
         else:
             element = "  "
@@ -83,17 +83,16 @@ class PDBIO(object):
         bfactor = atom.get_bfactor()
         occupancy = atom.get_occupancy()
         try:
-            occupancy_str = "%6.2f" % occupancy
+            occupancy_str = "{0:6.2f}".format(occupancy)
         except TypeError:
             if occupancy is None:
                 occupancy_str = " " * 6
                 import warnings
                 from Bio import BiopythonWarning
-                warnings.warn("Missing occupancy in atom %s written as blank" %
-                              repr(atom.get_full_id()), BiopythonWarning)
+                warnings.warn("Missing occupancy in atom {0!s} written as blank".format(
+                              repr(atom.get_full_id())), BiopythonWarning)
             else:
-                raise TypeError("Invalid occupancy %r in atom %r"
-                                % (occupancy, atom.get_full_id()))
+                raise TypeError("Invalid occupancy {0!r} in atom {1!r}".format(occupancy, atom.get_full_id()))
 
         args = (record_type, atom_number, name, altloc, resname, chain_id,
                 resseq, icode, x, y, z, occupancy_str, bfactor, segid,
@@ -184,7 +183,7 @@ class PDBIO(object):
             model_residues_written = 0
             atom_number = 1
             if model_flag:
-                fp.write("MODEL      %s\n" % model.serial_num)
+                fp.write("MODEL      {0!s}\n".format(model.serial_num))
             for chain in model.get_list():
                 if not select.accept_chain(chain):
                     continue

@@ -86,7 +86,7 @@ class NextOrf(object):
 
     def ToFasta(self, header, seq):
         seq = re.sub('(............................................................)', '\\1\n', seq)
-        return '>%s\n%s' % (header, seq)
+        return '>{0!s}\n{1!s}'.format(header, seq)
 
     def Gc(self, seq):
         d = {}
@@ -126,7 +126,7 @@ class NextOrf(object):
             nall += n
 
         gcall = 100.0 * gcall / nall
-        res = '%.1f%%, %.1f%%, %.1f%%, %.1f%%' % (gcall, gc[0], gc[1], gc[2])
+        res = '{0:.1f}%, {1:.1f}%, {2:.1f}%, {3:.1f}%'.format(gcall, gc[0], gc[1], gc[2])
         return res
 
     def GetOrfCoordinates(self, seq):
@@ -200,11 +200,11 @@ class NextOrf(object):
         for start, stop, length, subs, strand in CDS:
             self.counter += 1
             if strand > 0:
-                head = 'orf_%s:%s:%d:%d:%d' % (self.counter, self.header, strand, start, stop)
+                head = 'orf_{0!s}:{1!s}:{2:d}:{3:d}:{4:d}'.format(self.counter, self.header, strand, start, stop)
             if strand < 0:
-                head = 'orf_%s:%s:%d:%d:%d' % (self.counter, self.header, strand, n - stop + 1, n - start + 1)
+                head = 'orf_{0!s}:{1!s}:{2:d}:{3:d}:{4:d}'.format(self.counter, self.header, strand, n - stop + 1, n - start + 1)
             if self.options['gc']:
-                head = '%s:%s' % (head, self.Gc2(subs.data))
+                head = '{0!s}:{1!s}'.format(head, self.Gc2(subs.data))
 
             if out == 'aa':
                 orf = subs.translate(table=self.genetic_code)
@@ -217,7 +217,7 @@ class NextOrf(object):
 
 def help():
     global options
-    print('Usage: %s (<options>) <FASTA file>' % sys.argv[0])
+    print('Usage: {0!s} (<options>) <FASTA file>'.format(sys.argv[0]))
     print("")
     print('Options:                                                       default')
     print('--start       Start position in sequence                             0')
@@ -236,7 +236,7 @@ def help():
 #    print("")
     print("\nNCBI's Codon Tables:")
     for key, table in CodonTable.ambiguous_dna_by_id.items():
-        print('\t%s %s' % (key, table._codon_table.names[0]))
+        print('\t{0!s} {1!s}'.format(key, table._codon_table.names[0]))
     print('\ne.g.\n./nextorf.py --minlength 5 --strand plus --output nt --gc 1 testjan.fas')
     sys.exit(0)
 
@@ -279,7 +279,7 @@ if __name__ == '__main__':
                 options[key] = arg[1]
 
         if arg[0] == '-v':
-            print('OPTIONS %s' % options)
+            print('OPTIONS {0!s}'.format(options))
 
     file = args[0]
     nextorf = NextOrf(file, options)

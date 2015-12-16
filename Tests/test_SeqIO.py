@@ -295,9 +295,9 @@ def compare_record(record_one, record_two):
 def record_summary(record, indent=" "):
     """Returns a concise summary of a SeqRecord object as a string"""
     if record.id == record.name:
-        answer = "%sID and Name='%s',\n%sSeq='" % (indent, record.id, indent)
+        answer = "{0!s}ID and Name='{1!s}',\n{2!s}Seq='".format(indent, record.id, indent)
     else:
-        answer = "%sID = '%s', Name='%s',\n%sSeq='" % (
+        answer = "{0!s}ID = '{1!s}', Name='{2!s}',\n{3!s}Seq='".format(
             indent, record.id, record.name, indent)
     if record.seq is None:
         answer += "None"
@@ -306,7 +306,7 @@ def record_summary(record, indent=" "):
             answer += str(record.seq[:40]) + "..." + str(record.seq[-7:])
         else:
             answer += str(record.seq)
-        answer += "', length=%i" % (len(record.seq))
+        answer += "', length={0:d}".format((len(record.seq)))
     return answer
 
 
@@ -324,13 +324,13 @@ def alignment_summary(alignment, index=" "):
     rec_count = len(alignment)
     for i in range(min(5, alignment_len)):
         answer.append(index + col_summary(alignment[:, i])
-                            + " alignment column %i" % i)
+                            + " alignment column {0:d}".format(i))
     if alignment_len > 5:
         i = alignment_len - 1
         answer.append(index + col_summary("|" * rec_count)
                             + " ...")
         answer.append(index + col_summary(alignment[:, i])
-                            + " alignment column %i" % i)
+                            + " alignment column {0:d}".format(i))
     return "\n".join(answer)
 
 
@@ -343,7 +343,7 @@ def check_simple_write_read(records, indent=" "):
             # Skipping for speed.  Some of the unknown sequences are
             # rather long, and it seems a bit pointless to record them.
             continue
-        print(indent + "Checking can write/read as '%s' format" % format)
+        print(indent + "Checking can write/read as '{0!s}' format".format(format))
 
         # Going to write to a handle...
         if format in SeqIO._BinaryFormats:
@@ -373,7 +373,7 @@ def check_simple_write_read(records, indent=" "):
                 # TypeError: object of type 'NoneType' has no len()
                 print("Failed: Probably len() of None")
             else:
-                print(indent + "Failed: %s" % str(e))
+                print(indent + "Failed: {0!s}".format(str(e)))
             if records[0].seq.alphabet.letters is not None:
                 assert format != t_format, \
                     "Should be able to re-write in the original format!"
@@ -390,8 +390,7 @@ def check_simple_write_read(records, indent=" "):
             # I want to see the output when called from the test harness,
             # run_tests.py (which can be funny about new lines on Windows)
             handle.seek(0)
-            raise ValueError("%s\n\n%s\n\n%s"
-                             % (str(e), repr(handle.read()), repr(records)))
+            raise ValueError("{0!s}\n\n{1!s}\n\n{2!s}".format(str(e), repr(handle.read()), repr(records)))
 
         assert len(records2) == t_count
         for r1, r2 in zip(records, records2):
@@ -418,21 +417,21 @@ def check_simple_write_read(records, indent=" "):
             # valid character sets and the identifier lengths!
             if format in ["phylip", "phylip-sequential"]:
                 assert r1.id.replace("[", "").replace("]", "")[:10] == r2.id, \
-                    "'%s' vs '%s'" % (r1.id, r2.id)
+                    "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "phylip-relaxed":
                 assert r1.id.replace(" ", "").replace(':', '|') == r2.id, \
-                    "'%s' vs '%s'" % (r1.id, r2.id)
+                    "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "clustal":
                 assert r1.id.replace(" ", "_")[:30] == r2.id, \
-                    "'%s' vs '%s'" % (r1.id, r2.id)
+                    "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "stockholm":
                 assert r1.id.replace(" ", "_") == r2.id, \
-                    "'%s' vs '%s'" % (r1.id, r2.id)
+                    "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "fasta":
                 assert r1.id.split()[0] == r2.id
             else:
                 assert r1.id == r2.id, \
-                    "'%s' vs '%s'" % (r1.id, r2.id)
+                    "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
 
         if len(records) > 1:
             # Try writing just one record (passing a SeqRecord, not a list)
@@ -460,7 +459,7 @@ for (t_format, t_alignment, t_filename, t_count) in test_files:
     else:
         mode = "r"
 
-    print("Testing reading %s format file %s" % (t_format, t_filename))
+    print("Testing reading {0!s} format file {1!s}".format(t_format, t_filename))
     assert os.path.isfile(t_filename), t_filename
 
     with warnings.catch_warnings():
@@ -473,7 +472,7 @@ for (t_format, t_alignment, t_filename, t_count) in test_files:
         records = list(SeqIO.parse(handle=h, format=t_format))
         h.close()
         assert len(records) == t_count, \
-            "Found %i records but expected %i" % (len(records), t_count)
+            "Found {0:d} records but expected {1:d}".format(len(records), t_count)
 
         # Try using the iterator with a for loop, and a filename not handle
         records2 = []
@@ -550,14 +549,14 @@ for (t_format, t_alignment, t_filename, t_count) in test_files:
             # Check for blanks, or entries with leading/trailing spaces
             for acc in accs:
                 assert acc and acc == acc.strip(), \
-                    "Bad accession in annotations: %s" % repr(acc)
+                    "Bad accession in annotations: {0!s}".format(repr(acc))
             assert len(set(accs)) == len(accs), \
-                "Repeated accession in annotations: %s" % repr(accs)
+                "Repeated accession in annotations: {0!s}".format(repr(accs))
         for ref in record.dbxrefs:
             assert ref and ref == ref.strip(), \
-                "Bad cross reference in dbxrefs: %s" % repr(ref)
+                "Bad cross reference in dbxrefs: {0!s}".format(repr(ref))
         assert len(record.dbxrefs) == len(record.dbxrefs), \
-            "Repeated cross reference in dbxrefs: %s" % repr(record.dbxrefs)
+            "Repeated cross reference in dbxrefs: {0!s}".format(repr(record.dbxrefs))
 
         # Check the lists obtained by the different methods agree
         assert compare_record(record, records2[i])
@@ -611,8 +610,7 @@ for (t_format, t_alignment, t_filename, t_count) in test_files:
         good = nucleotide_alphas
         bad = protein_alphas
     else:
-        assert t_format in no_alpha_formats, "Got %s from %s file" \
-            % (repr(base_alpha), t_format)
+        assert t_format in no_alpha_formats, "Got {0!s} from {1!s} file".format(repr(base_alpha), t_format)
         good = protein_alphas + dna_alphas + rna_alphas + nucleotide_alphas
         bad = []
     for given_alpha in good:
@@ -634,8 +632,7 @@ for (t_format, t_alignment, t_filename, t_count) in test_files:
         try:
             print(next(SeqIO.parse(h, t_format, given_alpha)))
             h.close()
-            assert False, "Forcing wrong alphabet, %s, should fail (%s)" \
-                % (repr(given_alpha), t_filename)
+            assert False, "Forcing wrong alphabet, {0!s}, should fail ({1!s})".format(repr(given_alpha), t_filename)
         except ValueError:
             # Good - should fail
             pass
@@ -643,8 +640,7 @@ for (t_format, t_alignment, t_filename, t_count) in test_files:
     del good, bad, given_alpha, base_alpha
 
     if t_alignment:
-        print("Testing reading %s format file %s as an alignment"
-              % (t_format, t_filename))
+        print("Testing reading {0!s} format file {1!s} as an alignment".format(t_format, t_filename))
 
         alignment = MultipleSeqAlignment(SeqIO.parse(
             handle=t_filename, format=t_format))

@@ -33,11 +33,11 @@ from Bio._py3k import urlopen as _urlopen
 def _q(op, arg1, arg2=None, arg3=None):
     URL = "http://rest.kegg.jp/%s"
     if arg2 and arg3:
-        args = "%s/%s/%s/%s" % (op, arg1, arg2, arg3)
+        args = "{0!s}/{1!s}/{2!s}/{3!s}".format(op, arg1, arg2, arg3)
     elif arg2:
-        args = "%s/%s/%s" % (op, arg1, arg2)
+        args = "{0!s}/{1!s}/{2!s}".format(op, arg1, arg2)
     else:
-        args = "%s/%s" % (op, arg1)
+        args = "{0!s}/{1!s}".format(op, arg1)
     return _urlopen(URL % (args))
 
 

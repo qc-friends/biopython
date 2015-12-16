@@ -114,36 +114,35 @@ class PhdWriter(SequentialSequenceWriter):
                 "of peak location scores does not match length of sequence"
         if None in phred_qualities:
             raise ValueError("A quality value of None was found")
-        if record.description.startswith("%s " % record.id):
+        if record.description.startswith("{0!s} ".format(record.id)):
             title = record.description
         else:
-            title = "%s %s" % (record.id, record.description)
-        self.handle.write("BEGIN_SEQUENCE %s\nBEGIN_COMMENT\n"
-                          % self.clean(title))
+            title = "{0!s} {1!s}".format(record.id, record.description)
+        self.handle.write("BEGIN_SEQUENCE {0!s}\nBEGIN_COMMENT\n".format(self.clean(title)))
         for annot in [k.lower() for k in Phd.CKEYWORDS]:
             value = None
             if annot == "trim":
                 if record.annotations.get("trim", None):
-                    value = "%s %s %.4f" % record.annotations["trim"]
+                    value = "{0!s} {1!s} {2:.4f}".format(*record.annotations["trim"])
             elif annot == "trace_peak_area_ratio":
                 if record.annotations.get("trace_peak_area_ratio", None):
-                    value = "%.4f" % record.annotations[
-                        "trace_peak_area_ratio"]
+                    value = "{0:.4f}".format(record.annotations[
+                        "trace_peak_area_ratio"])
             else:
                 value = record.annotations.get(annot, None)
             if value or value == 0:
-                self.handle.write("%s: %s\n" % (annot.upper(), value))
+                self.handle.write("{0!s}: {1!s}\n".format(annot.upper(), value))
 
         self.handle.write("END_COMMENT\nBEGIN_DNA\n")
         for i, site in enumerate(record.seq):
             if peak_locations:
-                self.handle.write("%s %i %i\n" % (
+                self.handle.write("{0!s} {1:d} {2:d}\n".format(
                     site,
                     round(phred_qualities[i]),
                     peak_locations[i])
                 )
             else:
-                self.handle.write("%s %i\n" % (
+                self.handle.write("{0!s} {1:d}\n".format(
                     site,
                     round(phred_qualities[i]))
                 )

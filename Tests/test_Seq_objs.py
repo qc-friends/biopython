@@ -120,8 +120,7 @@ class StringMethodTests(unittest.TestCase):
                     i = pre_comp_function(i)
                     j = pre_comp_function(j)
                 if i != j:
-                    raise ValueError("%s.%s(%s) = %i, not %i"
-                                     % (repr(example1),
+                    raise ValueError("{0!s}.{1!s}({2!s}) = {3:d}, not {4:d}".format(repr(example1),
                                         method_name,
                                         repr(str2),
                                         i,
@@ -134,8 +133,7 @@ class StringMethodTests(unittest.TestCase):
                         i = pre_comp_function(i)
                         j = pre_comp_function(j)
                     if i != j:
-                        raise ValueError("%s.%s(%s) = %i, not %i"
-                                         % (repr(example1),
+                        raise ValueError("{0!s}.{1!s}({2!s}) = {3:d}, not {4:d}".format(repr(example1),
                                             method_name,
                                             repr(example2),
                                             i,
@@ -152,8 +150,7 @@ class StringMethodTests(unittest.TestCase):
                             i = pre_comp_function(i)
                             j = pre_comp_function(j)
                         if i != j:
-                            raise ValueError("%s.%s(%s, %i) = %i, not %i"
-                                             % (repr(example1),
+                            raise ValueError("{0!s}.{1!s}({2!s}, {3:d}) = {4:d}, not {5:d}".format(repr(example1),
                                                 method_name,
                                                 repr(str2),
                                                 start,
@@ -167,8 +164,7 @@ class StringMethodTests(unittest.TestCase):
                                 i = pre_comp_function(i)
                                 j = pre_comp_function(j)
                             if i != j:
-                                raise ValueError("%s.%s(%s, %i, %i) = %i, not %i"
-                                                 % (repr(example1),
+                                raise ValueError("{0!s}.{1!s}({2!s}, {3:d}, {4:d}) = {5:d}, not {6:d}".format(repr(example1),
                                                     method_name,
                                                     repr(str2),
                                                     start,
@@ -293,8 +289,7 @@ class StringMethodTests(unittest.TestCase):
                 # Silence change in behaviour warning
                 warnings.simplefilter('ignore', BiopythonWarning)
                 self.assertEqual(hash(str(example1)), hash(example1),
-                                 "Hash mismatch, %r for %r vs %r for %r"
-                                 % (hash(str(example1)), id(example1),
+                                 "Hash mismatch, {0!r} for {1!r} vs {2!r} for {3!r}".format(hash(str(example1)), id(example1),
                                     hash(example1), example1))
 
     def test_str_comparison(self):
@@ -305,22 +300,22 @@ class StringMethodTests(unittest.TestCase):
                     warnings.simplefilter('ignore', BiopythonWarning)
                     self.assertEqual(str(example1) == str(example2),
                                      example1 == example2,
-                                     "Checking %r == %r" % (example1, example2))
+                                     "Checking {0!r} == {1!r}".format(example1, example2))
                     self.assertEqual(str(example1) != str(example2),
                                      example1 != example2,
-                                     "Checking %r != %r" % (example1, example2))
+                                     "Checking {0!r} != {1!r}".format(example1, example2))
                     self.assertEqual(str(example1) < str(example2),
                                      example1 < example2,
-                                     "Checking %r < %r" % (example1, example2))
+                                     "Checking {0!r} < {1!r}".format(example1, example2))
                     self.assertEqual(str(example1) <= str(example2),
                                      example1 <= example2,
-                                     "Checking %r <= %r" % (example1, example2))
+                                     "Checking {0!r} <= {1!r}".format(example1, example2))
                     self.assertEqual(str(example1) > str(example2),
                                      example1 > example2,
-                                     "Checking %r > %r" % (example1, example2))
+                                     "Checking {0!r} > {1!r}".format(example1, example2))
                     self.assertEqual(str(example1) >= str(example2),
                                      example1 >= example2,
-                                     "Checking %r >= %r" % (example1, example2))
+                                     "Checking {0!r} >= {1!r}".format(example1, example2))
 
     def test_str_getitem(self):
         """Check slicing and indexing works like a string."""
@@ -533,7 +528,7 @@ class StringMethodTests(unittest.TestCase):
                         Seq(codon, unambiguous_dna)]:
                 try:
                     print(nuc.translate())
-                    self.fail("Translating %s should fail" % codon)
+                    self.fail("Translating {0!s} should fail".format(codon))
                 except TranslationError:
                     pass
 
@@ -554,8 +549,7 @@ class StringMethodTests(unittest.TestCase):
                             self.assertEqual(values, set("*"))
                         elif t == "X":
                             self.assertTrue(len(values) > 1,
-                                "translate('%s') = '%s' not '%s'"
-                                % (c1 + c2 + c3, t, ",".join(values)))
+                                "translate('{0!s}') = '{1!s}' not '{2!s}'".format(c1 + c2 + c3, t, ",".join(values)))
                         elif t == "Z":
                             self.assertEqual(values, set("EQ"))
                         elif t == "B":

@@ -61,7 +61,7 @@ class _XMLparser(ContentHandler):
         # Note could use try / except AttributeError
         # BUT I found often triggered by nested errors...
         if hasattr(self, method):
-            eval("self.%s()" % method)
+            eval("self.{0!s}()".format(method))
             if self._debug > 4:
                 print("NCBIXML: Parsed:  " + method)
         elif self._debug > 3:
@@ -73,8 +73,7 @@ class _XMLparser(ContentHandler):
         # We don't care about white space in parent tags like Hsp,
         # but that white space doesn't belong to child tags like Hsp_midline
         if self._value.strip():
-            raise ValueError("What should we do with %s before the %s tag?"
-                             % (repr(self._value), name))
+            raise ValueError("What should we do with {0!s} before the {1!s} tag?".format(repr(self._value), name))
         self._value = ""
 
     def characters(self, ch):
@@ -96,13 +95,13 @@ class _XMLparser(ContentHandler):
         # Note could use try / except AttributeError
         # BUT I found often triggered by nested errors...
         if hasattr(self, method):
-            eval("self.%s()" % method)
+            eval("self.{0!s}()".format(method))
             if self._debug > 2:
-                print("NCBIXML: Parsed:  %s %s" % (method, self._value))
+                print("NCBIXML: Parsed:  {0!s} {1!s}".format(method, self._value))
         elif self._debug > 1:
             # Doesn't exist (yet) and may want to warn about it
             if method not in self._debug_ignore_list:
-                print("NCBIXML: Ignored: %s %s" % (method, self._value))
+                print("NCBIXML: Ignored: {0!s} {1!s}".format(method, self._value))
                 self._debug_ignore_list.append(method)
 
         # Reset character buffer
@@ -652,14 +651,13 @@ if __name__ == '__main__':
 
     for r in r_list:
         # Small test
-        print('Blast of %s' % r.query)
-        print('Found %s alignments with a total of %s HSPs'
-                  % (len(r.alignments),
+        print('Blast of {0!s}'.format(r.query))
+        print('Found {0!s} alignments with a total of {1!s} HSPs'.format(len(r.alignments),
                      reduce(lambda a, b: a + b,
                             [len(a.hsps) for a in r.alignments])))
 
         for al in r.alignments:
-            print("%s %i bp %i HSPs" % (al.title[:50], al.length, len(al.hsps)))
+            print("{0!s} {1:d} bp {2:d} HSPs".format(al.title[:50], al.length, len(al.hsps)))
 
         # Cookbook example
         E_VALUE_THRESH = 0.04
@@ -667,9 +665,9 @@ if __name__ == '__main__':
             for hsp in alignment.hsps:
                 if hsp.expect < E_VALUE_THRESH:
                     print('*****')
-                    print('sequence %s' % alignment.title)
-                    print('length %i' % alignment.length)
-                    print('e value %f' % hsp.expect)
+                    print('sequence {0!s}'.format(alignment.title))
+                    print('length {0:d}'.format(alignment.length))
+                    print('e value {0:f}'.format(hsp.expect))
                     print(hsp.query[:75] + '...')
                     print(hsp.match[:75] + '...')
                     print(hsp.sbjct[:75] + '...')

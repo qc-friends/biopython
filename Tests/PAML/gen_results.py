@@ -132,13 +132,13 @@ Generate result files to be used in Bio.Phylo.PAML unit tests.
 
   -v         Use verbose output
   PROGRAM    codeml, baseml or yn00
-  VERSION    %s
+  VERSION    {0!s}
 
 To use this, the PAML programs must be in your executable path and
 they must be named programX_Y, where X and Y are the version numbers
 (i.e. baseml4_5 or codeml4_4c). If VERSION is not specified, test
 results will be generated for all versions listed above.
-'''%(versions)
+'''.format((versions))
     sys.exit(usage)
 
 if __name__ == "__main__":

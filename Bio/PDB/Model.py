@@ -54,7 +54,7 @@ class Model(Entity):
     # Special methods
 
     def __repr__(self):
-        return "<Model id=%s>" % self.get_id()
+        return "<Model id={0!s}>".format(self.get_id())
 
     # Public
 

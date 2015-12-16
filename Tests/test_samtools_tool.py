@@ -118,15 +118,13 @@ class SamtoolsTestCase(unittest.TestCase):
         cmdline.set_parameter("input_file", self.bamfile1)
         stdout_bam, stderr_bam = cmdline()
         self.assertTrue(stderr_bam.startswith(""),
-                        "SAM file viewing failed: \n%s\nStdout:%s"
-                        % (cmdline, stdout_bam))
+                        "SAM file viewing failed: \n{0!s}\nStdout:{1!s}".format(cmdline, stdout_bam))
         cmdline.set_parameter("input_file", self.samfile1)
         cmdline.set_parameter("S", True)
         stdout_sam, stderr_sam = cmdline()
         self.assertTrue(
             stdout_sam.startswith("HWI-1KL120:88:D0LRBACXX:1:1101:1780:2146"),
-            "SAM file  viewing failed:\n%s\nStderr:%s"
-            % (cmdline, stderr_sam))
+            "SAM file  viewing failed:\n{0!s}\nStderr:{1!s}".format(cmdline, stderr_sam))
 
     def create_fasta_index(self):
         """Creates index for reference fasta sequence."""
@@ -145,8 +143,7 @@ class SamtoolsTestCase(unittest.TestCase):
         cmdline.set_parameter("reference", self.reference)
         stdout, stderr = cmdline()
         self.assertFalse(stderr,
-                         "Samtools faidx failed:\n%s\nStderr:%s"
-                         % (cmdline, stderr))
+                         "Samtools faidx failed:\n{0!s}\nStderr:{1!s}".format(cmdline, stderr))
         self.assertTrue(os.path.isfile(self.referenceindexfile))
 
     def test_calmd(self):
@@ -182,16 +179,14 @@ class SamtoolsTestCase(unittest.TestCase):
         cmdline.set_parameter("out_prefix", "SamBam/out")
         stdout, stderr = cmdline()
         self.assertFalse(stderr,
-                         "Samtools sort failed:\n%s\nStderr:%s"
-                         % (cmdline, stderr))
+                         "Samtools sort failed:\n{0!s}\nStderr:{1!s}".format(cmdline, stderr))
 
     def test_index(self):
         cmdline = SamtoolsIndexCommandline(samtools_exe)
         cmdline.set_parameter("input_bam", self.bamfile1)
         stdout, stderr = cmdline()
         self.assertFalse(stderr,
-                         "Samtools index failed:\n%s\nStderr:%s"
-                         % (cmdline, stderr))
+                         "Samtools index failed:\n{0!s}\nStderr:{1!s}".format(cmdline, stderr))
         self.assertTrue(os.path.exists(self.bamindexfile1))
 
     def test_idxstats(self):
@@ -200,8 +195,7 @@ class SamtoolsTestCase(unittest.TestCase):
         cmdline.set_parameter("input_bam", self.bamfile1)
         stdout, stderr = cmdline()
         self.assertFalse(stderr,
-                         "Samtools idxstats failed:\n%s\nStderr:%s"
-                         % (cmdline, stderr))
+                         "Samtools idxstats failed:\n{0!s}\nStderr:{1!s}".format(cmdline, stderr))
 
     def test_merge(self):
         cmdline = SamtoolsMergeCommandline(samtools_exe)
@@ -210,8 +204,7 @@ class SamtoolsTestCase(unittest.TestCase):
         cmdline.set_parameter("f", True)  # Overwrite out.bam if it exists
         stdout, stderr = cmdline()
         self.assertFalse(stderr,
-                         "Samtools merge failed:\n%s\nStderr:%s"
-                         % (cmdline, stderr))
+                         "Samtools merge failed:\n{0!s}\nStderr:{1!s}".format(cmdline, stderr))
         self.assertTrue(os.path.exists(self.outbamfile))
 
     def test_mpileup(self):

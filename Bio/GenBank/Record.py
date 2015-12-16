@@ -243,9 +243,9 @@ class Record(object):
         """
         output = "LOCUS"
         output += " " * 7  # 6-12 spaces
-        output += "%-9s" % self.locus
+        output += "{0:<9!s}".format(self.locus)
         output += " "  # 22 space
-        output += "%7s" % self.size
+        output += "{0:7!s}".format(self.size)
         if "PROTEIN" in self.residue_type:
             output += " aa"
         else:
@@ -254,20 +254,20 @@ class Record(object):
         # treat circular types differently, since they'll have long residue
         # types
         if "circular" in self.residue_type:
-            output += "%17s" % self.residue_type
+            output += "{0:17!s}".format(self.residue_type)
         # second case: ss-DNA types of records
         elif "-" in self.residue_type:
-            output += "%7s" % self.residue_type
+            output += "{0:7!s}".format(self.residue_type)
             output += " " * 10  # spaces for circular
         else:
             output += " " * 3  # spaces for stuff like ss-
-            output += "%-4s" % self.residue_type
+            output += "{0:<4!s}".format(self.residue_type)
             output += " " * 10  # spaces for circular
 
         output += " " * 2
-        output += "%3s" % self.data_file_division
+        output += "{0:3!s}".format(self.data_file_division)
         output += " " * 7  # spaces for 56-63
-        output += "%11s" % self.date
+        output += "{0:11!s}".format(self.date)
         output += "\n"
         return output
 
@@ -286,7 +286,7 @@ class Record(object):
 
             acc_info = ""
             for accession in self.accession:
-                acc_info += "%s " % accession
+                acc_info += "{0!s} ".format(accession)
             # strip off an extra space at the end
             acc_info = acc_info.rstrip()
             output += _wrapped_genbank(acc_info, Record.GB_BASE_INDENT)
@@ -302,7 +302,7 @@ class Record(object):
             output = Record.BASE_FORMAT % "VERSION"
             output += self.version
             output += "  GI:"
-            output += "%s\n" % self.gi
+            output += "{0!s}\n".format(self.gi)
         else:
             output = ""
         return output
@@ -311,7 +311,7 @@ class Record(object):
         output = ""
         if len(self.projects) > 0:
             output = Record.BASE_FORMAT % "PROJECT"
-            output += "%s\n" % "  ".join(self.projects)
+            output += "{0!s}\n".format("  ".join(self.projects))
         return output
 
     def _dblink_line(self):
@@ -327,7 +327,7 @@ class Record(object):
         """
         if self.nid:
             output = Record.BASE_FORMAT % "NID"
-            output += "%s\n" % self.nid
+            output += "{0!s}\n".format(self.nid)
         else:
             output = ""
         return output
@@ -337,7 +337,7 @@ class Record(object):
         """
         if self.pid:
             output = Record.BASE_FORMAT % "PID"
-            output += "%s\n" % self.pid
+            output += "{0!s}\n".format(self.pid)
         else:
             output = ""
         return output
@@ -350,7 +350,7 @@ class Record(object):
             output += Record.BASE_FORMAT % "KEYWORDS"
             keyword_info = ""
             for keyword in self.keywords:
-                keyword_info += "%s; " % keyword
+                keyword_info += "{0!s}; ".format(keyword)
             # replace the ; at the end with a period
             keyword_info = keyword_info[:-2]
             keyword_info += "."
@@ -365,7 +365,7 @@ class Record(object):
         """
         if self.db_source:
             output = Record.BASE_FORMAT % "DBSOURCE"
-            output += "%s\n" % self.db_source
+            output += "{0!s}\n".format(self.db_source)
         else:
             output = ""
         return output
@@ -395,7 +395,7 @@ class Record(object):
         output += " " * Record.GB_BASE_INDENT
         taxonomy_info = ""
         for tax in self.taxonomy:
-            taxonomy_info += "%s; " % tax
+            taxonomy_info += "{0!s}; ".format(tax)
         # replace the ; at the end with a period
         taxonomy_info = taxonomy_info[:-2]
         taxonomy_info += "."
@@ -439,7 +439,7 @@ class Record(object):
                     count_info = count_parts.pop(0)
                     count_type = count_parts.pop(0)
 
-                    output += "%7s %s" % (count_info, count_type)
+                    output += "{0:7!s} {1!s}".format(count_info, count_type)
             # deal with ugly ORIGIN lines like:
             # 1311257 a2224835 c2190093 g1309889 t
             # by just outputting the raw information
@@ -475,7 +475,7 @@ class Record(object):
                     start_pos = cur_seq_pos + section * 10
                     end_pos = start_pos + 10
                     seq_section = self.sequence[start_pos:end_pos]
-                    output += " %s" % seq_section.lower()
+                    output += " {0!s}".format(seq_section.lower())
 
                     # stop looping if we are out of sequence
                     if end_pos > len(self.sequence):
@@ -554,10 +554,10 @@ class Reference(object):
         output = Record.BASE_FORMAT % "REFERENCE"
         if self.number:
             if self.bases:
-                output += "%-3s" % self.number
-                output += "%s" % self.bases
+                output += "{0:<3!s}".format(self.number)
+                output += "{0!s}".format(self.bases)
             else:
-                output += "%s" % self.number
+                output += "{0!s}".format(self.number)
 
         output += "\n"
         return output

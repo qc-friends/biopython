@@ -38,7 +38,7 @@ class BlastDisplayer(object):
         with open(self.outfile, 'w+') as fid:
             pass
 
-        com = '%s > %s' % (self.command, self.outfile)
+        com = '{0!s} > {1!s}'.format(self.command, self.outfile)
 
         self.worker = BlastWorker(com)
         self.worker.start()
@@ -90,7 +90,7 @@ class BlastWorker(threading.Thread):
         del self.queue
 
     def run(self):
-        print('running %s' % self.com)
+        print('running {0!s}'.format(self.com))
         os.system(self.com)
         self.finished = 1
 

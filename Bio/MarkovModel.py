@@ -31,7 +31,7 @@ except AttributeError:
     # module to see if we can simplify some of the other functions in
     # this module.
     import warnings
-    warnings.warn("For optimal speed, please update to Numpy version 1.3 or later (current version is %s)" % numpy.__version__)
+    warnings.warn("For optimal speed, please update to Numpy version 1.3 or later (current version is {0!s})".format(numpy.__version__))
 
     def logaddexp(logx, logy):
         if logy - logx > 100:
@@ -76,7 +76,7 @@ class MarkovModel(object):
 def _readline_and_check_start(handle, start):
     line = handle.readline()
     if not line.startswith(start):
-        raise ValueError("I expected %r but got %r" % (start, line))
+        raise ValueError("I expected {0!r} but got {1!r}".format(start, line))
     return line
 
 
@@ -97,21 +97,21 @@ def load(handle):
     mm.p_initial = numpy.zeros(N)
     line = _readline_and_check_start(handle, "INITIAL:")
     for i in range(len(states)):
-        line = _readline_and_check_start(handle, "  %s:" % states[i])
+        line = _readline_and_check_start(handle, "  {0!s}:".format(states[i]))
         mm.p_initial[i] = float(line.split()[-1])
 
     # Load the transition.
     mm.p_transition = numpy.zeros((N, N))
     line = _readline_and_check_start(handle, "TRANSITION:")
     for i in range(len(states)):
-        line = _readline_and_check_start(handle, "  %s:" % states[i])
+        line = _readline_and_check_start(handle, "  {0!s}:".format(states[i]))
         mm.p_transition[i, :] = [float(v) for v in line.split()[1:]]
 
     # Load the emission.
     mm.p_emission = numpy.zeros((N, M))
     line = _readline_and_check_start(handle, "EMISSION:")
     for i in range(len(states)):
-        line = _readline_and_check_start(handle, "  %s:" % states[i])
+        line = _readline_and_check_start(handle, "  {0!s}:".format(states[i]))
         mm.p_emission[i, :] = [float(v) for v in line.split()[1:]]
 
     return mm
@@ -121,17 +121,17 @@ def save(mm, handle):
     """save(mm, handle)"""
     # This will fail if there are spaces in the states or alphabet.
     w = handle.write
-    w("STATES: %s\n" % ' '.join(mm.states))
-    w("ALPHABET: %s\n" % ' '.join(mm.alphabet))
+    w("STATES: {0!s}\n".format(' '.join(mm.states)))
+    w("ALPHABET: {0!s}\n".format(' '.join(mm.alphabet)))
     w("INITIAL:\n")
     for i in range(len(mm.p_initial)):
-        w("  %s: %g\n" % (mm.states[i], mm.p_initial[i]))
+        w("  {0!s}: {1:g}\n".format(mm.states[i], mm.p_initial[i]))
     w("TRANSITION:\n")
     for i in range(len(mm.p_transition)):
-        w("  %s: %s\n" % (mm.states[i], ' '.join(str(x) for x in mm.p_transition[i])))
+        w("  {0!s}: {1!s}\n".format(mm.states[i], ' '.join(str(x) for x in mm.p_transition[i])))
     w("EMISSION:\n")
     for i in range(len(mm.p_emission)):
-        w("  %s: %s\n" % (mm.states[i], ' '.join(str(x) for x in mm.p_emission[i])))
+        w("  {0!s}: {1!s}\n".format(mm.states[i], ' '.join(str(x) for x in mm.p_emission[i])))
 
 
 # XXX allow them to specify starting points
@@ -255,8 +255,7 @@ def _baum_welch(N, M, training_outputs,
             break
         prev_llik = llik
     else:
-        raise RuntimeError("HMM did not converge in %d iterations"
-                           % MAX_ITERATIONS)
+        raise RuntimeError("HMM did not converge in {0:d} iterations".format(MAX_ITERATIONS))
 
     # Return everything back in normal space.
     return [numpy.exp(x) for x in (lp_initial, lp_transition, lp_emission)]
@@ -586,7 +585,7 @@ def _copy_and_check(matrix, desired_shape):
     elif len(matrix.shape) == 2:
         for i in range(len(matrix)):
             if numpy.fabs(sum(matrix[i]) - 1.0) > 0.01:
-                raise ValueError("matrix %d not normalized to 1.0" % i)
+                raise ValueError("matrix {0:d} not normalized to 1.0".format(i))
     else:
         raise ValueError("I don't handle matrices > 2 dimensions")
     return matrix

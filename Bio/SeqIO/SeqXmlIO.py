@@ -210,9 +210,9 @@ class SeqXmlIterator(XMLRecordIterator):
         if "source" not in attr_dict or "id" not in attr_dict:
             raise ValueError("Invalid DB cross reference.")
 
-        if "%s:%s" % (attr_dict["source"], attr_dict["id"]) not in record.dbxrefs:
+        if "{0!s}:{1!s}".format(attr_dict["source"], attr_dict["id"]) not in record.dbxrefs:
             record.dbxrefs.append(
-                "%s:%s" % (attr_dict["source"], attr_dict["id"]))
+                "{0!s}:{1!s}".format(attr_dict["source"], attr_dict["id"]))
 
 
 class SeqXmlWriter(SequentialSequenceWriter):
@@ -304,8 +304,7 @@ class SeqXmlWriter(SequentialSequenceWriter):
                 elif len(local_ncbi_taxid) == 0:
                     local_ncbi_taxid = None
                 else:
-                    ValueError('Multiple entries for record.annotations["ncbi_taxid"], %r'
-                                     % local_ncbi_taxid)
+                    ValueError('Multiple entries for record.annotations["ncbi_taxid"], {0!r}'.format(local_ncbi_taxid))
         if "organism" in record.annotations and local_ncbi_taxid:
             local_org = record.annotations["organism"]
 

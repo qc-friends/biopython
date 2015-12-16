@@ -113,8 +113,7 @@ class DatabaseLoader(object):
         id_results = self.adaptor.execute_and_fetchall(sql, fields)
         # something is wrong
         if len(id_results) > 1:
-            raise ValueError("Multiple term ids for %s: %r" %
-                             (name, id_results))
+            raise ValueError("Multiple term ids for {0!s}: {1!r}".format(name, id_results))
         elif len(id_results) == 1:
             return id_results[0][0]
         else:
@@ -222,7 +221,7 @@ class DatabaseLoader(object):
             # Its natural that several distinct taxa will have the same common
             # name - in which case we can't resolve the taxon uniquely.
             if len(taxa) > 1:
-                raise ValueError("Taxa: %d species have name %r" % (
+                raise ValueError("Taxa: {0:d} species have name {1!r}".format(
                     len(taxa),
                     common_name))
             if taxa:
@@ -385,7 +384,7 @@ class DatabaseLoader(object):
             taxonomic_record = Entrez.read(handle)
             if len(taxonomic_record) == 1:
                 assert taxonomic_record[0]["TaxId"] == str(ncbi_taxon_id), \
-                    "%s versus %s" % (taxonomic_record[0]["TaxId"],
+                    "{0!s} versus {1!s}".format(taxonomic_record[0]["TaxId"],
                                       ncbi_taxon_id)
                 parent_taxon_id = self._get_taxon_id_from_ncbi_lineage(
                     taxonomic_record[0]["LineageEx"])
@@ -818,8 +817,7 @@ class DatabaseLoader(object):
             # will become a "join" on reloading. What does BioPerl do?
             import warnings
             from Bio import BiopythonWarning
-            warnings.warn("%s location operators are not fully supported"
-                          % feature.location_operator, BiopythonWarning)
+            warnings.warn("{0!s} location operators are not fully supported".format(feature.location_operator), BiopythonWarning)
         # This will be a list of length one for simple FeatureLocation:
         parts = feature.location.parts
         if parts and set(loc.strand for loc in parts) == set([-1]):
@@ -952,7 +950,7 @@ class DatabaseLoader(object):
                 db = dbxref_data[0]
                 accessions = dbxref_data[1:]
             except:
-                raise ValueError("Parsing of db_xref failed: '%s'" % value)
+                raise ValueError("Parsing of db_xref failed: '{0!s}'".format(value))
             # Loop over all the grabbed accessions, and attempt to fill the
             # table
             for accession in accessions:
@@ -1029,7 +1027,7 @@ class DatabaseLoader(object):
                 accession = accession.strip()
             except:
                 raise ValueError(
-                    "Parsing of dbxrefs list failed: '%s'" % value)
+                    "Parsing of dbxrefs list failed: '{0!s}'".format(value))
             # Get the dbxref_id value for the dbxref data
             dbxref_id = self._get_dbxref_id(db, accession)
             # Insert the bioentry_dbxref  data

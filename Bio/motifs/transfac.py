@@ -152,10 +152,10 @@ def write(motifs):
     else:
         if version is not None:
             block = """\
-VV  %s
+VV  {0!s}
 XX
 //
-""" % version
+""".format(version)
             blocks.append(block)
     multiple_value_keys = Motif.multiple_value_keys
     sections = (('AC', 'AS',),  # Accession
@@ -188,13 +188,13 @@ XX
                     line = "P0      A      C      G      T"
                     lines.append(line)
                     for i in range(length):
-                        line = "%02.d %6.20g %6.20g %6.20g %6.20g      %s" % (
+                        line = "{0:02d} {1:6.20g} {2:6.20g} {3:6.20g} {4:6.20g}      {5!s}".format(
                                              i + 1,
                                              motif.counts['A'][i],
                                              motif.counts['C'][i],
                                              motif.counts['G'][i],
                                              motif.counts['T'][i],
-                                             sequence[i],
+                                             sequence[i]
                                             )
                         lines.append(line)
                     blank = True
@@ -206,10 +206,10 @@ XX
                     if value is not None:
                         if key in multiple_value_keys:
                             for v in value:
-                                line = "%s  %s" % (key, v)
+                                line = "{0!s}  {1!s}".format(key, v)
                                 lines.append(line)
                         else:
-                            line = "%s  %s" % (key, value)
+                            line = "{0!s}  {1!s}".format(key, value)
                             lines.append(line)
                         blank = True
                 if key == 'PV':
@@ -225,7 +225,7 @@ XX
                                 value = reference.get(key)
                                 if value is None:
                                     continue
-                                line = "%s  %s" % (key, value)
+                                line = "{0!s}  {1!s}".format(key, value)
                                 lines.append(line)
                                 blank = True
             if blank:

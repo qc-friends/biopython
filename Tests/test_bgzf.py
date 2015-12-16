@@ -30,7 +30,7 @@ def _have_bug17666():
     try:
         data = h.read()
         h.close()
-        assert not data, "Should be zero length, not %i" % len(data)
+        assert not data, "Should be zero length, not {0:d}".format(len(data))
         return False
     except TypeError as err:
         # TypeError: integer argument expected, got 'tuple'
@@ -139,7 +139,7 @@ class BgzfTests(unittest.TestCase):
 
                 self.assertEqual(len(old), len(new))
                 self.assertEqual(old[:10], new[:10],
-                                 "%r vs %r, mode %r" % (old[:10], new[:10], mode))
+                                 "{0!r} vs {1!r}, mode {2!r}".format(old[:10], new[:10], mode))
                 self.assertEqual(old, new)
 
     def check_by_char(self, old_file, new_file, old_gzip=False):
@@ -175,7 +175,7 @@ class BgzfTests(unittest.TestCase):
                 self.assertEqual(len(old), len(new))
                 # If bytes vs unicode mismatch, give a short error message:
                 self.assertEqual(old[:10], new[:10],
-                                 "%r vs %r, mode %r" % (old[:10], new[:10], mode))
+                                 "{0!r} vs {1!r}, mode {2!r}".format(old[:10], new[:10], mode))
                 self.assertEqual(old, new)
 
     def check_random(self, filename):

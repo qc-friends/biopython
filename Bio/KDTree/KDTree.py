@@ -63,7 +63,7 @@ def _neighbor_test(nr_points, dim, bucket_size, radius):
         # print("Passed.")
         return True
     else:
-        print("Not passed: %i != %i." % (l1, l2))
+        print("Not passed: {0:d} != {1:d}.".format(l1, l2))
         return False
 
 
@@ -101,7 +101,7 @@ def _test(nr_points, dim, bucket_size, radius):
         # print("Passed.")
         return True
     else:
-        print("Not passed: %i != %i." % (l1, l2))
+        print("Not passed: {0:d} != {1:d}.".format(l1, l2))
         return False
 
 
@@ -155,7 +155,7 @@ class KDTree(object):
         if coords.min() <= -1e6 or coords.max() >= 1e6:
             raise Exception("Points should lie between -1e6 and 1e6")
         if len(coords.shape) != 2 or coords.shape[1] != self.dim:
-            raise Exception("Expected a Nx%i NumPy array" % self.dim)
+            raise Exception("Expected a Nx{0:d} NumPy array".format(self.dim))
         self.kdt.set_data(coords)
         self.built = 1
 
@@ -172,8 +172,7 @@ class KDTree(object):
         if not self.built:
             raise Exception("No point set specified")
         if center.shape != (self.dim,):
-            raise Exception("Expected a %i-dimensional NumPy array"
-                            % self.dim)
+            raise Exception("Expected a {0:d}-dimensional NumPy array".format(self.dim))
         self.kdt.search_center_radius(center, radius)
 
     def get_radii(self):
@@ -260,7 +259,7 @@ if __name__ == "__main__":
     indices = kdtree.all_get_indices()
     radii = kdtree.all_get_radii()
 
-    print("Found %i point pairs within radius %f." % (len(indices), query_radius))
+    print("Found {0:d} point pairs within radius {1:f}.".format(len(indices), query_radius))
 
     # Do 10 individual queries
 
@@ -276,4 +275,4 @@ if __name__ == "__main__":
         radii = kdtree.get_radii()
 
         x, y, z = center
-        print("Found %i points in radius %f around center (%.2f, %.2f, %.2f)." % (len(indices), query_radius, x, y, z))
+        print("Found {0:d} points in radius {1:f} around center ({2:.2f}, {3:.2f}, {4:.2f}).".format(len(indices), query_radius, x, y, z))

@@ -76,10 +76,10 @@ def __read_database_and_motifs(record, handle):
             break
     line = next(handle)
     if not line.startswith('****'):
-        raise ValueError("Line does not start with '****':\n%s" % line)
+        raise ValueError("Line does not start with '****':\n{0!s}".format(line))
     line = next(handle)
     if 'DATABASE' not in line:
-        raise ValueError("Line does not contain 'DATABASE':\n%s" % line)
+        raise ValueError("Line does not contain 'DATABASE':\n{0!s}".format(line))
     words = line.strip().split()
     record.database = words[1]
     if words[2] == '(nucleotide)':
@@ -91,7 +91,7 @@ def __read_database_and_motifs(record, handle):
             break
     line = next(handle)
     if '----' not in line:
-        raise ValueError("Line does not contain '----':\n%s" % line)
+        raise ValueError("Line does not contain '----':\n{0!s}".format(line))
     for line in handle:
         if not line.strip():
             break
@@ -112,7 +112,7 @@ def __read_section_i(record, handle):
             break
     line = next(handle)
     if not line.startswith('---'):
-        raise ValueError("Line does not start with '---':\n%s" % line)
+        raise ValueError("Line does not start with '---':\n{0!s}".format(line))
     for line in handle:
         if not line.strip():
             break
@@ -121,7 +121,7 @@ def __read_section_i(record, handle):
             record.sequences.append(sequence)
     line = next(handle)
     if not line.startswith('****'):
-        raise ValueError("Line does not start with '****':\n%s" % line)
+        raise ValueError("Line does not start with '****':\n{0!s}".format(line))
 
 
 def __read_section_ii(record, handle):
@@ -133,7 +133,7 @@ def __read_section_ii(record, handle):
             break
     line = next(handle)
     if not line.startswith('---'):
-        raise ValueError("Line does not start with '---':\n%s" % line)
+        raise ValueError("Line does not start with '---':\n{0!s}".format(line))
     for line in handle:
         if not line.strip():
             break
@@ -145,7 +145,7 @@ def __read_section_ii(record, handle):
             record.diagrams[sequence] = diagram
     line = next(handle)
     if not line.startswith('****'):
-        raise ValueError("Line does not start with '****':\n%s" % line)
+        raise ValueError("Line does not start with '****':\n{0!s}".format(line))
 
 
 def __read_section_iii(record, handle):

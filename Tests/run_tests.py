@@ -174,7 +174,7 @@ def _have_bug17666():
     try:
         data = h.read()
         h.close()
-        assert not data, "Should be zero length, not %i" % len(data)
+        assert not data, "Should be zero length, not {0:d}".format(len(data))
         return False
     except TypeError as err:
         # TypeError: integer argument expected, got 'tuple'
@@ -196,9 +196,9 @@ def main(argv):
     # Q. Then, why ".."?
     # A. Because Martel may not be in ../build/lib.*
     test_path = sys.path[0] or "."
-    source_path = os.path.abspath("%s/.." % test_path)
+    source_path = os.path.abspath("{0!s}/..".format(test_path))
     sys.path.insert(1, source_path)
-    build_path = os.path.abspath("%s/../build/lib.%s-%s" % (
+    build_path = os.path.abspath("{0!s}/../build/lib.{1!s}-{2!s}".format(
         test_path, distutils.util.get_platform(), sys.version[:3]))
     if os.access(build_path, os.F_OK):
         sys.path.insert(1, build_path)
@@ -258,8 +258,8 @@ def main(argv):
         if args[arg_num][-3:] == ".py":
             args[arg_num] = args[arg_num][:-3]
 
-    print("Python version: %s" % sys.version)
-    print("Operating system: %s %s" % (os.name, sys.platform))
+    print("Python version: {0!s}".format(sys.version))
+    print("Operating system: {0!s} {1!s}".format(os.name, sys.platform))
 
     # run the tests
     runner = TestRunner(args, verbosity)
@@ -298,8 +298,7 @@ class ComparisonTestCase(unittest.TestCase):
             else:
                 expected = open(outputfile, "rU")
         except IOError:
-            self.fail("Warning: Can't open %s for test %s" %
-                      (outputfile, self.name))
+            self.fail("Warning: Can't open {0!s} for test {1!s}".format(outputfile, self.name))
 
         self.output.seek(0)
         # first check that we are dealing with the right output
@@ -308,8 +307,7 @@ class ComparisonTestCase(unittest.TestCase):
 
         if expected_test != self.name:
             expected.close()
-            raise ValueError("\nOutput:   %s\nExpected: %s"
-                             % (self.name, expected_test))
+            raise ValueError("\nOutput:   {0!s}\nExpected: {1!s}".format(self.name, expected_test))
 
         # now loop through the output and compare it to the expected file
         while True:
@@ -319,8 +317,8 @@ class ComparisonTestCase(unittest.TestCase):
             # stop looping if either of the info handles reach the end
             if not(expected_line) or not(output_line):
                 # make sure both have no information left
-                assert expected_line == '', "Unread: %s" % expected_line
-                assert output_line == '', "Extra output: %s" % output_line
+                assert expected_line == '', "Unread: {0!s}".format(expected_line)
+                assert output_line == '', "Extra output: {0!s}".format(output_line)
                 break
 
             # normalize the newlines in the two lines
@@ -335,8 +333,7 @@ class ComparisonTestCase(unittest.TestCase):
             # otherwise make sure the two lines are the same
             elif expected_line != output_line:
                 expected.close()
-                raise ValueError("\nOutput  : %s\nExpected: %s"
-                                 % (repr(output_line), repr(expected_line)))
+                raise ValueError("\nOutput  : {0!s}\nExpected: {1!s}".format(repr(output_line), repr(expected_line)))
         expected.close()
 
     def generate_output(self):
@@ -404,7 +401,7 @@ class TestRunner(unittest.TextTestRunner):
             stdout = sys.stdout
             sys.stdout = output
             if name.startswith("test_"):
-                sys.stderr.write("%s ... " % name)
+                sys.stderr.write("{0!s} ... ".format(name))
                 # It's either a unittest or a print-and-compare test
                 loader = unittest.TestLoader()
                 suite = loader.loadTestsFromName(name)
@@ -417,12 +414,12 @@ class TestRunner(unittest.TextTestRunner):
                             # Remove the traceback etc
                             msg = msg[msg.find("Bio.Missing"):]
                             msg = msg[msg.find("Error: "):]
-                            sys.stderr.write("skipping. %s\n" % msg)
+                            sys.stderr.write("skipping. {0!s}\n".format(msg))
                             return True
                     # Looks like a real failure
                     sys.stderr.write("loading tests failed:\n")
                     for msg in loader.errors:
-                        sys.stderr.write("%s\n" % msg)
+                        sys.stderr.write("{0!s}\n".format(msg))
                     return False
                 if suite.countTestCases() == 0:
                     # This is a print-and-compare test instead of a
@@ -431,7 +428,7 @@ class TestRunner(unittest.TextTestRunner):
                     suite = unittest.TestSuite([test])
             else:
                 # It's a doc test
-                sys.stderr.write("%s docstring test ... " % name)
+                sys.stderr.write("{0!s} docstring test ... ".format(name))
                 # Can't use fromlist=name.split(".") until python 2.5+
                 module = __import__(name, None, None, name.split("."))
                 suite = doctest.DocTestSuite(module,
@@ -441,11 +438,11 @@ class TestRunner(unittest.TextTestRunner):
             if self.testdir != os.path.abspath("."):
                 sys.stderr.write("FAIL\n")
                 result.stream.write(result.separator1 + "\n")
-                result.stream.write("ERROR: %s\n" % name)
+                result.stream.write("ERROR: {0!s}\n".format(name))
                 result.stream.write(result.separator2 + "\n")
                 result.stream.write("Current directory changed\n")
-                result.stream.write("Was: %s\n" % self.testdir)
-                result.stream.write("Now: %s\n" % os.path.abspath("."))
+                result.stream.write("Was: {0!s}\n".format(self.testdir))
+                result.stream.write("Now: {0!s}\n".format(os.path.abspath(".")))
                 os.chdir(self.testdir)
                 if not result.wasSuccessful():
                     result.printErrors()
@@ -460,13 +457,13 @@ class TestRunner(unittest.TextTestRunner):
         except MissingExternalDependencyError as msg:
             # Seems this isn't always triggered on Python 3.5,
             # exception messages can be in loader.errors instead.
-            sys.stderr.write("skipping. %s\n" % msg)
+            sys.stderr.write("skipping. {0!s}\n".format(msg))
             return True
         except Exception as msg:
             # This happened during the import
             sys.stderr.write("ERROR\n")
             result.stream.write(result.separator1 + "\n")
-            result.stream.write("ERROR: %s\n" % name)
+            result.stream.write("ERROR: {0!s}\n".format(name))
             result.stream.write(result.separator2 + "\n")
             result.stream.write(traceback.format_exc())
             return False
@@ -479,7 +476,7 @@ class TestRunner(unittest.TextTestRunner):
             # Invalid method Code length ...
             sys.stderr.write("ERROR\n")
             result.stream.write(result.separator1 + "\n")
-            result.stream.write("ERROR: %s\n" % name)
+            result.stream.write("ERROR: {0!s}\n".format(name))
             result.stream.write(result.separator2 + "\n")
             result.stream.write(traceback.format_exc())
             return False
@@ -501,11 +498,10 @@ class TestRunner(unittest.TextTestRunner):
         timeTaken = stopTime - startTime
         sys.stderr.write(self.stream.getvalue())
         sys.stderr.write('-' * 70 + "\n")
-        sys.stderr.write("Ran %d test%s in %.3f seconds\n" %
-                         (total, total != 1 and "s" or "", timeTaken))
+        sys.stderr.write("Ran {0:d} test{1!s} in {2:.3f} seconds\n".format(total, total != 1 and "s" or "", timeTaken))
         sys.stderr.write("\n")
         if failures:
-            sys.stderr.write("FAILED (failures = %d)\n" % failures)
+            sys.stderr.write("FAILED (failures = {0:d})\n".format(failures))
         return failures
 
 

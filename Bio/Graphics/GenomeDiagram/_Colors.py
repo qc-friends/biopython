@@ -152,7 +152,7 @@ class ColorTranslator(object):
         if value in self._artemis_colorscheme:
             return self._artemis_colorscheme[value][0]
         else:
-            raise ValueError("Artemis color out of range: %d" % value)
+            raise ValueError("Artemis color out of range: {0:d}".format(value))
 
     def get_colorscheme(self):
         """Return the user-defined color scheme as a dictionary."""
@@ -170,7 +170,7 @@ class ColorTranslator(object):
         if value in self._colorscheme:
             return self._colorscheme[value][0]
         else:
-            raise ValueError("Scheme color out of range: %d" % value)
+            raise ValueError("Scheme color out of range: {0:d}".format(value))
 
     def int255_color(self, values):
         """ int255_color(self, values)

@@ -115,7 +115,7 @@ class PDBList(object):
                             (x.split()[-1] for x in handle.readlines())
                             )[-1]
 
-        path = self.pdb_server + '/pub/pdb/data/status/%s/' % (recent)
+        path = self.pdb_server + '/pub/pdb/data/status/{0!s}/'.format((recent))
 
         # Retrieve the lists
         added = self.get_status_list(path + 'added.pdb')
@@ -186,11 +186,10 @@ class PDBList(object):
         """
         # Get the compressed PDB structure
         code = pdb_code.lower()
-        archive_fn = "pdb%s.ent.gz" % code
+        archive_fn = "pdb{0!s}.ent.gz".format(code)
         pdb_dir = "divided" if not obsolete else "obsolete"
         url = (self.pdb_server +
-               '/pub/pdb/data/structures/%s/pdb/%s/%s' %
-               (pdb_dir, code[1:3], archive_fn))
+               '/pub/pdb/data/structures/{0!s}/pdb/{1!s}/{2!s}'.format(pdb_dir, code[1:3], archive_fn))
 
         # Where does the final PDB file get saved?
         if pdir is None:
@@ -203,16 +202,16 @@ class PDBList(object):
             os.makedirs(path)
 
         filename = os.path.join(path, archive_fn)
-        final_file = os.path.join(path, "pdb%s.ent" % code)  # (decompressed)
+        final_file = os.path.join(path, "pdb{0!s}.ent".format(code))  # (decompressed)
 
         # Skip download if the file already exists
         if not self.overwrite:
             if os.path.exists(final_file):
-                print("Structure exists: '%s' " % final_file)
+                print("Structure exists: '{0!s}' ".format(final_file))
                 return final_file
 
         # Retrieve the file
-        print("Downloading PDB structure '%s'..." % pdb_code)
+        print("Downloading PDB structure '{0!s}'...".format(pdb_code))
         _urlretrieve(url, filename)
 
         # Uncompress the archive, delete when done
@@ -241,7 +240,7 @@ class PDBList(object):
             try:
                 self.retrieve_pdb_file(pdb_code)
             except Exception:
-                print('error %s\n' % pdb_code)
+                print('error {0!s}\n'.format(pdb_code))
                 # you can insert here some more log notes that
                 # something has gone wrong.
 
@@ -249,24 +248,24 @@ class PDBList(object):
         for pdb_code in obsolete:
             if self.flat_tree:
                 old_file = os.path.join(self.local_pdb,
-                                        'pdb%s.ent' % pdb_code)
+                                        'pdb{0!s}.ent'.format(pdb_code))
                 new_dir = self.obsolete_pdb
             else:
                 old_file = os.path.join(self.local_pdb, pdb_code[1:3],
-                                        'pdb%s.ent' % pdb_code)
+                                        'pdb{0!s}.ent'.format(pdb_code))
                 new_dir = os.path.join(self.obsolete_pdb, pdb_code[1:3])
-            new_file = os.path.join(new_dir, 'pdb%s.ent' % pdb_code)
+            new_file = os.path.join(new_dir, 'pdb{0!s}.ent'.format(pdb_code))
             if os.path.isfile(old_file):
                 if not os.path.isdir(new_dir):
                     os.mkdir(new_dir)
                 try:
                     shutil.move(old_file, new_file)
                 except Exception:
-                    print("Could not move %s to obsolete folder" % old_file)
+                    print("Could not move {0!s} to obsolete folder".format(old_file))
             elif os.path.isfile(new_file):
-                print("Obsolete file %s already moved" % old_file)
+                print("Obsolete file {0!s} already moved".format(old_file))
             else:
-                print("Obsolete file %s is missing" % old_file)
+                print("Obsolete file {0!s} is missing".format(old_file))
 
     def download_entire_pdb(self, listfile=None):
         """Retrieve all PDB entries not present in the local PDB copy.

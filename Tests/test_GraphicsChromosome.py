@@ -249,16 +249,15 @@ class OrganismGraphicTest(unittest.TestCase):
         sys.stdout = save_stdout
 
         self.assertTrue(expected_string in properties,
-               "Unexpected results from dumpProperties: \n %s" % properties)
+               "Unexpected results from dumpProperties: \n {0!s}".format(properties))
 
         properties = test_widget.getProperties()
         self.assertEqual(properties["label_size"], 6,
-               "Unexpected results from getProperties: %s" % properties)
+               "Unexpected results from getProperties: {0!s}".format(properties))
 
         test_widget.setProperties({"start_x_position": 12})
         self.assertEqual(test_widget.start_x_position, 12,
-               "setProperties doesn't seem to work right: %s"
-               % test_widget.start_x_position)
+               "setProperties doesn't seem to work right: {0!s}".format(test_widget.start_x_position))
 
 
 class OrganismSubAnnotationsTest(unittest.TestCase):
@@ -288,7 +287,7 @@ class OrganismSubAnnotationsTest(unittest.TestCase):
         for name, acc, length, features, color in entries:
             if False:
                 # How I generated the values above... and tested passing in SeqFeatures
-                filename = "/Users/pjcock/Documents/comp_genomics/seed/%s.gbk" % acc
+                filename = "/Users/pjcock/Documents/comp_genomics/seed/{0!s}.gbk".format(acc)
                 import os
                 if not os.path.isfile(filename):
                     continue
@@ -416,10 +415,10 @@ class ChromosomeCountTest(unittest.TestCase):
         """Retrieve a color from a count number with the default color scheme.
         """
         test_color = self.count_display._color_from_count(3)
-        assert test_color == colors.blue, "Unexpected color %s" % test_color
+        assert test_color == colors.blue, "Unexpected color {0!s}".format(test_color)
 
         test_color = self.count_display._color_from_count(9)
-        assert test_color == colors.red, "Unexpected color %s" % test_color
+        assert test_color == colors.red, "Unexpected color {0!s}".format(test_color)
 
         try:
             self.count_display._color_from_count(200)

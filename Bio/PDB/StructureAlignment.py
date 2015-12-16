@@ -135,4 +135,4 @@ if __name__ == "__main__":
 
     # Print aligned pairs (r is None if gap)
     for (r1, r2) in al.get_iterator():
-        print("%s %s" % (r1, r2))
+        print("{0!s} {1!s}".format(r1, r2))

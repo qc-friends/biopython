@@ -156,7 +156,7 @@ def parse_domain(str):
 
 
 def _open_scop_file(scop_dir_path, version, filetype):
-    filename = "dir.%s.scop.txt_%s" % (filetype, version)
+    filename = "dir.{0!s}.scop.txt_{1!s}".format(filetype, version)
     handle = open(os.path.join(scop_dir_path, filename))
     return handle
 
@@ -466,7 +466,7 @@ class Scop(object):
 
         for p in self._sunidDict.values():
             for c in p.children:
-                cur.execute("INSERT INTO hie VALUES (%s,%s)" % (p.sunid, c.sunid))
+                cur.execute("INSERT INTO hie VALUES ({0!s},{1!s})".format(p.sunid, c.sunid))
 
     def write_cla_sql(self, handle):
         """Write CLA data to SQL database"""
@@ -711,8 +711,8 @@ class Astral(object):
                 raise RuntimeError("must provide dir_path and version")
 
             self.version = version
-            self.path = os.path.join(dir_path, "scopseq-%s" % version)
-            astral_file = "astral-scopdom-seqres-all-%s.fa" % self.version
+            self.path = os.path.join(dir_path, "scopseq-{0!s}".format(version))
+            astral_file = "astral-scopdom-seqres-all-{0!s}.fa".format(self.version)
             astral_file = os.path.join(self.path, astral_file)
 
         if astral_file:
@@ -736,7 +736,7 @@ class Astral(object):
                     raise RuntimeError("No scopseq directory specified")
 
                 file_prefix = "astral-scopdom-seqres-sel-gs"
-                filename = "%s-e100m-%s-%s.id" % (file_prefix, astralEv_to_file[id],
+                filename = "{0!s}-e100m-{1!s}-{2!s}.id".format(file_prefix, astralEv_to_file[id],
                                                   self.version)
                 filename = os.path.join(self.path, filename)
                 self.EvDatasets[id] = self.getAstralDomainsFromFile(filename)
@@ -752,7 +752,7 @@ class Astral(object):
                     raise RuntimeError("No scopseq directory specified")
 
                 file_prefix = "astral-scopdom-seqres-sel-gs"
-                filename = "%s-bib-%s-%s.id" % (file_prefix, id, self.version)
+                filename = "{0!s}-bib-{1!s}-{2!s}.id".format(file_prefix, id, self.version)
                 filename = os.path.join(self.path, filename)
                 self.IdDatasets[id] = self.getAstralDomainsFromFile(filename)
         return self.IdDatasets[id]

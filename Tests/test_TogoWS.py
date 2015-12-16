@@ -45,7 +45,7 @@ class TogoFields(unittest.TestCase):
                         'orthology', 'reaction', 'module',
                         'pathway'])
         self.assertTrue(dbs.issuperset(expected),
-                        "Missing DB: %s" % ", ".join(sorted(expected.difference(dbs))))
+                        "Missing DB: {0!s}".format(", ".join(sorted(expected.difference(dbs)))))
 
     def test_pubmed(self):
         """Check supported fields for pubmed database"""
@@ -462,10 +462,9 @@ class TogoSearch(unittest.TestCase):
             raise ValueError("Bad test - TogoWS makes no promises about order")
         search_count = TogoWS.search_count(database, search_term)
         if expected_matches and search_count < len(expected_matches):
-            raise ValueError("Only %i matches, expected at least %i"
-                             % (search_count, len(expected_matches)))
+            raise ValueError("Only {0:d} matches, expected at least {1:d}".format(search_count, len(expected_matches)))
         if search_count > 5000 and not limit:
-            print("%i results, skipping" % search_count)
+            print("{0:d} results, skipping".format(search_count))
             return
         if limit:
             count = min(search_count, limit)
@@ -477,7 +476,7 @@ class TogoSearch(unittest.TestCase):
         self.assertEqual(count, len(search_iter))
         for match in expected_matches:
             self.assertTrue(match in search_iter,
-                            "Expected %s in results but not" % match)
+                            "Expected {0!s} in results but not".format(match))
 
 
 class TogoConvert(unittest.TestCase):

@@ -69,7 +69,7 @@ def align(cmdline, pair, kbyte=None, force_type=None, dry_run=False, quiet=False
     Returns a filehandle
     """
     if not pair or len(pair) != 2:
-        raise ValueError("Expected pair of filename, not %s" % repr(pair))
+        raise ValueError("Expected pair of filename, not {0!s}".format(repr(pair)))
 
     output_file = tempfile.NamedTemporaryFile(mode='r')
     input_files = tempfile.NamedTemporaryFile(mode="w"), tempfile.NamedTemporaryFile(mode="w")
@@ -101,7 +101,7 @@ def align(cmdline, pair, kbyte=None, force_type=None, dry_run=False, quiet=False
                                        quiet)
 
     if debug:
-        sys.stderr.write("%s\n" % cmdline_str)
+        sys.stderr.write("{0!s}\n".format(cmdline_str))
 
     status = os.system(cmdline_str) >> 8
 
@@ -110,7 +110,7 @@ def align(cmdline, pair, kbyte=None, force_type=None, dry_run=False, quiet=False
             sys.stderr.write("INFO trying again with the linear model\n")
             return align(cmdline, pair, 0, force_type, dry_run, quiet, debug)
         else:
-            raise OSError("%s returned %s" % (" ".join(cmdline), status))
+            raise OSError("{0!s} returned {1!s}".format(" ".join(cmdline), status))
 
     return output_file
 

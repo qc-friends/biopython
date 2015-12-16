@@ -67,9 +67,9 @@ class Baseml(Paml):
         self._set_rel_paths()
         if True:  # Dummy statement to preserve indentation for diff
             with open(self.ctl_file, 'w') as ctl_handle:
-                ctl_handle.write("seqfile = %s\n" % self._rel_alignment)
-                ctl_handle.write("outfile = %s\n" % self._rel_out_file)
-                ctl_handle.write("treefile = %s\n" % self._rel_tree)
+                ctl_handle.write("seqfile = {0!s}\n".format(self._rel_alignment))
+                ctl_handle.write("outfile = {0!s}\n".format(self._rel_out_file))
+                ctl_handle.write("treefile = {0!s}\n".format(self._rel_tree))
                 for option in self._options.items():
                     if option[1] is None:
                         # If an option has a value of None, there's no need
@@ -86,17 +86,17 @@ class Baseml(Paml):
                     # which are to be stored in "model_options" as a string.
                     if option[0] == "model" and option[1] in [9, 10]:
                         if self._options["model_options"] is not None:
-                            ctl_handle.write("model = %s  %s" % (option[1],
+                            ctl_handle.write("model = {0!s}  {1!s}".format(option[1],
                                             self._options["model_options"]))
                             continue
-                    ctl_handle.write("%s = %s\n" % (option[0], option[1]))
+                    ctl_handle.write("{0!s} = {1!s}\n".format(option[0], option[1]))
 
     def read_ctl_file(self, ctl_file):
         """Parse a control file and load the options into the Baseml instance.
         """
         temp_options = {}
         if not os.path.isfile(ctl_file):
-            raise IOError("File not found: %r" % ctl_file)
+            raise IOError("File not found: {0!r}".format(ctl_file))
         else:
             with open(ctl_file) as ctl_handle:
                 for line in ctl_handle:
@@ -105,7 +105,7 @@ class Baseml(Paml):
                     if uncommented != "":
                         if "=" not in uncommented:
                             raise AttributeError(
-                                "Malformed line in control file:\n%r" % line)
+                                "Malformed line in control file:\n{0!r}".format(line))
                         (option, value) = uncommented.split("=")
                         option = option.strip()
                         value = value.strip()
@@ -116,7 +116,7 @@ class Baseml(Paml):
                         elif option == "outfile":
                             self.out_file = value
                         elif option not in self._options:
-                            raise KeyError("Invalid option: %s" % option)
+                            raise KeyError("Invalid option: {0!s}".format(option))
                         elif option == "model":
                             if len(value) <= 2 and value.isdigit():
                                 temp_options["model"] = int(value)

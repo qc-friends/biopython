@@ -80,8 +80,8 @@ class Pathway(object):
                             '<!DOCTYPE pathway SYSTEM ' +
                             '"http://www.genome.jp/kegg/xml/' +
                             'KGML_v0.7.1_.dtd">',
-                            '<!-- Created by KGML_Pathway.py %s -->' %
-                            time.asctime()])
+                            '<!-- Created by KGML_Pathway.py {0!s} -->'.format(
+                            time.asctime())])
         rough_xml = header + _as_string(ET.tostring(self.element, 'utf-8'))
         reparsed = minidom.parseString(rough_xml)
         return reparsed.toprettyxml(indent="  ")
@@ -90,7 +90,7 @@ class Pathway(object):
         """Add an Entry element to the pathway."""
         # We insist that the node ID is an integer
         assert _is_int_or_long(entry.id), \
-            "Node ID must be an integer, got %s (%s)" % (type(entry.id),
+            "Node ID must be an integer, got {0!s} ({1!s})".format(type(entry.id),
                                                          entry.id)
         entry._pathway = self           # Let the entry know about the pathway
         self.entries[entry.id] = entry
@@ -98,7 +98,7 @@ class Pathway(object):
     def remove_entry(self, entry):
         """Remove an Entry element from the pathway."""
         assert _is_int_or_long(entry.id), \
-            "Node ID must be an integer, got %s (%s)" % (type(entry.id),
+            "Node ID must be an integer, got {0!s} ({1!s})".format(type(entry.id),
                                                          entry.id)
         # We need to remove the entry from any other elements that may
         # contain it, which means removing those elements
@@ -109,17 +109,17 @@ class Pathway(object):
         """Add a Reaction element to the pathway."""
         # We insist that the node ID is an integer and corresponds to an entry
         assert _is_int_or_long(reaction.id), \
-            "Node ID must be an integer, got %s (%s)" % (type(reaction.id),
+            "Node ID must be an integer, got {0!s} ({1!s})".format(type(reaction.id),
                                                          reaction.id)
         assert reaction.id in self.entries, \
-            "Reaction ID %d has no corresponding entry" % reaction.id
+            "Reaction ID {0:d} has no corresponding entry".format(reaction.id)
         reaction._pathway = self    # Let the reaction know about the pathway
         self._reactions[reaction.id] = reaction
 
     def remove_reaction(self, reaction):
         """Remove a Reaction element from the pathway."""
         assert _is_int_or_long(reaction.id), \
-            "Node ID must be an integer, got %s (%s)" % (type(reaction.id),
+            "Node ID must be an integer, got {0!s} ({1!s})".format(type(reaction.id),
                                                          reaction.id)
         # We need to remove the reaction from any other elements that may
         # contain it, which means removing those elements
@@ -137,17 +137,17 @@ class Pathway(object):
 
     def __str__(self):
         """Returns a readable summary description string."""
-        outstr = ['Pathway: %s' % self.title,
-                  'KEGG ID: %s' % self.name,
-                  'Image file: %s' % self.image,
-                  'Organism: %s' % self.org,
-                  'Entries: %d' % len(self.entries),
+        outstr = ['Pathway: {0!s}'.format(self.title),
+                  'KEGG ID: {0!s}'.format(self.name),
+                  'Image file: {0!s}'.format(self.image),
+                  'Organism: {0!s}'.format(self.org),
+                  'Entries: {0:d}'.format(len(self.entries)),
                   'Entry types:']
         for t in ['ortholog', 'enzyme', 'reaction',
                   'gene', 'group', 'compound', 'map']:
             etype = [e for e in self.entries.values() if e.type == t]
             if len(etype):
-                outstr.append('\t%s: %d' % (t, len(etype)))
+                outstr.append('\t{0!s}: {1:d}'.format(t, len(etype)))
         return '\n'.join(outstr) + '\n'
 
     # Assert correct formatting of the pathway name, and other attributes
@@ -156,7 +156,7 @@ class Pathway(object):
 
     def _setname(self, value):
         assert value.startswith('path:'), \
-            "Pathway name should begin with 'path:', got %s" % value
+            "Pathway name should begin with 'path:', got {0!s}".format(value)
         self._name = value
 
     def _delname(self):
@@ -285,12 +285,12 @@ class Entry(object):
 
     def __str__(self):
         """Return readable descriptive string."""
-        outstr = ['Entry node ID: %d' % self.id,
-                  'Names: %s' % self.name,
-                  'Type: %s' % self.type,
-                  'Components: %s' % self.components,
-                  'Reactions: %s' % self.reaction,
-                  'Graphics elements: %d %s' % (len(self.graphics),
+        outstr = ['Entry node ID: {0:d}'.format(self.id),
+                  'Names: {0!s}'.format(self.name),
+                  'Type: {0!s}'.format(self.type),
+                  'Components: {0!s}'.format(self.components),
+                  'Reactions: {0!s}'.format(self.reaction),
+                  'Graphics elements: {0:d} {1!s}'.format(len(self.graphics),
                                                 self.graphics)]
         return '\n'.join(outstr) + '\n'
 
@@ -302,7 +302,7 @@ class Entry(object):
         """
         if self._pathway is not None:
             assert element.id in self._pathway.entries, \
-                "Component %s is not an entry in the pathway" % element.id
+                "Component {0!s} is not an entry in the pathway".format(element.id)
         self.components.add(element)
 
     def remove_component(self, value):
@@ -635,13 +635,13 @@ class Reaction(object):
 
     def __str__(self):
         """Return an informative human-readable string."""
-        outstr = ['Reaction node ID: %s' % self.id,
-                  'Reaction KEGG IDs: %s' % self.name,
-                  'Type: %s' % self.type,
-                  'Substrates: %s' %
-                  ','.join([s.name for s in self.substrates]),
-                  'Products: %s' %
-                  ','.join([s.name for s in self.products]),
+        outstr = ['Reaction node ID: {0!s}'.format(self.id),
+                  'Reaction KEGG IDs: {0!s}'.format(self.name),
+                  'Type: {0!s}'.format(self.type),
+                  'Substrates: {0!s}'.format(
+                  ','.join([s.name for s in self.substrates])),
+                  'Products: {0!s}'.format(
+                  ','.join([s.name for s in self.products])),
                   ]
         return '\n'.join(outstr) + '\n'
 
@@ -649,15 +649,15 @@ class Reaction(object):
         """Add a substrate, identified by its node ID, to the reaction."""
         if self._pathway is not None:
             assert int(substrate_id) in self._pathway.entries, \
-                "Couldn't add substrate, no node ID %d in Pathway" % \
-                int(substrate_id)
+                "Couldn't add substrate, no node ID {0:d} in Pathway".format( \
+                int(substrate_id))
         self._substrates.add(substrate_id)
 
     def add_product(self, product_id):
         """Add a product, identified by its node ID, to the reaction."""
         if self._pathway is not None:
             assert int(product_id) in self._pathway.entries, \
-                "Couldn't add product, no node ID %d in Pathway" % product_id
+                "Couldn't add product, no node ID {0:d} in Pathway".format(product_id)
         self._products.add(int(product_id))
 
     # The node ID is also the node ID of the Entry that corresponds to the
@@ -761,11 +761,11 @@ class Relation(object):
 
     def __str__(self):
         """A useful human-readable string."""
-        outstr = ['Relation (subtypes: %d):' % len(self.subtypes),
+        outstr = ['Relation (subtypes: {0:d}):'.format(len(self.subtypes)),
                   'Entry1:', str(self.entry1),
                   'Entry2:', str(self.entry2)]
         for s in self.subtypes:
-            outstr.extend(['Subtype: %s' % s[0], str(s[1])])
+            outstr.extend(['Subtype: {0!s}'.format(s[0]), str(s[1])])
         return '\n'.join(outstr)
 
     # Properties entry1 and entry2

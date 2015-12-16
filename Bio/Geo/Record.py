@@ -38,45 +38,45 @@ class Record(object):
 
     def __str__(self):
         output = ''
-        output += 'GEO Type: %s\n' % self.entity_type
-        output += 'GEO Id: %s\n' % self.entity_id
+        output += 'GEO Type: {0!s}\n'.format(self.entity_type)
+        output += 'GEO Id: {0!s}\n'.format(self.entity_id)
         att_keys = sorted(self.entity_attributes)
         for key in att_keys:
             contents = self.entity_attributes[key]
             if isinstance(contents, list):
                 for item in contents:
                     try:
-                        output += '%s: %s\n' % (key, item[:40])
+                        output += '{0!s}: {1!s}\n'.format(key, item[:40])
                         output += out_block(item[40:])
                     except Exception:  # TODO: IndexError?
                         pass
             elif isinstance(contents, str):
-                output += '%s: %s\n' % (key, contents[:40])
+                output += '{0!s}: {1!s}\n'.format(key, contents[:40])
                 output += out_block(contents[40:])
             else:
                 print(contents)
-                output += '%s: %s\n' % (key, contents[:40])
+                output += '{0!s}: {1!s}\n'.format(key, contents[:40])
                 output += out_block(contents[40:])
         col_keys = sorted(self.col_defs)
         output += 'Column Header Definitions\n'
         for key in col_keys:
             val = self.col_defs[key]
-            output += '    %s: %s\n' % (key, val[:40])
+            output += '    {0!s}: {1!s}\n'.format(key, val[:40])
             output += out_block(val[40:], '    ')
         # May have to display VERY large tables,
         # so only show the first 20 lines of data
         MAX_ROWS = 20 + 1  # include header in count
         for row in self.table_rows[0:MAX_ROWS]:
-            output += '%s: ' % self.table_rows.index(row)
+            output += '{0!s}: '.format(self.table_rows.index(row))
             for col in row:
-                output += '%s\t' % col
+                output += '{0!s}\t'.format(col)
             output += '\n'
         if len(self.table_rows) > MAX_ROWS:
             output += '...\n'
             row = self.table_rows[-1]
-            output += '%s: ' % self.table_rows.index(row)
+            output += '{0!s}: '.format(self.table_rows.index(row))
             for col in row:
-                output += '%s\t' % col
+                output += '{0!s}\t'.format(col)
             output += '\n'
 
         return output
@@ -85,6 +85,6 @@ class Record(object):
 def out_block(text, prefix=''):
     output = ''
     for j in range(0, len(text), 80):
-        output += '%s%s\n' % (prefix, text[j:j + 80])
+        output += '{0!s}{1!s}\n'.format(prefix, text[j:j + 80])
     output += '\n'
     return output

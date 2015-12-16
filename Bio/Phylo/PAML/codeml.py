@@ -75,9 +75,9 @@ class Codeml(Paml):
         self._set_rel_paths()
         if True:  # Dummy statement to preserve indentation for diff
             with open(self.ctl_file, 'w') as ctl_handle:
-                ctl_handle.write("seqfile = %s\n" % self._rel_alignment)
-                ctl_handle.write("outfile = %s\n" % self._rel_out_file)
-                ctl_handle.write("treefile = %s\n" % self._rel_tree)
+                ctl_handle.write("seqfile = {0!s}\n".format(self._rel_alignment))
+                ctl_handle.write("outfile = {0!s}\n".format(self._rel_out_file))
+                ctl_handle.write("treefile = {0!s}\n".format(self._rel_tree))
                 for option in self._options.items():
                     if option[1] is None:
                         # If an option has a value of None, there's no need
@@ -89,16 +89,16 @@ class Codeml(Paml):
                         # control file it is specified as a series of numbers
                         # separated by spaces.
                         NSsites = " ".join(str(site) for site in option[1])
-                        ctl_handle.write("%s = %s\n" % (option[0], NSsites))
+                        ctl_handle.write("{0!s} = {1!s}\n".format(option[0], NSsites))
                     else:
-                        ctl_handle.write("%s = %s\n" % (option[0], option[1]))
+                        ctl_handle.write("{0!s} = {1!s}\n".format(option[0], option[1]))
 
     def read_ctl_file(self, ctl_file):
         """Parse a control file and load the options into the Codeml instance.
         """
         temp_options = {}
         if not os.path.isfile(ctl_file):
-            raise IOError("File not found: %r" % ctl_file)
+            raise IOError("File not found: {0!r}".format(ctl_file))
         else:
             with open(ctl_file) as ctl_handle:
                 for line in ctl_handle:
@@ -107,7 +107,7 @@ class Codeml(Paml):
                     if uncommented != "":
                         if "=" not in uncommented:
                             raise AttributeError(
-                                "Malformed line in control file:\n%r" % line)
+                                "Malformed line in control file:\n{0!r}".format(line))
                         (option, value) = uncommented.split("=", 1)
                         option = option.strip()
                         value = value.strip()
@@ -124,10 +124,10 @@ class Codeml(Paml):
                                     site_classes[n] = int(site_classes[n])
                                 except:
                                     raise TypeError(
-                                        "Invalid site class: %s" % site_classes[n])
+                                        "Invalid site class: {0!s}".format(site_classes[n]))
                             temp_options["NSsites"] = site_classes
                         elif option not in self._options:
-                            raise KeyError("Invalid option: %s" % option)
+                            raise KeyError("Invalid option: {0!s}".format(option))
                         else:
                             if "." in value:
                                 try:
@@ -154,9 +154,9 @@ class Codeml(Paml):
                 # control file it is specified as a series of numbers
                 # separated by spaces.
                 NSsites = " ".join(str(site) for site in option[1])
-                print("%s = %s" % (option[0], NSsites))
+                print("{0!s} = {1!s}".format(option[0], NSsites))
             else:
-                print("%s = %s" % (option[0], option[1]))
+                print("{0!s} = {1!s}".format(option[0], option[1]))
 
     def _set_rel_paths(self):
         """Convert all file/directory locations to paths relative to the current working directory.

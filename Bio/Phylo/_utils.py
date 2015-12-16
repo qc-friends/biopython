@@ -427,7 +427,7 @@ def draw(tree, label_func=str, do_show=True, show_confidence=True,
         fig = plt.figure()
         axes = fig.add_subplot(1, 1, 1)
     elif not isinstance(axes, plt.matplotlib.axes.Axes):
-        raise ValueError("Invalid argument for axes: %s" % axes)
+        raise ValueError("Invalid argument for axes: {0!s}".format(axes))
 
     def draw_clade_lines(use_linecollection=False, orientation='horizontal',
                          y_here=0, x_start=0, x_here=0, y_bot=0, y_top=0,
@@ -463,8 +463,8 @@ def draw(tree, label_func=str, do_show=True, show_confidence=True,
         # Add node/taxon labels
         label = label_func(clade)
         if label not in (None, clade.__class__.__name__):
-            axes.text(x_here, y_here, ' %s' %
-                      label, verticalalignment='center',
+            axes.text(x_here, y_here, ' {0!s}'.format(
+                      label), verticalalignment='center',
                       color=get_label_color(label))
         # Add label above the branch (optional)
         conf_label = format_branch_label(clade)

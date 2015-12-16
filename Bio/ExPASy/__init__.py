@@ -35,7 +35,7 @@ def get_prodoc_entry(id, cgi='http://www.expasy.ch/cgi-bin/get-prodoc-entry'):
     'There is no PROSITE documentation entry XXX. Please try again.'
     """
     # Open a handle to ExPASy.
-    return _urlopen("%s?%s" % (cgi, id))
+    return _urlopen("{0!s}?{1!s}".format(cgi, id))
 
 
 def get_prosite_entry(id,
@@ -49,7 +49,7 @@ def get_prosite_entry(id,
     containing this line:
     'There is currently no PROSITE entry for XXX. Please try again.'
     """
-    return _urlopen("%s?%s" % (cgi, id))
+    return _urlopen("{0!s}?{1!s}".format(cgi, id))
 
 
 def get_prosite_raw(id, cgi='http://www.expasy.ch/cgi-bin/get-prosite-raw.pl'):
@@ -61,7 +61,7 @@ def get_prosite_raw(id, cgi='http://www.expasy.ch/cgi-bin/get-prosite-raw.pl'):
 
     For a non-existing key, ExPASy returns nothing.
     """
-    return _urlopen("%s?%s" % (cgi, id))
+    return _urlopen("{0!s}?{1!s}".format(cgi, id))
 
 
 def get_sprot_raw(id):
@@ -70,7 +70,7 @@ def get_sprot_raw(id):
     For an ID of XXX, fetches http://www.uniprot.org/uniprot/XXX.txt
     (as per the http://www.expasy.ch/expasy_urls.html documentation).
     """
-    return _urlopen("http://www.uniprot.org/uniprot/%s.txt" % id)
+    return _urlopen("http://www.uniprot.org/uniprot/{0!s}.txt".format(id))
 
 
 def sprot_search_ful(text, make_wild=None, swissprot=1, trembl=None,
@@ -89,7 +89,7 @@ def sprot_search_ful(text, make_wild=None, swissprot=1, trembl=None,
     if trembl:
         variables['T'] = 'on'
     options = _urlencode(variables)
-    fullcgi = "%s?%s" % (cgi, options)
+    fullcgi = "{0!s}?{1!s}".format(cgi, options)
     handle = _urlopen(fullcgi)
     return handle
 
@@ -109,6 +109,6 @@ def sprot_search_de(text, swissprot=1, trembl=None,
     if trembl:
         variables['T'] = 'on'
     options = _urlencode(variables)
-    fullcgi = "%s?%s" % (cgi, options)
+    fullcgi = "{0!s}?{1!s}".format(cgi, options)
     handle = _urlopen(fullcgi)
     return handle

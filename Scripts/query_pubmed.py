@@ -50,7 +50,7 @@ if __name__ == '__main__':
         print_usage()
         sys.exit(0)
 
-    print("Doing a PubMed search for %s..." % repr(query))
+    print("Doing a PubMed search for {0!s}...".format(repr(query)))
 
     if count_only:
         handle = Entrez.esearch(db="pubmed", term=query)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     search_results = Entrez.read(handle)
     ids = search_results["IdList"]
     count = len(ids)
-    print("Found %d citations" % count)
+    print("Found {0:d} citations".format(count))
 
     if count_only:
         sys.exit(0)

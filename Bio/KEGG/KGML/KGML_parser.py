@@ -158,8 +158,8 @@ class KGMLParser(object):
                 # This should warn us of any unimplemented tags
                 import warnings
                 from Bio import BiopythonParserWarning
-                warnings.warn("Warning: tag %s not implemented in parser" %
-                              element.tag, BiopythonParserWarning)
+                warnings.warn("Warning: tag {0!s} not implemented in parser".format(
+                              element.tag), BiopythonParserWarning)
         return self.pathway
 
 

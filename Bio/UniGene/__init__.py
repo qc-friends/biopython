@@ -247,7 +247,7 @@ class Record(object):
         self.txmap = []  # TXMAP entries, array of TXMap entries
 
     def __repr__(self):
-        return "<%s> %s %s\n%s" % (self.__class__.__name__,
+        return "<{0!s}> {1!s} {2!s}\n{3!s}".format(self.__class__.__name__,
                           self.ID, self.symbol, self.title)
 
 
@@ -297,7 +297,7 @@ def _read(handle):
             elif value == "NO":
                 record.homol = True
             else:
-                raise ValueError("Cannot parse HOMOL line %s" % line)
+                raise ValueError("Cannot parse HOMOL line {0!s}".format(line))
         elif tag == "EXPRESS":
             record.express = [word.strip() for word in value.split("|")]
         elif tag == "RESTR_EXPR":
@@ -323,6 +323,6 @@ def _read(handle):
                                  " (%d) does not agree with the number of sequences found (%d)" % (scount, len(record.sequence)))
             return record
         else:
-            raise ValueError("Unknown tag %s" % tag)
+            raise ValueError("Unknown tag {0!s}".format(tag))
     if record:
         raise ValueError("Unexpected end of stream.")

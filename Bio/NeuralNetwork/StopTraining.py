@@ -58,8 +58,7 @@ class ValidationIncreaseStop(object):
         """
         if num_iterations % 10 == 0:
             if self.verbose:
-                print("%s; Training Error:%s; Validation Error:%s"
-                      % (num_iterations, training_error, validation_error))
+                print("{0!s}; Training Error:{1!s}; Validation Error:{2!s}".format(num_iterations, training_error, validation_error))
 
         if num_iterations > self.min_iterations:
             if self.last_error is not None:

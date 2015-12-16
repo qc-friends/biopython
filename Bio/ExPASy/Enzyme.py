@@ -87,13 +87,13 @@ Each record contains the following keys:
     def __repr__(self):
         if self["ID"]:
             if self["DE"]:
-                return "%s (%s, %s)" % (self.__class__.__name__,
+                return "{0!s} ({1!s}, {2!s})".format(self.__class__.__name__,
                                         self["ID"], self["DE"])
             else:
-                return "%s (%s)" % (self.__class__.__name__,
+                return "{0!s} ({1!s})".format(self.__class__.__name__,
                                        self["ID"])
         else:
-            return "%s ( )" % (self.__class__.__name__)
+            return "{0!s} ( )".format((self.__class__.__name__))
 
     def __str__(self):
         output = "ID: " + self["ID"]
@@ -103,7 +103,7 @@ Each record contains the following keys:
         output += " CF: " + self["CF"]
         output += " CC: " + repr(self["CC"])
         output += " PR: " + repr(self["PR"])
-        output += " DR: %d Records" % len(self["DR"])
+        output += " DR: {0:d} Records".format(len(self["DR"]))
         return output
 
 # Everything below is private

@@ -54,7 +54,7 @@ def scan(seq="", mirror='http://www.expasy.org', output='xml', **keywords):
         if value is not None:
             parameters[key] = value
     command = _urlencode(parameters)
-    url = "%s/cgi-bin/prosite/PSScan.cgi?%s" % (mirror, command)
+    url = "{0!s}/cgi-bin/prosite/PSScan.cgi?{1!s}".format(mirror, command)
     handle = _urlopen(url)
     return handle
 

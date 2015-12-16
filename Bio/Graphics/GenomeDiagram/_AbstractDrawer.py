@@ -82,13 +82,13 @@ def page_sizes(size):
     try:
         return sizes[size]
     except:
-        raise ValueError("%s not in list of page sizes" % size)
+        raise ValueError("{0!s} not in list of page sizes".format(size))
 
 
 def _stroke_and_fill_colors(color, border):
     """Helper function handle border and fill colors (PRIVATE)."""
     if not isinstance(color, colors.Color):
-        raise ValueError("Invalid color %r" % color)
+        raise ValueError("Invalid color {0!r}".format(color))
 
     if color == colors.white and border is None:   # Force black border on
         strokecolor = colors.black                 # white boxes with
@@ -96,7 +96,7 @@ def _stroke_and_fill_colors(color, border):
         strokecolor = color                        # use fill color
     elif border:
         if not isinstance(border, colors.Color):
-            raise ValueError("Invalid border color %r" % border)
+            raise ValueError("Invalid border color {0!r}".format(border))
         strokecolor = border
     else:
         # e.g. False
@@ -239,8 +239,7 @@ def draw_arrow(point1, point2, color=colors.lightgreen, border=None,
     elif orientation == 'left':
         x1, x2, y1, y2 = xmax, xmin, ymin, ymax
     else:
-        raise ValueError("Invalid orientation %s, should be 'left' or 'right'"
-                         % repr(orientation))
+        raise ValueError("Invalid orientation {0!s}, should be 'left' or 'right'".format(repr(orientation)))
 
     # We define boxheight and boxwidth accordingly, and calculate the shaft
     # height from these.  We also ensure that the maximum head length is
@@ -450,12 +449,12 @@ class AbstractDrawer(object):
         elif isinstance(pagesize, tuple):  # A tuple, so don't translate
             pagesize = pagesize
         else:
-            raise ValueError("Page size %s not recognised" % pagesize)
+            raise ValueError("Page size {0!s} not recognised".format(pagesize))
         shortside, longside = min(pagesize), max(pagesize)
 
         orientation = orientation.lower()
         if orientation not in ('landscape', 'portrait'):
-            raise ValueError("Orientation %s not recognised" % orientation)
+            raise ValueError("Orientation {0!s} not recognised".format(orientation))
         if orientation == 'landscape':
             self.pagesize = (longside, shortside)
         else:

@@ -469,8 +469,7 @@ def solexa_quality_from_phred(phred_quality):
         # Special case, map to -5 as discussed in the docstring
         return -5.0
     else:
-        raise ValueError("PHRED qualities must be positive (or zero), not %s"
-                         % repr(phred_quality))
+        raise ValueError("PHRED qualities must be positive (or zero), not {0!s}".format(repr(phred_quality)))
 
 
 def phred_quality_from_solexa(solexa_quality):
@@ -515,8 +514,7 @@ def phred_quality_from_solexa(solexa_quality):
         # Assume None is used as some kind of NULL or NA value; return None
         return None
     if solexa_quality < -5:
-        warnings.warn("Solexa quality less than -5 passed, %s"
-                      % repr(solexa_quality), BiopythonWarning)
+        warnings.warn("Solexa quality less than -5 passed, {0!s}".format(repr(solexa_quality)), BiopythonWarning)
     return 10 * log(10 ** (solexa_quality / 10.0) + 1, 10)
 
 
@@ -1429,12 +1427,11 @@ class FastqPhredWriter(SequentialSequenceWriter):
         self._record_written = True
         # TODO - Is an empty sequence allowed in FASTQ format?
         if record.seq is None:
-            raise ValueError("No sequence for record %s" % record.id)
+            raise ValueError("No sequence for record {0!s}".format(record.id))
         seq_str = str(record.seq)
         qualities_str = _get_sanger_quality_str(record)
         if len(qualities_str) != len(seq_str):
-            raise ValueError("Record %s has sequence length %i but %i quality scores"
-                             % (record.id, len(seq_str), len(qualities_str)))
+            raise ValueError("Record {0!s} has sequence length {1:d} but {2:d} quality scores".format(record.id, len(seq_str), len(qualities_str)))
 
         # FASTQ files can include a description, just like FASTA files
         # (at least, this is what the NCBI Short Read Archive does)
@@ -1444,11 +1441,11 @@ class FastqPhredWriter(SequentialSequenceWriter):
             # The description includes the id at the start
             title = description
         elif description:
-            title = "%s %s" % (id, description)
+            title = "{0!s} {1!s}".format(id, description)
         else:
             title = id
 
-        self.handle.write("@%s\n%s\n+\n%s\n" % (title, seq_str, qualities_str))
+        self.handle.write("@{0!s}\n{1!s}\n+\n{2!s}\n".format(title, seq_str, qualities_str))
 
 
 class QualPhredWriter(SequentialSequenceWriter):
@@ -1518,16 +1515,16 @@ class QualPhredWriter(SequentialSequenceWriter):
                 # The description includes the id at the start
                 title = description
             elif description:
-                title = "%s %s" % (id, description)
+                title = "{0!s} {1!s}".format(id, description)
             else:
                 title = id
-        handle.write(">%s\n" % title)
+        handle.write(">{0!s}\n".format(title))
 
         qualities = _get_phred_quality(record)
         try:
             # This rounds to the nearest integer.
             # TODO - can we record a float in a qual file?
-            qualities_strs = [("%i" % round(q, 0)) for q in qualities]
+            qualities_strs = [("{0:d}".format(round(q, 0))) for q in qualities]
         except TypeError as e:
             if None in qualities:
                 raise TypeError("A quality value of None was found")
@@ -1617,12 +1614,11 @@ class FastqSolexaWriter(SequentialSequenceWriter):
 
         # TODO - Is an empty sequence allowed in FASTQ format?
         if record.seq is None:
-            raise ValueError("No sequence for record %s" % record.id)
+            raise ValueError("No sequence for record {0!s}".format(record.id))
         seq_str = str(record.seq)
         qualities_str = _get_solexa_quality_str(record)
         if len(qualities_str) != len(seq_str):
-            raise ValueError("Record %s has sequence length %i but %i quality scores"
-                             % (record.id, len(seq_str), len(qualities_str)))
+            raise ValueError("Record {0!s} has sequence length {1:d} but {2:d} quality scores".format(record.id, len(seq_str), len(qualities_str)))
 
         # FASTQ files can include a description, just like FASTA files
         # (at least, this is what the NCBI Short Read Archive does)
@@ -1632,11 +1628,11 @@ class FastqSolexaWriter(SequentialSequenceWriter):
             # The description includes the id at the start
             title = description
         elif description:
-            title = "%s %s" % (id, description)
+            title = "{0!s} {1!s}".format(id, description)
         else:
             title = id
 
-        self.handle.write("@%s\n%s\n+\n%s\n" % (title, seq_str, qualities_str))
+        self.handle.write("@{0!s}\n{1!s}\n+\n{2!s}\n".format(title, seq_str, qualities_str))
 
 
 class FastqIlluminaWriter(SequentialSequenceWriter):
@@ -1673,12 +1669,11 @@ class FastqIlluminaWriter(SequentialSequenceWriter):
 
         # TODO - Is an empty sequence allowed in FASTQ format?
         if record.seq is None:
-            raise ValueError("No sequence for record %s" % record.id)
+            raise ValueError("No sequence for record {0!s}".format(record.id))
         seq_str = str(record.seq)
         qualities_str = _get_illumina_quality_str(record)
         if len(qualities_str) != len(seq_str):
-            raise ValueError("Record %s has sequence length %i but %i quality scores"
-                             % (record.id, len(seq_str), len(qualities_str)))
+            raise ValueError("Record {0!s} has sequence length {1:d} but {2:d} quality scores".format(record.id, len(seq_str), len(qualities_str)))
 
         # FASTQ files can include a description, just like FASTA files
         # (at least, this is what the NCBI Short Read Archive does)
@@ -1688,11 +1683,11 @@ class FastqIlluminaWriter(SequentialSequenceWriter):
             # The description includes the id at the start
             title = description
         elif description:
-            title = "%s %s" % (id, description)
+            title = "{0!s} {1!s}".format(id, description)
         else:
             title = id
 
-        self.handle.write("@%s\n%s\n+\n%s\n" % (title, seq_str, qualities_str))
+        self.handle.write("@{0!s}\n{1!s}\n+\n{2!s}\n".format(title, seq_str, qualities_str))
 
 
 def PairedFastaQualIterator(fasta_handle, qual_handle, alphabet=single_letter_alphabet, title2ids=None):
@@ -1783,11 +1778,9 @@ def PairedFastaQualIterator(fasta_handle, qual_handle, alphabet=single_letter_al
         if q_rec is None:
             raise ValueError("QUAL file has more entries than the FASTA file.")
         if f_rec.id != q_rec.id:
-            raise ValueError("FASTA and QUAL entries do not match (%s vs %s)."
-                             % (f_rec.id, q_rec.id))
+            raise ValueError("FASTA and QUAL entries do not match ({0!s} vs {1!s}).".format(f_rec.id, q_rec.id))
         if len(f_rec) != len(q_rec.letter_annotations["phred_quality"]):
-            raise ValueError("Sequence length and number of quality scores disagree for %s"
-                             % f_rec.id)
+            raise ValueError("Sequence length and number of quality scores disagree for {0!s}".format(f_rec.id))
         # Merge the data....
         f_rec.letter_annotations[
             "phred_quality"] = q_rec.letter_annotations["phred_quality"]

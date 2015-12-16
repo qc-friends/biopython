@@ -217,4 +217,4 @@ if __name__ == "__main__":
         print(model)
         for chain in model.get_list():
             print(chain)
-            print("Found %d residues." % len(chain.get_list()))
+            print("Found {0:d} residues.".format(len(chain.get_list())))

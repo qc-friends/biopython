@@ -121,8 +121,7 @@ class TestQblast(unittest.TestCase):
                 for alignment in record.alignments:
                     print(alignment.hit_id)
             self.assertTrue(found_result,
-                            "Missing all expected hits (%s), instead have: %s"
-                            % (", ".join(expected_hits),
+                            "Missing all expected hits ({0!s}), instead have: {1!s}".format(", ".join(expected_hits),
                                ", ".join(a.hit_id for a in record.alignments)))
 
         # Check the expected result(s) are found in the descriptions
@@ -137,7 +136,7 @@ class TestQblast(unittest.TestCase):
                             or expected_hit in descr.title.split(None, 1)[0].split("|"):
                         found_result = True
                         break
-            assert found_result, "Missing all of %s in descriptions" % expected_hit
+            assert found_result, "Missing all of {0!s} in descriptions".format(expected_hit)
             self.assertTrue(found_result)
 
     def test_parse_qblast_ref_page(self):

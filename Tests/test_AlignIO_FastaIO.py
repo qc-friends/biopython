@@ -35,29 +35,26 @@ test_files = [
 for (t_format, t_per, t_count, t_filename) in test_files:
     assert t_format == "fasta-m10" and t_per == 2
 
-    print("Testing reading %s format file %s with %i alignments"
-          % (t_format, t_filename, t_count))
+    print("Testing reading {0!s} format file {1!s} with {2:d} alignments".format(t_format, t_filename, t_count))
     assert os.path.isfile(t_filename), t_filename
 
     # Try as an iterator using handle
     with open(t_filename, "r") as handle:
         alignments = list(AlignIO.parse(handle, format=t_format))
     assert len(alignments) == t_count, \
-         "Found %i alignments but expected %i" % (len(alignments), t_count)
+         "Found {0:d} alignments but expected {1:d}".format(len(alignments), t_count)
     for alignment in alignments:
         assert len(alignment) == t_per, \
-            "Expected %i records per alignment, got %i" \
-            % (t_per, len(alignment))
+            "Expected {0:d} records per alignment, got {1:d}".format(t_per, len(alignment))
 
     # Print the alignment
     for i, alignment in enumerate(alignments):
         print("=" * 78)
-        print("Alignment %i, with %i sequences of length %i"
-              % (i,
+        print("Alignment {0:d}, with {1:d} sequences of length {2:d}".format(i,
                  len(alignment),
                  alignment.get_alignment_length()))
         for k in sorted(alignment._annotations):
-            print(" - %s: %r" % (k, alignment._annotations[k]))
+            print(" - {0!s}: {1!r}".format(k, alignment._annotations[k]))
         assert alignment[0].name == "query"
         assert alignment[1].name == "match"
         # Show each sequence row horizontally
@@ -69,6 +66,6 @@ for (t_format, t_per, t_count, t_filename) in test_files:
             assert not record.features
             assert not record.letter_annotations
             for k in sorted(record.annotations):
-                print(" - %s: %r" % (k, record.annotations[k]))
+                print(" - {0!s}: {1!r}".format(k, record.annotations[k]))
     print("=" * 78)
 print("Finished tested reading files")

@@ -72,8 +72,7 @@ _between_location = r"\d+\^\d+"
 
 _within_position = r"\(\d+\.\d+\)"
 _re_within_position = re.compile(_within_position)
-_within_location = r"([<>]?\d+|%s)\.\.([<>]?\d+|%s)" \
-                   % (_within_position, _within_position)
+_within_location = r"([<>]?\d+|{0!s})\.\.([<>]?\d+|{1!s})".format(_within_position, _within_position)
 assert _re_within_position.match("(3.9)")
 assert re.compile(_within_location).match("(3.9)..10")
 assert re.compile(_within_location).match("26..(30.33)")
@@ -81,8 +80,7 @@ assert re.compile(_within_location).match("(13.19)..(20.28)")
 
 _oneof_position = r"one\-of\(\d+(,\d+)+\)"
 _re_oneof_position = re.compile(_oneof_position)
-_oneof_location = r"([<>]?\d+|%s)\.\.([<>]?\d+|%s)" \
-                   % (_oneof_position, _oneof_position)
+_oneof_location = r"([<>]?\d+|{0!s})\.\.([<>]?\d+|{1!s})".format(_oneof_position, _oneof_position)
 assert _re_oneof_position.match("one-of(6,9)")
 assert re.compile(_oneof_location).match("one-of(6,9)..101")
 assert re.compile(_oneof_location).match("one-of(6,9)..one-of(101,104)")
@@ -94,17 +92,13 @@ assert _re_oneof_position.match("one-of(3,6,9)")
 
 
 _simple_location = r"\d+\.\.\d+"
-_re_simple_location = re.compile(r"^%s$" % _simple_location)
-_re_simple_compound = re.compile(r"^(join|order|bond)\(%s(,%s)*\)$"
-                                 % (_simple_location, _simple_location))
-_complex_location = r"([a-zA-Z][a-zA-Z0-9_\.]*[a-zA-Z0-9]?\:)?(%s|%s|%s|%s|%s)" \
-                    % (_pair_location, _solo_location, _between_location,
+_re_simple_location = re.compile(r"^{0!s}$".format(_simple_location))
+_re_simple_compound = re.compile(r"^(join|order|bond)\({0!s}(,{1!s})*\)$".format(_simple_location, _simple_location))
+_complex_location = r"([a-zA-Z][a-zA-Z0-9_\.]*[a-zA-Z0-9]?\:)?({0!s}|{1!s}|{2!s}|{3!s}|{4!s})".format(_pair_location, _solo_location, _between_location,
                        _within_location, _oneof_location)
-_re_complex_location = re.compile(r"^%s$" % _complex_location)
-_possibly_complemented_complex_location = r"(%s|complement\(%s\))" \
-                                          % (_complex_location, _complex_location)
-_re_complex_compound = re.compile(r"^(join|order|bond)\(%s(,%s)*\)$"
-                                 % (_possibly_complemented_complex_location,
+_re_complex_location = re.compile(r"^{0!s}$".format(_complex_location))
+_possibly_complemented_complex_location = r"({0!s}|complement\({1!s}\))".format(_complex_location, _complex_location)
+_re_complex_compound = re.compile(r"^(join|order|bond)\({0!s}(,{1!s})*\)$".format(_possibly_complemented_complex_location,
                                     _possibly_complemented_complex_location))
 
 
@@ -148,7 +142,7 @@ assert not _re_simple_compound.match("join(complement(149815..150200),complement
 assert not _re_complex_location.match("join(complement(149815..150200),complement(293787..295573),NC_016402.1:6618..6676,181647..181905)")
 assert not _re_simple_location.match("join(complement(149815..150200),complement(293787..295573),NC_016402.1:6618..6676,181647..181905)")
 
-_solo_bond = re.compile("bond\(%s\)" % _solo_location)
+_solo_bond = re.compile("bond\({0!s}\)".format(_solo_location))
 assert _solo_bond.match("bond(196)")
 assert _solo_bond.search("bond(196)")
 assert _solo_bond.search("join(bond(284),bond(305),bond(309),bond(305))")
@@ -294,7 +288,7 @@ def _loc(loc_str, expected_seq_length, strand):
             elif int(s) == expected_seq_length and e == "1":
                 pos = _pos(s)
             else:
-                raise ValueError("Invalid between location %s" % repr(loc_str))
+                raise ValueError("Invalid between location {0!s}".format(repr(loc_str)))
             return SeqFeature.FeatureLocation(pos, pos, strand)
         else:
             # e.g. "123"
@@ -874,8 +868,7 @@ class _FeatureConsumer(_BaseGenBankConsumer):
             pass
         # otherwise raise an error
         else:
-            raise ValueError("Could not parse base info %s in record %s" %
-                             (ref_base_info, self.data.id))
+            raise ValueError("Could not parse base info {0!s} in record {1!s}".format(ref_base_info, self.data.id))
 
         self._cur_reference.location = all_locations
 
@@ -1117,8 +1110,7 @@ class _FeatureConsumer(_BaseGenBankConsumer):
         cur_feature.location = None
         import warnings
         from Bio import BiopythonParserWarning
-        warnings.warn(BiopythonParserWarning("Couldn't parse feature location: %r"
-                                             % (location_line)))
+        warnings.warn(BiopythonParserWarning("Couldn't parse feature location: {0!r}".format((location_line))))
 
     def feature_qualifier(self, key, value):
         """When we get a qualifier key and its value.
@@ -1205,7 +1197,7 @@ class _FeatureConsumer(_BaseGenBankConsumer):
             self.data.id = self.data.name  # Good fall back?
         elif self.data.id.count('.') == 0:
             try:
-                self.data.id += '.%i' % self.data.annotations['sequence_version']
+                self.data.id += '.{0:d}'.format(self.data.annotations['sequence_version'])
             except KeyError:
                 pass
 
@@ -1223,8 +1215,7 @@ class _FeatureConsumer(_BaseGenBankConsumer):
         and self._expected_size != len(sequence):
             import warnings
             from Bio import BiopythonParserWarning
-            warnings.warn("Expected sequence length %i, found %i (%s)."
-                          % (self._expected_size, len(sequence), self.data.id),
+            warnings.warn("Expected sequence length {0:d}, found {1:d} ({2!s}).".format(self._expected_size, len(sequence), self.data.id),
                           BiopythonParserWarning)
 
         if self._seq_type:
@@ -1248,8 +1239,7 @@ class _FeatureConsumer(_BaseGenBankConsumer):
                 pass
             # we have a bug if we get here
             else:
-                raise ValueError("Could not determine alphabet for seq_type %s"
-                                 % self._seq_type)
+                raise ValueError("Could not determine alphabet for seq_type {0!s}".format(self._seq_type))
 
         if not sequence and self.__expected_size:
             self.data.seq = UnknownSeq(self._expected_size, seq_alphabet)
@@ -1287,7 +1277,7 @@ class _RecordConsumer(_BaseGenBankConsumer):
         if 'dna' in content or 'rna' in content:
             import warnings
             from Bio import BiopythonParserWarning
-            warnings.warn("Invalid seq_type (%s): DNA/RNA should be uppercase." % content,
+            warnings.warn("Invalid seq_type ({0!s}): DNA/RNA should be uppercase.".format(content),
                           BiopythonParserWarning)
         self.data.residue_type = content
 
@@ -1449,7 +1439,7 @@ class _RecordConsumer(_BaseGenBankConsumer):
         for content in content_list:
             # the record parser keeps the /s -- add them if we don't have 'em
             if not content.startswith("/"):
-                content = "/%s" % content
+                content = "/{0!s}".format(content)
             # add on a qualifier if we've got one
             if self._cur_qualifier is not None:
                 self._cur_feature.qualifiers.append(self._cur_qualifier)
@@ -1460,7 +1450,7 @@ class _RecordConsumer(_BaseGenBankConsumer):
     def feature_qualifier_description(self, content):
         # if we have info then the qualifier key should have a ='s
         if '=' not in self._cur_qualifier.key:
-            self._cur_qualifier.key = "%s=" % self._cur_qualifier.key
+            self._cur_qualifier.key = "{0!s}=".format(self._cur_qualifier.key)
         cur_content = self._remove_newlines(content)
         # remove all spaces from the value if it is a type where spaces
         # are not important

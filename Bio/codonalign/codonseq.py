@@ -245,8 +245,7 @@ class CodonSeq(Seq):
             if not gap:
                 gap = self.alphabet.gap_char
             elif gap != self.alphabet.gap_char:
-                raise ValueError("Gap %s does not match %s from alphabet"
-                        % (repr(gap), repr(self.alphabet.alphabet.gap_char)))
+                raise ValueError("Gap {0!s} does not match {1!s} from alphabet".format(repr(gap), repr(self.alphabet.alphabet.gap_char)))
             alpha = _ungap(self.alphabet)
         elif not gap:
             raise ValueError("Gap character not given and not defined in "
@@ -254,7 +253,7 @@ class CodonSeq(Seq):
         else:
             alpha = self.alphabet  # modify!
         if len(gap) != 1 or not isinstance(gap, str):
-            raise ValueError("Unexpected gap character, %s" % repr(gap))
+            raise ValueError("Unexpected gap character, {0!s}".format(repr(gap)))
         return CodonSeq(str(self._data).replace(gap, ""), alpha,
                         rf_table=self.rf_table)
 
@@ -638,7 +637,7 @@ def _diff_codon(codon1, codon2, fold_dict):
                 elif fold_num[n] == '4':
                     P4 += 1
                 else:
-                    raise RuntimeError("Unexpected fold_num %d" % fold_num[n])
+                    raise RuntimeError("Unexpected fold_num {0:d}".format(fold_num[n]))
             if i != j and (i in pyrimidine and j in pyrimidine):
                 if fold_num[n] == '0':
                     P0 += 1
@@ -647,7 +646,7 @@ def _diff_codon(codon1, codon2, fold_dict):
                 elif fold_num[n] == '4':
                     P4 += 1
                 else:
-                    raise RuntimeError("Unexpected fold_num %d" % fold_num[n])
+                    raise RuntimeError("Unexpected fold_num {0:d}".format(fold_num[n]))
             if i != j and ((i in purine and j in pyrimidine)
                     or (i in pyrimidine and j in purine)):
                 if fold_num[n] == '0':
@@ -657,7 +656,7 @@ def _diff_codon(codon1, codon2, fold_dict):
                 elif fold_num[n] == '4':
                     Q4 += 1
                 else:
-                    raise RuntimeError("Unexpected fold_num %d" % fold_num[n])
+                    raise RuntimeError("Unexpected fold_num {0:d}".format(fold_num[n]))
     return (P0, P2, P4, Q0, Q2, Q4)
 
 

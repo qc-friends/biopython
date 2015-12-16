@@ -90,7 +90,7 @@ class BlastTableReader(object):
     def _consume_header(self, inline):
         for keyword in reader_keywords:
             if keyword in inline:
-                in_header = self._Parse('_parse_%s' % reader_keywords[keyword], inline)
+                in_header = self._Parse('_parse_{0!s}'.format(reader_keywords[keyword]), inline)
                 break
         return in_header
 

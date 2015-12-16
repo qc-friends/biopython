@@ -166,4 +166,4 @@ if __name__ == "__main__":
     print("")
     print(y_on_x2)
     print("")
-    print("%.2f" % rms)
+    print("{0:.2f}".format(rms))

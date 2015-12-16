@@ -203,7 +203,7 @@ def write(alignments, handle, format):
     if not format:
         raise ValueError("Format required (lower case string)")
     if format != format.lower():
-        raise ValueError("Format string '%s' should be lower case" % format)
+        raise ValueError("Format string '{0!s}' should be lower case".format(format))
 
     if isinstance(alignments, Alignment):
         # This raised an exception in older versions of Biopython
@@ -225,10 +225,9 @@ def write(alignments, handle, format):
                 SeqIO.write(alignment, fp, format)
                 count += 1
         elif format in _FormatToIterator or format in SeqIO._FormatToIterator:
-            raise ValueError("Reading format '%s' is supported, but not writing"
-                             % format)
+            raise ValueError("Reading format '{0!s}' is supported, but not writing".format(format))
         else:
-            raise ValueError("Unknown format '%s'" % format)
+            raise ValueError("Unknown format '{0!s}'".format(format))
 
     assert isinstance(count, int), "Internal error - the underlying %s " \
            "writer should have returned the alignment count, not %s" \
@@ -340,10 +339,10 @@ def parse(handle, format, seq_count=None, alphabet=None):
     if not format:
         raise ValueError("Format required (lower case string)")
     if format != format.lower():
-        raise ValueError("Format string '%s' should be lower case" % format)
+        raise ValueError("Format string '{0!s}' should be lower case".format(format))
     if alphabet is not None and not (isinstance(alphabet, Alphabet) or
                                      isinstance(alphabet, AlphabetEncoder)):
-        raise ValueError("Invalid alphabet, %s" % repr(alphabet))
+        raise ValueError("Invalid alphabet, {0!s}".format(repr(alphabet)))
     if seq_count is not None and not isinstance(seq_count, int):
         raise TypeError("Need integer for seq_count (sequences per alignment)")
 
@@ -368,7 +367,7 @@ def parse(handle, format, seq_count=None, alphabet=None):
                                                 alphabet=alphabet,
                                                 seq_count=seq_count)
         else:
-            raise ValueError("Unknown format '%s'" % format)
+            raise ValueError("Unknown format '{0!s}'".format(format))
 
         # This imposes some overhead... wait until we drop Python 2.4 to fix it
         for a in i:

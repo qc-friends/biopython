@@ -123,7 +123,7 @@ def _check_bases(seq_string):
         seq_string = seq_string.replace(c, "")
     # Check only allowed IUPAC letters
     if not set(seq_string).issubset(set("ABCDGHKMNRSTVWY")):
-        raise TypeError("Invalid character found in %s" % repr(seq_string))
+        raise TypeError("Invalid character found in {0!s}".format(repr(seq_string)))
     return " " + seq_string
 
 
@@ -172,13 +172,13 @@ class FormattedSeq(object):
             self.alphabet = seq.alphabet
             self.klass = seq.klass
         else:
-            raise TypeError('expected Seq or MutableSeq, got %s' % type(seq))
+            raise TypeError('expected Seq or MutableSeq, got {0!s}'.format(type(seq)))
 
     def __len__(self):
         return len(self.data) - 1
 
     def __repr__(self):
-        return 'FormattedSeq(%s, linear=%s)' % (repr(self[1:]), repr(self.linear))
+        return 'FormattedSeq({0!s}, linear={1!s})'.format(repr(self[1:]), repr(self.linear))
 
     def __eq__(self, other):
         if isinstance(other, FormattedSeq):
@@ -250,16 +250,14 @@ class RestrictionType(type):
 
         see below."""
         if "-" in name:
-            raise ValueError("Problem with hyphen in %s as enzyme name"
-                             % repr(name))
+            raise ValueError("Problem with hyphen in {0!s} as enzyme name".format(repr(name)))
         # 2011/11/26 - Nobody knows what this call was supposed to accomplish,
         # but all unit tests seem to pass without it.
         # super(RestrictionType, cls).__init__(cls, name, bases, dct)
         try:
             cls.compsite = re.compile(cls.compsite)
         except Exception as err:
-            raise ValueError("Problem with regular expression, re.compiled(%s)"
-                             % repr(cls.compsite))
+            raise ValueError("Problem with regular expression, re.compiled({0!s})".format(repr(cls.compsite)))
 
     def __add__(cls, other):
         """RE.__add__(other) -> RestrictionBatch().
@@ -325,7 +323,7 @@ class RestrictionType(type):
         """RE.__repr__() -> str.
 
         used with eval or exec will instantiate the enzyme."""
-        return "%s" % cls.__name__
+        return "{0!s}".format(cls.__name__)
 
     def __len__(cls):
         """RE.__len__() -> int.
@@ -381,7 +379,7 @@ class RestrictionType(type):
         True if a and b have compatible overhang."""
         if not isinstance(other, RestrictionType):
             raise TypeError(
-                  'expected RestrictionType, got %s instead' % type(other))
+                  'expected RestrictionType, got {0!s} instead'.format(type(other)))
         return cls._mod1(other)
 
     def __ge__(cls, other):
@@ -919,8 +917,7 @@ class Unknown(AbstractCut):
 
         if linear is False, the sequence is considered to be circular and the
         output will be modified accordingly."""
-        raise NotImplementedError('%s restriction is unknown.'
-                                  % self.__name__)
+        raise NotImplementedError('{0!s} restriction is unknown.'.format(self.__name__))
     catalyze = catalyse
 
     @classmethod
@@ -1642,8 +1639,7 @@ class Ambiguous(AbstractCut):
             elif f5 > length:
                 re = site + (f5 - length) * 'N' + '^_N'
             else:
-                raise ValueError('%s.easyrepr() : error f5=%i'
-                                 % (self.name, f5))
+                raise ValueError('{0!s}.easyrepr() : error f5={1:d}'.format(self.name, f5))
         else:
             if f3 == 0:
                 if f5 == 0:
@@ -1748,8 +1744,7 @@ class NotDefined(AbstractCut):
         #   could raise an Error may be rather than return quietly.
         #
         # return False
-        raise ValueError("%s.mod2(%s), %s : NotDefined. pas glop pas glop!"
-                         % (str(self), str(other), str(self)))
+        raise ValueError("{0!s}.mod2({1!s}), {2!s} : NotDefined. pas glop pas glop!".format(str(self), str(other), str(self)))
 
     @classmethod
     def elucidate(self):
@@ -1768,7 +1763,7 @@ class NotDefined(AbstractCut):
         '? GTATAC ?'
         >>>
         """
-        return '? %s ?' % self.site
+        return '? {0!s} ?'.format(self.site)
 
 
 class Commercially_available(AbstractCut):
@@ -1868,7 +1863,7 @@ class RestrictionBatch(set):
                                '+'.join(self.elements()[-2:])))
 
     def __repr__(self):
-        return 'RestrictionBatch(%s)' % self.elements()
+        return 'RestrictionBatch({0!s})'.format(self.elements())
 
     def __contains__(self, other):
         try:
@@ -1897,8 +1892,7 @@ class RestrictionBatch(set):
             self.add(e)
             return e
         else:
-            raise ValueError('enzyme %s is not in RestrictionBatch'
-                             % e.__name__)
+            raise ValueError('enzyme {0!s} is not in RestrictionBatch'.format(e.__name__))
 
     def lambdasplit(self, func):
         """B.lambdasplit(func) -> RestrictionBatch .
@@ -1980,7 +1974,7 @@ class RestrictionBatch(set):
                 pass
         except (NameError, SyntaxError):
             pass
-        raise ValueError('%s is not a RestrictionType' % y.__class__)
+        raise ValueError('{0!s} is not a RestrictionType'.format(y.__class__))
 
     def is_restriction(self, y):
         """B.is_restriction(y) -> bool.
@@ -2069,8 +2063,7 @@ class RestrictionBatch(set):
                 self.already_mapped = str(dna), dna.linear
                 self.mapping = dict((x, x.search(dna)) for x in self)
                 return self.mapping
-        raise TypeError("Expected Seq or MutableSeq instance, got %s instead"
-                        % type(dna))
+        raise TypeError("Expected Seq or MutableSeq instance, got {0!s} instead".format(type(dna)))
 
 ###############################################################################
 #                                                                             #
@@ -2097,8 +2090,7 @@ class Analysis(RestrictionBatch, PrintFormat):
             self.search(self.sequence, self.linear)
 
     def __repr__(self):
-        return 'Analysis(%s,%s,%s)' %\
-               (repr(self.rb), repr(self.sequence), self.linear)
+        return 'Analysis({0!s},{1!s},{2!s})'.format(repr(self.rb), repr(self.sequence), self.linear)
 
     def _sub_set(self, wanted):
         """A._sub_set(other_set) -> dict.
@@ -2117,9 +2109,9 @@ class Analysis(RestrictionBatch, PrintFormat):
         search to only part of the sequence given to analyse.
         """
         if not isinstance(start, int):
-            raise TypeError('expected int, got %s instead' % type(start))
+            raise TypeError('expected int, got {0!s} instead'.format(type(start)))
         if not isinstance(end, int):
-            raise TypeError('expected int, got %s instead' % type(end))
+            raise TypeError('expected int, got {0!s} instead'.format(type(end)))
         if start < 1:
             start += len(self.sequence)
         if end < 1:
@@ -2189,11 +2181,10 @@ class Analysis(RestrictionBatch, PrintFormat):
                 setattr(self, k, v)
             elif k in ('Cmodulo', 'PrefWidth'):
                 raise AttributeError(
-                    'To change %s, change NameWidth and/or ConsoleWidth'
-                    % name)
+                    'To change {0!s}, change NameWidth and/or ConsoleWidth'.format(name))
             else:
                 raise AttributeError(
-                    'Analysis has no attribute %s' % name)
+                    'Analysis has no attribute {0!s}'.format(name))
         return
 
     def full(self, linear=True):
@@ -2269,7 +2260,7 @@ class Analysis(RestrictionBatch, PrintFormat):
          Limit the search to the enzymes named in list_of_names."""
         for i, enzyme in enumerate(names):
             if enzyme not in AllEnzymes:
-                print("no data for the enzyme: %s" % name)
+                print("no data for the enzyme: {0!s}".format(name))
                 del names[i]
         if not dct:
             return RestrictionBatch(names).search(self.sequence)

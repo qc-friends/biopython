@@ -73,8 +73,7 @@ def calculate(nb, observation, scale=0):
 
     # Make sure the observation has the right dimensionality.
     if len(observation) != nb.dimensionality:
-        raise ValueError("observation in %d dimension, but classifier in %d"
-                         % (len(observation), nb.dimensionality))
+        raise ValueError("observation in {0:d} dimension, but classifier in {1:d}".format(len(observation), nb.dimensionality))
 
     # Calculate log P(observation|class) for every class.
     n = len(nb.classes)
@@ -232,6 +231,6 @@ if __name__ == "__main__":
 
     carmodel = train(xcar, ycar)
     carresult = classify(carmodel, ['Red', 'Sports', 'Domestic'])
-    print('Is Yes? %s' % carresult)
+    print('Is Yes? {0!s}'.format(carresult))
     carresult = classify(carmodel, ['Red', 'SUV', 'Domestic'])
-    print('Is No? %s' % carresult)
+    print('Is No? {0!s}'.format(carresult))

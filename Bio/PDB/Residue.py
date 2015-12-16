@@ -33,7 +33,7 @@ class Residue(Entity):
         resname = self.get_resname()
         hetflag, resseq, icode = self.get_id()
         full_id = (resname, hetflag, resseq, icode)
-        return "<Residue %s het=%s resseq=%s icode=%s>" % full_id
+        return "<Residue {0!s} het={1!s} resseq={2!s} icode={3!s}>".format(*full_id)
 
     # Private methods
 
@@ -77,7 +77,7 @@ class Residue(Entity):
         atom_id = atom.get_id()
         if self.has_id(atom_id):
             raise PDBConstructionException(
-                "Atom %s defined twice in residue %s" % (atom_id, self))
+                "Atom {0!s} defined twice in residue {1!s}".format(atom_id, self))
         Entity.add(self, atom)
 
     def sort(self):
@@ -128,7 +128,7 @@ class DisorderedResidue(DisorderedEntityWrapper):
         resname = self.get_resname()
         hetflag, resseq, icode = self.get_id()
         full_id = (resname, hetflag, resseq, icode)
-        return "<DisorderedResidue %s het=%s resseq=%i icode=%s>" % full_id
+        return "<DisorderedResidue {0!s} het={1!s} resseq={2:d} icode={3!s}>".format(*full_id)
 
     def add(self, atom):
         residue = self.disordered_get()
@@ -140,8 +140,7 @@ class DisorderedResidue(DisorderedEntityWrapper):
             # add atom anyway, if PDBParser ignores exception the atom will be part of the residue
             residue.add(atom)
             raise PDBConstructionException(
-                "Blank altlocs in duplicate residue %s (%s, %i, %s)"
-                % (resname, het, resseq, icode))
+                "Blank altlocs in duplicate residue {0!s} ({1!s}, {2:d}, {3!s})".format(resname, het, resseq, icode))
         residue.add(atom)
 
     def sort(self):

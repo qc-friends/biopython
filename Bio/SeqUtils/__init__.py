@@ -136,9 +136,9 @@ def xGC_skew(seq, window=1000, zoom=100,
     x1, x2, y1, y2 = X0 - r, X0 + r, Y0 - r, Y0 + r
 
     ty = Y0
-    canvas.create_text(X0, ty, text='%s...%s (%d nt)' % (seq[:7], seq[-7:], len(seq)))
+    canvas.create_text(X0, ty, text='{0!s}...{1!s} ({2:d} nt)'.format(seq[:7], seq[-7:], len(seq)))
     ty += 20
-    canvas.create_text(X0, ty, text='GC %3.2f%%' % (GC(seq)))
+    canvas.create_text(X0, ty, text='GC {0:3.2f}%'.format((GC(seq))))
     ty += 20
     canvas.create_text(X0, ty, text='GC Skew', fill='blue')
     ty += 20
@@ -186,7 +186,7 @@ def nt_search(seq, subseq):
         if len(value) == 1:
             pattern += value
         else:
-            pattern += '[%s]' % value
+            pattern += '[{0!s}]'.format(value)
 
     pos = -1
     result = [pattern]
@@ -389,19 +389,17 @@ def molecular_weight(seq, seq_type=None, double_stranded=False, circular=False,
             # Convert to one-letter sequence. Have to use a string for seq1
             seq = Seq(seq1(str(seq)), alphabet=Alphabet.ProteinAlphabet())
         elif not isinstance(base_alphabet, Alphabet.Alphabet):
-            raise TypeError("%s is not a valid alphabet for mass calculations"
-                             % base_alphabet)
+            raise TypeError("{0!s} is not a valid alphabet for mass calculations".format(base_alphabet))
         else:
             tmp_type = "DNA"  # backward compatibity
         if seq_type and tmp_type and tmp_type != seq_type:
-            raise ValueError("seq_type=%r contradicts %s from seq alphabet"
-                             % (seq_type, tmp_type))
+            raise ValueError("seq_type={0!r} contradicts {1!s} from seq alphabet".format(seq_type, tmp_type))
         seq_type = tmp_type
     elif isinstance(seq, str):
         if seq_type is None:
             seq_type = "DNA"  # backward compatibity
     else:
-        raise TypeError("Expected a string or Seq object, not seq=%r" % seq)
+        raise TypeError("Expected a string or Seq object, not seq={0!r}".format(seq))
 
     seq = ''.join(str(seq).split()).upper()  # Do the minimum formatting
 
@@ -421,8 +419,7 @@ def molecular_weight(seq, seq_type=None, double_stranded=False, circular=False,
         else:
             weight_table = IUPACData.protein_weights
     else:
-        raise ValueError("Allowed seq_types are DNA, RNA or protein, not %r"
-                         % seq_type)
+        raise ValueError("Allowed seq_types are DNA, RNA or protein, not {0!r}".format(seq_type))
 
     if monoisotopic:
         water = 18.010565
@@ -434,8 +431,7 @@ def molecular_weight(seq, seq_type=None, double_stranded=False, circular=False,
         if circular:
             weight -= water
     except KeyError as e:
-        raise ValueError('%s is not a valid unambiguous letter for %s'
-                         % (e, seq_type))
+        raise ValueError('{0!s} is not a valid unambiguous letter for {1!s}'.format(e, seq_type))
     except:
         raise
 
@@ -487,26 +483,26 @@ def six_frame_translations(seq, genetic_code=1):
 
     # create header
     if length > 20:
-        short = '%s ... %s' % (seq[:10], seq[-10:])
+        short = '{0!s} ... {1!s}'.format(seq[:10], seq[-10:])
     else:
         short = seq
     header = 'GC_Frame: '
     for nt in ['a', 't', 'g', 'c']:
-        header += '%s:%d ' % (nt, seq.count(nt.upper()))
+        header += '{0!s}:{1:d} '.format(nt, seq.count(nt.upper()))
 
-    header += '\nSequence: %s, %d nt, %0.2f %%GC\n\n\n' % (short.lower(), length, GC(seq))
+    header += '\nSequence: {0!s}, {1:d} nt, {2:0.2f} %GC\n\n\n'.format(short.lower(), length, GC(seq))
     res = header
 
     for i in range(0, length, 60):
         subseq = seq[i:i + 60]
         csubseq = comp[i:i + 60]
         p = i // 3
-        res += '%d/%d\n' % (i + 1, i / 3 + 1)
+        res += '{0:d}/{1:d}\n'.format(i + 1, i / 3 + 1)
         res += '  ' + '  '.join(frames[3][p:p + 20]) + '\n'
         res += ' ' + '  '.join(frames[2][p:p + 20]) + '\n'
         res += '  '.join(frames[1][p:p + 20]) + '\n'
         # seq
-        res += subseq.lower() + '%5d %%\n' % int(GC(subseq))
+        res += subseq.lower() + '{0:5d} %\n'.format(int(GC(subseq)))
         res += csubseq.lower() + '\n'
         # - frames
         res += '  '.join(frames[-2][p:p + 20]) + ' \n'

@@ -21,7 +21,7 @@ class InputRecord(object):
     def __str__(self):
         output = ""
         for name, primer1, primer2 in self.primer_info:
-            output += "%s %s %s\n" % (name, primer1, primer2)
+            output += "{0!s} {1!s} {2!s}\n".format(name, primer1, primer2)
         return output
 
     def add_primer_set(self, primer_name, first_primer_seq,

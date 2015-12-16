@@ -63,7 +63,7 @@ print("Testing parsers...")
 for parser in all_parsers:
     for filename in files_to_parse:
         if not os.path.isfile(filename):
-            print("Missing test input file: %s" % filename)
+            print("Missing test input file: {0!s}".format(filename))
             continue
 
         handle = open(filename, 'r')
@@ -79,19 +79,18 @@ for parser in all_parsers:
                 break
 
             if isinstance(parser, GenBank.FeatureParser):
-                print("***Record from %s with the FeatureParser"
-                      % filename.split(os.path.sep)[-1])
-                print("Seq: %r" % cur_record.seq)
-                print("Id: %s" % cur_record.id)
-                print("Name: %s" % cur_record.name)
-                print("Description %s" % cur_record.description)
+                print("***Record from {0!s} with the FeatureParser".format(filename.split(os.path.sep)[-1]))
+                print("Seq: {0!r}".format(cur_record.seq))
+                print("Id: {0!s}".format(cur_record.id))
+                print("Name: {0!s}".format(cur_record.name))
+                print("Description {0!s}".format(cur_record.description))
                 print("Annotations***")
                 ann_keys = sorted(cur_record.annotations)
                 for ann_key in ann_keys:
                     if ann_key != 'references':
-                        print("Key: %s" % ann_key)
-                        print("Value: %s" %
-                              cur_record.annotations[ann_key])
+                        print("Key: {0!s}".format(ann_key))
+                        print("Value: {0!s}".format(
+                              cur_record.annotations[ann_key]))
                     else:
                         print("References*")
                         for reference in cur_record.annotations[ann_key]:
@@ -105,23 +104,22 @@ for parser in all_parsers:
                     else:
                         # Assuming no mixed strand examples...
                         assert feature.strand is not None
-                print("DB cross refs %s" % cur_record.dbxrefs)
+                print("DB cross refs {0!s}".format(cur_record.dbxrefs))
             elif isinstance(parser, GenBank.RecordParser):
-                print("***Record from %s with the RecordParser"
-                      % filename.split(os.path.sep)[-1])
-                print("sequence length: %i" % len(cur_record.sequence))
-                print("locus: %s" % cur_record.locus)
-                print("definition: %s" % cur_record.definition)
-                print("accession: %s" % cur_record.accession)
+                print("***Record from {0!s} with the RecordParser".format(filename.split(os.path.sep)[-1]))
+                print("sequence length: {0:d}".format(len(cur_record.sequence)))
+                print("locus: {0!s}".format(cur_record.locus))
+                print("definition: {0!s}".format(cur_record.definition))
+                print("accession: {0!s}".format(cur_record.accession))
                 for reference in cur_record.references:
-                    print("reference title: %s" % reference.title)
+                    print("reference title: {0!s}".format(reference.title))
 
                 for feature in cur_record.features:
-                    print("feature key: %s" % feature.key)
-                    print("location: %s" % feature.location)
-                    print("num qualifiers: %i" % len(feature.qualifiers))
+                    print("feature key: {0!s}".format(feature.key))
+                    print("location: {0!s}".format(feature.location))
+                    print("num qualifiers: {0:d}".format(len(feature.qualifiers)))
                     for qualifier in feature.qualifiers:
-                        print("key: %s value: %s" % (qualifier.key, qualifier.value))
+                        print("key: {0!s} value: {1!s}".format(qualifier.key, qualifier.value))
 
         handle.close()
 
@@ -145,21 +143,20 @@ def do_comparison(good_record, test_record):
         if not(good_line) and not(test_line):
             break
         if not(good_line):
-            raise AssertionError("Extra info in Test: %r" % test_line)
+            raise AssertionError("Extra info in Test: {0!r}".format(test_line))
         if not(test_line):
-            raise AssertionError("Extra info in Expected: %r" % good_line)
+            raise AssertionError("Extra info in Expected: {0!r}".format(good_line))
         test_normalized = ' '.join(x for x in test_line.split() if x)
         good_normalized = ' '.join(x for x in good_line.split() if x)
         assert test_normalized == good_normalized, \
-               "Expected does not match Test.\nExpect: %r\nTest:   %r\n" % \
-               (good_line, test_line)
+               "Expected does not match Test.\nExpect: {0!r}\nTest:   {1!r}\n".format(good_line, test_line)
 
 
 def t_write_format():
     record_parser = GenBank.RecordParser(debug_level=0)
 
     for file in write_format_files:
-        print("Testing GenBank writing for %s..." % os.path.basename(file))
+        print("Testing GenBank writing for {0!s}...".format(os.path.basename(file)))
         cur_handle = open(os.path.join("GenBank", file), "r")
         compare_handle = open(os.path.join("GenBank", file), "r")
 
@@ -173,7 +170,7 @@ def t_write_format():
             if cur_record is None or compare_record is None:
                 break
 
-            print("\tTesting for %s" % cur_record.version)
+            print("\tTesting for {0!s}".format(cur_record.version))
 
             output_record = str(cur_record) + "\n"
             do_comparison(compare_record, output_record)

@@ -18,11 +18,11 @@ def resolve_uri(s, namespaces=cdao_namespaces, cdao_to_obo=True, xml_style=False
     """
 
     if cdao_to_obo and s.startswith('cdao:'):
-        return resolve_uri('obo:%s' % cdao_elements[s[5:]], namespaces, cdao_to_obo)
+        return resolve_uri('obo:{0!s}'.format(cdao_elements[s[5:]]), namespaces, cdao_to_obo)
 
     for prefix in namespaces:
         if xml_style:
-            s = s.replace(prefix + ':', '{%s}' % namespaces[prefix])
+            s = s.replace(prefix + ':', '{{{0!s}}}'.format(namespaces[prefix]))
         else:
             s = s.replace(prefix + ':', namespaces[prefix])
 
@@ -2875,7 +2875,7 @@ cdao_elements = {}
 
 root = ET.fromstring(cdao_owl)
 for node_type in 'ObjectProperty', 'Class', 'DatatypeProperty':
-    for element in root.findall('{http://www.w3.org/2002/07/owl#}%s' % node_type):
+    for element in root.findall('{{http://www.w3.org/2002/07/owl#}}{0!s}'.format(node_type)):
         obo = element.attrib[
             '{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about'].split('/')[-1]
         cdao = element.find(

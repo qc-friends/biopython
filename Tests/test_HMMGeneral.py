@@ -37,8 +37,7 @@ class LetterAlphabet(Alphabet.Alphabet):
 def test_assertion(name, result, expected):
     """Helper function to test an assertion and print out a reasonable error.
     """
-    assert result == expected, "Expected %s, got %s for %s" \
-           % (expected, result, name)
+    assert result == expected, "Expected {0!s}, got {1!s} for {2!s}".format(expected, result, name)
 
 
 class MarkovModelBuilderTest(unittest.TestCase):
@@ -414,7 +413,7 @@ class AbstractTrainerTest(unittest.TestCase):
 
         for test_result in result_tests:
             assert results[test_result[0]] == test_result[1], \
-                   "Got %f, expected %f for %s" % (results[test_result[0]],
+                   "Got {0:f}, expected {1:f} for {2!s}".format(results[test_result[0]],
                                                    test_result[1],
                                                    test_result[0])
 
@@ -426,7 +425,7 @@ class AbstractTrainerTest(unittest.TestCase):
         log_prob = self.test_trainer.log_likelihood(probs)
         expected_log_prob = -7.31873556778
         assert abs(expected_log_prob - log_prob) < 0.1, \
-          "Bad probability calculated: %s" % log_prob
+          "Bad probability calculated: {0!s}".format(log_prob)
 
 # run the tests
 if __name__ == "__main__":

@@ -274,12 +274,12 @@ class PrintFormat(object):
         for name, sites in iterator:
             l = len(sites)
             if l > cur_len:
-                title += "\n\nenzymes which cut %i times :\n\n" % cur_len
+                title += "\n\nenzymes which cut {0:d} times :\n\n".format(cur_len)
                 title = self.__next_section(new_sect, title)
                 new_sect, cur_len = [(name, sites)], l
                 continue
             new_sect.append((name, sites))
-        title += "\n\nenzymes which cut %i times :\n\n" % cur_len
+        title += "\n\nenzymes which cut {0:d} times :\n\n".format(cur_len)
         return self.__next_section(new_sect, title)
 
     def _make_map_only(self, ls, title, nc=[], s1=''):
@@ -411,7 +411,7 @@ class PrintFormat(object):
         ls.sort()
         indentation = '\n' + (self.NameWidth + self.Indent) * ' '
         linesize = self.linesize - self.MaxSize
-        pat = re.compile("([\w,\s()]){1,%i}[,\.]" % linesize)
+        pat = re.compile("([\w,\s()]){{1,{0:d}}}[,\.]".format(linesize))
         several, Join = '', ''.join
         for name, sites in ls:
             stringsite = ''

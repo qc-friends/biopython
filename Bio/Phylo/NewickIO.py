@@ -34,7 +34,7 @@ tokens = [
     (r"\;",                                       'semicolon'),
     (r"\n",                                       'newline'),
 ]
-tokenizer = re.compile('(%s)' % '|'.join(token[0] for token in tokens))
+tokenizer = re.compile('({0!s})'.format('|'.join(token[0] for token in tokens)))
 token_dict = dict((name, re.compile(token)) for (token, name) in tokens)
 
 
@@ -74,7 +74,7 @@ def _parse_confidence(text):
 
 
 def _format_comment(text):
-    return '[%s]' % (text.replace('[', '\\[').replace(']', '\\]'))
+    return '[{0!s}]'.format((text.replace('[', '\\[').replace(']', '\\]')))
 
 
 def _get_comment(clade):
@@ -199,8 +199,7 @@ class Parser(object):
         # if ; token broke out of for loop, there should be no remaining tokens
         try:
             next_token = next(tokens)
-            raise NewickError('Text after semicolon in Newick tree: %s'
-                              % next_token.group())
+            raise NewickError('Text after semicolon in Newick tree: {0!s}'.format(next_token.group()))
         except StopIteration:
             pass
 
@@ -269,15 +268,15 @@ class Writer(object):
             if label:
                 unquoted_label = re.match(token_dict['unquoted node label'], label)
                 if (not unquoted_label) or (unquoted_label.end() < len(label)):
-                    label = "'%s'" % label.replace(
-                        '\\', '\\\\').replace("'", "\\'")
+                    label = "'{0!s}'".format(label.replace(
+                        '\\', '\\\\').replace("'", "\\'"))
 
             if clade.is_terminal():    # terminal
                 return (label
                         + make_info_string(clade, terminal=True))
             else:
                 subtrees = (newickize(sub) for sub in clade)
-                return '(%s)%s' % (','.join(subtrees),
+                return '({0!s}){1!s}'.format(','.join(subtrees),
                                    label + make_info_string(clade))
 
         # Convert each tree to a string
@@ -292,7 +291,7 @@ class Writer(object):
             # Nexus-style (?) notation before the raw Newick tree
             treeline = ['tree', (tree.name or 'a_tree'), '=']
             if tree.weight != 1:
-                treeline.append('[&W%s]' % round(float(tree.weight), 3))
+                treeline.append('[&W{0!s}]'.format(round(float(tree.weight), 3)))
             if tree.rooted:
                 treeline.append('[&R]')
             treeline.append(rawtree)

@@ -84,7 +84,7 @@ class Entity(object):
         entity_id = entity.get_id()
         if self.has_id(entity_id):
             raise PDBConstructionException(
-                "%s defined twice" % str(entity_id))
+                "{0!s} defined twice".format(str(entity_id)))
         entity.set_parent(self)
         self.child_list.append(entity)
         self.child_dict[entity_id] = entity
@@ -94,7 +94,7 @@ class Entity(object):
         entity_id = entity.get_id()
         if self.has_id(entity_id):
             raise PDBConstructionException(
-                "%s defined twice" % str(entity_id))
+                "{0!s} defined twice".format(str(entity_id)))
         entity.set_parent(self)
         self.child_list[pos:pos] = [entity]
         self.child_dict[entity_id] = entity

@@ -64,19 +64,19 @@ def compare_record(old, new, truncate=None):
     It knows to ignore UnknownSeq objects for string matching (i.e. QUAL files).
     """
     if old.id != new.id:
-        raise ValueError("'%s' vs '%s' " % (old.id, new.id))
+        raise ValueError("'{0!s}' vs '{1!s}' ".format(old.id, new.id))
     if old.description != new.description \
     and (old.id + " " + old.description).strip() != new.description:
-        raise ValueError("'%s' vs '%s' " % (old.description, new.description))
+        raise ValueError("'{0!s}' vs '{1!s}' ".format(old.description, new.description))
     if len(old.seq) != len(new.seq):
-        raise ValueError("%i vs %i" % (len(old.seq), len(new.seq)))
+        raise ValueError("{0:d} vs {1:d}".format(len(old.seq), len(new.seq)))
     if isinstance(old.seq, UnknownSeq) or isinstance(new.seq, UnknownSeq):
         pass
     elif str(old.seq) != str(new.seq):
         if len(old.seq) < 200:
-            raise ValueError("'%s' vs '%s'" % (old.seq, new.seq))
+            raise ValueError("'{0!s}' vs '{1!s}'".format(old.seq, new.seq))
         else:
-            raise ValueError("'%s...' vs '%s...'" % (old.seq[:100], new.seq[:100]))
+            raise ValueError("'{0!s}...' vs '{1!s}...'".format(old.seq[:100], new.seq[:100]))
     if "phred_quality" in old.letter_annotations \
     and "phred_quality" in new.letter_annotations \
     and old.letter_annotations["phred_quality"] != new.letter_annotations["phred_quality"]:
@@ -126,7 +126,7 @@ def compare_record(old, new, truncate=None):
 def compare_records(old_list, new_list, truncate_qual=None):
     """Check two lists of SeqRecords agree, raises a ValueError if mismatch."""
     if len(old_list) != len(new_list):
-        raise ValueError("%i vs %i records" % (len(old_list), len(new_list)))
+        raise ValueError("{0:d} vs {1:d} records".format(len(old_list), len(new_list)))
     for old, new in zip(old_list, new_list):
         if not compare_record(old, new, truncate_qual):
             return False
@@ -194,10 +194,10 @@ tests = [("diff_ids", 2),
          ("trunc_at_qual", 4)]
 for base_name, good_count in tests:
     def funct(name, c):
-        f = lambda x: x.check_all_fail("Quality/error_%s.fastq" % name, c)
-        f.__doc__ = "Reject FASTQ with %s" % name.replace("_", " ")
+        f = lambda x: x.check_all_fail("Quality/error_{0!s}.fastq".format(name), c)
+        f.__doc__ = "Reject FASTQ with {0!s}".format(name.replace("_", " "))
         return f
-    setattr(TestFastqErrors, "test_%s" % (base_name),
+    setattr(TestFastqErrors, "test_{0!s}".format((base_name)),
             funct(base_name, good_count))
     del funct
 
@@ -212,10 +212,10 @@ tests = [("del", 3, 5),
          ("null", 0, 5)]
 for base_name, good_count, full_count in tests:
     def funct(name, c1, c2):
-        f = lambda x: x.check_qual_char("Quality/error_qual_%s.fastq" % name, c1, c2)
-        f.__doc__ = "Reject FASTQ with %s in quality" % name.replace("_", " ")
+        f = lambda x: x.check_qual_char("Quality/error_qual_{0!s}.fastq".format(name), c1, c2)
+        f.__doc__ = "Reject FASTQ with {0!s} in quality".format(name.replace("_", " "))
         return f
-    setattr(TestFastqErrors, "test_qual_%s" % (base_name),
+    setattr(TestFastqErrors, "test_qual_{0!s}".format((base_name)),
             funct(base_name, good_count, full_count))
     del funct
 
@@ -277,11 +277,10 @@ class TestReferenceFastqConversions(unittest.TestCase):
     """Tests where we have reference output."""
     def simple_check(self, base_name, in_variant):
         for out_variant in ["sanger", "solexa", "illumina"]:
-            in_filename = "Quality/%s_original_%s.fastq" \
-                          % (base_name, in_variant)
+            in_filename = "Quality/{0!s}_original_{1!s}.fastq".format(base_name, in_variant)
             self.assertTrue(os.path.isfile(in_filename))
             # Load the reference output...
-            with open("Quality/%s_as_%s.fastq" % (base_name, out_variant),
+            with open("Quality/{0!s}_as_{1!s}.fastq".format(base_name, out_variant),
                       _universal_read_mode) as handle:
                 expected = handle.read()
 
@@ -315,10 +314,10 @@ for base_name, variant in tests:
 
     def funct(bn, var):
         f = lambda x: x.simple_check(bn, var)
-        f.__doc__ = "Reference conversions of %s file %s" % (var, bn)
+        f.__doc__ = "Reference conversions of {0!s} file {1!s}".format(var, bn)
         return f
 
-    setattr(TestReferenceFastqConversions, "test_%s_%s" % (base_name, variant),
+    setattr(TestReferenceFastqConversions, "test_{0!s}_{1!s}".format(base_name, variant),
             funct(base_name, variant))
     del funct
 
@@ -400,16 +399,14 @@ class TestReadWrite(unittest.TestCase):
     """Test can read and write back files."""
     def test_fastq_2000(self):
         """Read and write back simple example with upper case 2000bp read"""
-        data = "@%s\n%s\n+\n%s\n" \
-               % ("id descr goes here", "ACGT" * 500, "!@a~" * 500)
+        data = "@{0!s}\n{1!s}\n+\n{2!s}\n".format("id descr goes here", "ACGT" * 500, "!@a~" * 500)
         handle = StringIO()
         self.assertEqual(1, SeqIO.write(SeqIO.parse(StringIO(data), "fastq"), handle, "fastq"))
         self.assertEqual(data, handle.getvalue())
 
     def test_fastq_1000(self):
         """Read and write back simple example with mixed case 1000bp read"""
-        data = "@%s\n%s\n+\n%s\n" \
-               % ("id descr goes here", "ACGTNncgta" * 100, "abcd!!efgh" * 100)
+        data = "@{0!s}\n{1!s}\n+\n{2!s}\n".format("id descr goes here", "ACGTNncgta" * 100, "abcd!!efgh" * 100)
         handle = StringIO()
         self.assertEqual(1, SeqIO.write(SeqIO.parse(StringIO(data), "fastq"), handle, "fastq"))
         self.assertEqual(data, handle.getvalue())
@@ -417,16 +414,14 @@ class TestReadWrite(unittest.TestCase):
     def test_fastq_dna(self):
         """Read and write back simple example with ambiguous DNA"""
         # First in upper case...
-        data = "@%s\n%s\n+\n%s\n" \
-               % ("id descr goes here",
+        data = "@{0!s}\n{1!s}\n+\n{2!s}\n".format("id descr goes here",
                   ambiguous_dna_letters.upper(),
                   "".join(chr(33 + q) for q in range(len(ambiguous_dna_letters))))
         handle = StringIO()
         self.assertEqual(1, SeqIO.write(SeqIO.parse(StringIO(data), "fastq"), handle, "fastq"))
         self.assertEqual(data, handle.getvalue())
         # Now in lower case...
-        data = "@%s\n%s\n+\n%s\n" \
-               % ("id descr goes here",
+        data = "@{0!s}\n{1!s}\n+\n{2!s}\n".format("id descr goes here",
                   ambiguous_dna_letters.lower(),
                   "".join(chr(33 + q) for q in range(len(ambiguous_dna_letters))))
         handle = StringIO()
@@ -436,16 +431,14 @@ class TestReadWrite(unittest.TestCase):
     def test_fastq_rna(self):
         """Read and write back simple example with ambiguous RNA"""
         # First in upper case...
-        data = "@%s\n%s\n+\n%s\n" \
-               % ("id descr goes here",
+        data = "@{0!s}\n{1!s}\n+\n{2!s}\n".format("id descr goes here",
                   ambiguous_rna_letters.upper(),
                   "".join(chr(33 + q) for q in range(len(ambiguous_rna_letters))))
         handle = StringIO()
         self.assertEqual(1, SeqIO.write(SeqIO.parse(StringIO(data), "fastq"), handle, "fastq"))
         self.assertEqual(data, handle.getvalue())
         # Now in lower case...
-        data = "@%s\n%s\n+\n%s\n" \
-               % ("id descr goes here",
+        data = "@{0!s}\n{1!s}\n+\n{2!s}\n".format("id descr goes here",
                   ambiguous_rna_letters.lower(),
                   "".join(chr(33 + q) for q in range(len(ambiguous_rna_letters))))
         handle = StringIO()
@@ -650,7 +643,7 @@ class MappingTests(unittest.TestCase):
         qual = "".join(chr(33 + q) for q in range(0, 94))
         expected_sol = [min(62, int(round(QualityIO.solexa_quality_from_phred(q))))
                         for q in range(0, 94)]
-        in_handle = StringIO("@Test\n%s\n+\n%s" % (seq, qual))
+        in_handle = StringIO("@Test\n{0!s}\n+\n{1!s}".format(seq, qual))
         out_handle = StringIO()
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always", BiopythonWarning)
@@ -672,7 +665,7 @@ class MappingTests(unittest.TestCase):
         qual = "".join(chr(64 + q) for q in range(-5, 63))
         expected_phred = [round(QualityIO.phred_quality_from_solexa(q))
                           for q in range(-5, 63)]
-        in_handle = StringIO("@Test\n%s\n+\n%s" % (seq, qual))
+        in_handle = StringIO("@Test\n{0!s}\n+\n{1!s}".format(seq, qual))
         out_handle = StringIO()
         SeqIO.write(SeqIO.parse(in_handle, "fastq-solexa"),
                     out_handle, "fastq-sanger")
@@ -687,7 +680,7 @@ class MappingTests(unittest.TestCase):
         seq = "N" * 94
         qual = "".join(chr(33 + q) for q in range(0, 94))
         expected_phred = [min(62, q) for q in range(0, 94)]
-        in_handle = StringIO("@Test\n%s\n+\n%s" % (seq, qual))
+        in_handle = StringIO("@Test\n{0!s}\n+\n{1!s}".format(seq, qual))
         out_handle = StringIO()
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always", BiopythonWarning)
@@ -705,7 +698,7 @@ class MappingTests(unittest.TestCase):
         seq = "N" * 63
         qual = "".join(chr(64 + q) for q in range(0, 63))
         expected_phred = list(range(63))
-        in_handle = StringIO("@Test\n%s\n+\n%s" % (seq, qual))
+        in_handle = StringIO("@Test\n{0!s}\n+\n{1!s}".format(seq, qual))
         out_handle = StringIO()
         SeqIO.write(SeqIO.parse(in_handle, "fastq-illumina"),
                     out_handle, "fastq-sanger")

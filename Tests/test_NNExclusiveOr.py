@@ -46,7 +46,7 @@ def main():
     for example in examples:
         prediction = network.predict(example.inputs)
         if VERBOSE:
-            print("%s;%s=> %s" % (example.inputs, example.outputs, prediction))
+            print("{0!s};{1!s}=> {2!s}".format(example.inputs, example.outputs, prediction))
 
 
 def stopping_criteria(num_iterations, validation_error, training_error):
@@ -54,7 +54,7 @@ def stopping_criteria(num_iterations, validation_error, training_error):
     """
     if num_iterations % 100 == 0:
         if VERBOSE:
-            print("error: %s" % validation_error)
+            print("error: {0!s}".format(validation_error))
     if num_iterations >= 2000:
         return True
     return False

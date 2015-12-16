@@ -92,7 +92,7 @@ class FDistController(object):
             sample_line = lines[1].rstrip().split(' ')
             sample = int(sample_line[9])
         else:
-            out, err = proc.communicate('%f\n%f\n%f %f\na\n' % (
+            out, err = proc.communicate('{0:f}\n{1:f}\n{2:f} {3:f}\na\n'.format(
                 crit_freq, p, beta[0], beta[1]))
             lines = out.split("\n")
             l = lines[0].rstrip().split(" ")
@@ -169,8 +169,8 @@ class FDistController(object):
             f.write(str(mut) + '\n')
         f.write(str(num_sims) + '\n')
         if is_dominant:
-            f.write("%f %f\n" % beta)
-            f.write("%f\n" % max_freq)
+            f.write("{0:f} {1:f}\n".format(*beta))
+            f.write("{0:f}\n".format(max_freq))
         f.close()
 
         self._generate_intfile(data_dir)

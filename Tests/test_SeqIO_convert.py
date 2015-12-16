@@ -75,8 +75,7 @@ def check_convert_fails(in_filename, in_format, out_format, alphabet=None):
         assert False, "Convert should have failed!"
     except ValueError as err2:
         assert str(err1) == str(err2), \
-               "Different failures, parse/write:\n%s\nconvert:\n%s" \
-               % (err1, err2)
+               "Different failures, parse/write:\n{0!s}\nconvert:\n{1!s}".format(err1, err2)
 
 
 # TODO - move this to a shared test module...
@@ -87,21 +86,21 @@ def compare_record(old, new, truncate=None):
     It knows to ignore UnknownSeq objects for string matching (i.e. QUAL files).
     """
     if old.id != new.id:
-        raise ValueError("'%s' vs '%s' " % (old.id, new.id))
+        raise ValueError("'{0!s}' vs '{1!s}' ".format(old.id, new.id))
     if old.description != new.description \
     and (old.id + " " + old.description).strip() != new.description \
     and new.description != "<unknown description>" \
     and new.description != "":  # e.g. tab format
-        raise ValueError("'%s' vs '%s' " % (old.description, new.description))
+        raise ValueError("'{0!s}' vs '{1!s}' ".format(old.description, new.description))
     if len(old.seq) != len(new.seq):
-        raise ValueError("%i vs %i" % (len(old.seq), len(new.seq)))
+        raise ValueError("{0:d} vs {1:d}".format(len(old.seq), len(new.seq)))
     if isinstance(old.seq, UnknownSeq) or isinstance(new.seq, UnknownSeq):
         pass
     elif str(old.seq) != str(new.seq):
         if len(old.seq) < 200:
-            raise ValueError("'%s' vs '%s'" % (old.seq, new.seq))
+            raise ValueError("'{0!s}' vs '{1!s}'".format(old.seq, new.seq))
         else:
-            raise ValueError("'%s...' vs '%s...'" % (old.seq[:100], new.seq[:100]))
+            raise ValueError("'{0!s}...' vs '{1!s}...'".format(old.seq[:100], new.seq[:100]))
     if "phred_quality" in old.letter_annotations \
     and "phred_quality" in new.letter_annotations \
     and old.letter_annotations["phred_quality"] != new.letter_annotations["phred_quality"]:
@@ -151,7 +150,7 @@ def compare_record(old, new, truncate=None):
 def compare_records(old_list, new_list, truncate_qual=None):
     """Check two lists of SeqRecords agree, raises a ValueError if mismatch."""
     if len(old_list) != len(new_list):
-        raise ValueError("%i vs %i records" % (len(old_list), len(new_list)))
+        raise ValueError("{0:d} vs {1:d} records".format(len(old_list), len(new_list)))
     for old, new in zip(old_list, new_list):
         if not compare_record(old, new, truncate_qual):
             return False
@@ -186,11 +185,10 @@ for filename, format, alphabet in tests:
 
         def funct(fn, fmt1, fmt2, alpha):
             f = lambda x: x.simple_check(fn, fmt1, fmt2, alpha)
-            f.__doc__ = "Convert %s from %s to %s" % (fn, fmt1, fmt2)
+            f.__doc__ = "Convert {0!s} from {1!s} to {2!s}".format(fn, fmt1, fmt2)
             return f
 
-        setattr(ConvertTests, "test_%s_%s_to_%s"
-                % (filename.replace("/", "_").replace(".", "_"), in_format, out_format),
+        setattr(ConvertTests, "test_{0!s}_{1!s}_to_{2!s}".format(filename.replace("/", "_").replace(".", "_"), in_format, out_format),
                 funct(filename, in_format, out_format, alphabet))
         del funct
 
@@ -231,11 +229,10 @@ for filename, format, alphabet in tests:
 
         def funct(fn, fmt1, fmt2, alpha):
             f = lambda x: x.failure_check(fn, fmt1, fmt2, alpha)
-            f.__doc__ = "Convert %s from %s to %s" % (fn, fmt1, fmt2)
+            f.__doc__ = "Convert {0!s} from {1!s} to {2!s}".format(fn, fmt1, fmt2)
             return f
 
-        setattr(ConvertTests, "test_%s_%s_to_%s"
-                % (filename.replace("/", "_").replace(".", "_"), in_format, out_format),
+        setattr(ConvertTests, "test_{0!s}_{1!s}_to_{2!s}".format(filename.replace("/", "_").replace(".", "_"), in_format, out_format),
                 funct(filename, in_format, out_format, alphabet))
     del funct
 

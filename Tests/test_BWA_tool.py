@@ -95,11 +95,9 @@ class BwaTestCase(unittest.TestCase):
         for extension in self.reference_extensions:
             index_file = self.reference_file + "." + extension
             self.assertTrue(os.path.exists(index_file),
-                            "Index File %s not found"
-                            % (index_file))
+                            "Index File {0!s} not found".format((index_file)))
         self.assertTrue(stdout.startswith("[bwt_gen]"),
-                        "FASTA indexing failed:\n%s\nStdout:%s"
-                        % (cmdline, stdout))
+                        "FASTA indexing failed:\n{0!s}\nStdout:{1!s}".format(cmdline, stdout))
 
     def do_aln(self, in_file, out_file):
         """Test for generating sai files given the reference and read file"""
@@ -110,8 +108,7 @@ class BwaTestCase(unittest.TestCase):
         stdout, stderr = cmdline(stdout=out_file)
 
         self.assertTrue("fail to locate the index" not in stderr,
-                        "Error aligning sequence to reference:\n%s\nStderr:%s"
-                        % (cmdline, stderr))
+                        "Error aligning sequence to reference:\n{0!s}\nStderr:{1!s}".format(cmdline, stderr))
 
     def create_fasta_index(self):
         """Creates index for fasta file.
@@ -140,8 +137,7 @@ class BwaTestCase(unittest.TestCase):
             with open(self.samfile1, "r") as handle:
                 headline = handle.readline()
             self.assertTrue(headline.startswith("@SQ"),
-                            "Error generating sam files:\n%s\nOutput starts:%s"
-                            % (cmdline, headline))
+                            "Error generating sam files:\n{0!s}\nOutput starts:{1!s}".format(cmdline, headline))
 
         def test_sampe(self):
             """Test for generating samfile by paired end sequencing"""
@@ -162,8 +158,7 @@ class BwaTestCase(unittest.TestCase):
             with open(self.samfile, "r") as handle:
                 headline = handle.readline()
             self.assertTrue(headline.startswith("@SQ"),
-                            "Error generating sam files:\n%s\nOutput starts:%s"
-                            % (cmdline, headline))
+                            "Error generating sam files:\n{0!s}\nOutput starts:{1!s}".format(cmdline, headline))
 
 
 if __name__ == "__main__":

@@ -196,8 +196,7 @@ def _set_hsp_seqs(hsp, parsed, program):
             start = start + start_adj
             stop = stop + start_adj - stop_adj
             parsed[seq_type]['seq'] = pseq['seq'][start:stop]
-    assert len(parsed['query']['seq']) == len(parsed['hit']['seq']), "%r %r" \
-            % (len(parsed['query']['seq']), len(parsed['hit']['seq']))
+    assert len(parsed['query']['seq']) == len(parsed['hit']['seq']), "{0!r} {1!r}".format(len(parsed['query']['seq']), len(parsed['hit']['seq']))
     if 'similarity' in hsp.aln_annotation:
         # only using 'start' since FASTA seems to have trimmed the 'excess'
         # end part
@@ -259,8 +258,7 @@ def _get_aln_slice_coords(parsed_hsp):
         stop = disp_start - stop + 1
     stop += seq_stripped.count('-')
     assert 0 <= start and start < stop and stop <= len(seq_stripped), \
-           "Problem with sequence start/stop,\n%s[%i:%i]\n%s" \
-           % (seq, start, stop, parsed_hsp)
+           "Problem with sequence start/stop,\n{0!s}[{1:d}:{2:d}]\n{3!s}".format(seq, start, stop, parsed_hsp)
     return start, stop
 
 
@@ -451,7 +449,7 @@ class FastaM10Parser(object):
                 if state == _STATE_NONE:
                     # make sure it's the correct query
                     assert query_id.startswith(self.line[1:].split(' ')[0]), \
-                            "%r vs %r" % (query_id, self.line)
+                            "{0!r} vs {1!r}".format(query_id, self.line)
                     state = _STATE_QUERY_BLOCK
                     parsed_hsp['query']['seq'] = ''
                 elif state == _STATE_QUERY_BLOCK:
@@ -490,7 +488,7 @@ class FastaM10Parser(object):
                         parsed_hsp['hit'][name] = value
                 # for values in the hit block
                 else:
-                    raise ValueError("Unexpected line: %r" % self.line)
+                    raise ValueError("Unexpected line: {0!r}".format(self.line))
             # otherwise, it must be lines containing the sequences
             else:
                 assert '>' not in self.line
@@ -504,7 +502,7 @@ class FastaM10Parser(object):
                             self.line.strip('\r\n')
                 # we should not get here!
                 else:
-                    raise ValueError("Unexpected line: %r" % self.line)
+                    raise ValueError("Unexpected line: {0!r}".format(self.line))
 
             self.line = self.handle.readline()
 

@@ -85,7 +85,7 @@ def extract_doctests(latex_filename):
             elif line.startswith("%doctest"):
                 if lines:
                     if not lines[0].startswith(">>> "):
-                        raise ValueError("Should start '>>> ' not %r" % lines[0])
+                        raise ValueError("Should start '>>> ' not {0!r}".format(lines[0]))
                     yield name, "".join(lines), folder, deps
                     lines = []
                 deps = [x.strip() for x in line.split()[1:]]
@@ -94,13 +94,13 @@ def extract_doctests(latex_filename):
                     deps = deps[1:]
                 else:
                     folder = ""
-                name = "test_%s_line_%05i" % (base_name, line_number)
+                name = "test_{0!s}_line_{1:05d}".format(base_name, line_number)
                 x = _extract(handle)
                 lines.extend(x)
                 line_number += len(x) + 2
     if lines:
         if not lines[0].startswith(">>> "):
-            raise ValueError("Should start '>>> ' not %r" % lines[0])
+            raise ValueError("Should start '>>> ' not {0!r}".format(lines[0]))
         yield name, "".join(lines), folder, deps
     # yield "dummy", ">>> 2 + 2\n5\n"
 
@@ -141,15 +141,14 @@ for latex in files:
             method = lambda x: None
             if f:
                 p = os.path.join(tutorial_base, f)
-                method.__doc__ = "%s\n\n>>> import os\n>>> os.chdir(%r)\n%s\n" \
-                    % (n, p, d)
+                method.__doc__ = "{0!s}\n\n>>> import os\n>>> os.chdir({1!r})\n{2!s}\n".format(n, p, d)
             else:
-                method.__doc__ = "%s\n\n%s\n" % (n, d)
+                method.__doc__ = "{0!s}\n\n{1!s}\n".format(n, d)
             method._folder = f
             return method
 
         setattr(TutorialDocTestHolder,
-                "doctest_%s" % name.replace(" ", "_"),
+                "doctest_{0!s}".format(name.replace(" ", "_")),
                 funct(name, example, folder))
         del funct
 
@@ -170,8 +169,7 @@ class TutorialTestCase(unittest.TestCase):
                 failures.append(name[30:])
                 # raise ValueError("Tutorial doctest %s failed" % test.name[30:])
         if failures:
-            raise ValueError("%i Tutorial doctests failed: %s" %
-                             (len(failures), ", ".join(failures)))
+            raise ValueError("{0:d} Tutorial doctests failed: {1!s}".format(len(failures), ", ".join(failures)))
 
     def tearDown(self):
         global original_path
@@ -183,10 +181,10 @@ if __name__ == "__main__":
     if missing_deps:
         print("Skipping tests needing the following:")
         for dep in sorted(missing_deps):
-            print(" - %s" % dep)
+            print(" - {0!s}".format(dep))
     print("Running Tutorial doctests...")
     import doctest
     tests = doctest.testmod()
     if tests.failed:
-        raise RuntimeError("%i/%i tests failed" % tests)
+        raise RuntimeError("{0:d}/{1:d} tests failed".format(*tests))
     print("Tests done")

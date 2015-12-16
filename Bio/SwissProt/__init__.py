@@ -232,7 +232,7 @@ def _read(handle):
             _read_ft(record, line)
         elif key == 'SQ':
             cols = value.split()
-            assert len(cols) == 7, "I don't understand SQ line %s" % line
+            assert len(cols) == 7, "I don't understand SQ line {0!s}".format(line)
             # Do more checking here?
             record.seqinfo = int(cols[1]), int(cols[3]), cols[5]
         elif key == '  ':
@@ -251,7 +251,7 @@ def _read(handle):
             record.sequence = "".join(_sequence_lines)
             return record
         else:
-            raise ValueError("Unknown keyword '%s' found" % key)
+            raise ValueError("Unknown keyword '{0!s}' found".format(key))
     if record:
         raise ValueError("Unexpected end of stream.")
 
@@ -278,13 +278,11 @@ def _read_id(record, line):
     # check if the data class is one of the allowed values
     allowed = ('STANDARD', 'PRELIMINARY', 'IPI', 'Reviewed', 'Unreviewed')
     if record.data_class not in allowed:
-        raise ValueError("Unrecognized data class %s in line\n%s" %
-              (record.data_class, line))
+        raise ValueError("Unrecognized data class {0!s} in line\n{1!s}".format(record.data_class, line))
     # molecule_type should be 'PRT' for PRoTein
     # Note that has been removed in recent releases (set to None)
     if record.molecule_type not in (None, 'PRT'):
-        raise ValueError("Unrecognized molecule type %s in line\n%s" %
-              (record.molecule_type, line))
+        raise ValueError("Unrecognized molecule type {0!s} in line\n{1!s}".format(record.molecule_type, line))
 
 
 def _read_dt(record, line):
@@ -315,7 +313,7 @@ def _read_dt(record, line):
             if 'REL.' in uprcols[index]:
                 rel_index = index
         assert rel_index >= 0, \
-                "Could not find Rel. in DT line: %s" % line
+                "Could not find Rel. in DT line: {0!s}".format(line)
         version_index = rel_index + 1
         # get the version information
         str_version = cols[version_index].rstrip(",")
@@ -378,7 +376,7 @@ def _read_dt(record, line):
         else:
             assert False, "Shouldn't reach this line!"
     else:
-        raise ValueError("I don't understand the date line %s" % line)
+        raise ValueError("I don't understand the date line {0!s}".format(line))
 
 
 def _read_ox(record, line):
@@ -401,13 +399,13 @@ def _read_ox(record, line):
         ids = line[5:].rstrip().rstrip(";")
     else:
         descr, ids = line[5:].rstrip().rstrip(";").split("=")
-        assert descr == "NCBI_TaxID", "Unexpected taxonomy type %s" % descr
+        assert descr == "NCBI_TaxID", "Unexpected taxonomy type {0!s}".format(descr)
     record.taxonomy_id.extend(ids.split(', '))
 
 
 def _read_oh(record, line):
     # Line type OH (Organism Host) for viral hosts
-    assert line[5:].startswith("NCBI_TaxID="), "Unexpected %s" % line
+    assert line[5:].startswith("NCBI_TaxID="), "Unexpected {0!s}".format(line)
     line = line[16:].rstrip()
     assert line[-1] == "." and line.count(";") == 1, line
     taxid, name = line[:-1].split(";")
@@ -422,11 +420,11 @@ def _read_rn(reference, rn):
     # RN   [1] {ECO:0000313|EMBL:AEX14553.1}
     words = rn.split(None, 1)
     number = words[0]
-    assert number.startswith('[') and number.endswith(']'), "Missing brackets %s" % number
+    assert number.startswith('[') and number.endswith(']'), "Missing brackets {0!s}".format(number)
     reference.number = int(number[1:-1])
     if len(words) > 1:
         evidence = words[1]
-        assert evidence.startswith('{') and evidence.endswith('}'), "Missing braces %s" % evidence
+        assert evidence.startswith('{') and evidence.endswith('}'), "Missing braces {0!s}".format(evidence)
         reference.evidence = evidence[1:-1].split('|')
 
 def _read_rc(reference, value):
@@ -446,7 +444,7 @@ def _read_rc(reference, value):
             reference.comments.append(comment)
         else:
             comment = reference.comments[-1]
-            comment = "%s %s" % (comment, col)
+            comment = "{0!s} {1!s}".format(comment, col)
             reference.comments[-1] = comment
     return unread
 
@@ -479,7 +477,7 @@ def _read_rx(reference, value):
             if len(x) != 2 or x == ("DOI", "DOI"):
                 warn = True
                 break
-            assert len(x) == 2, "I don't understand RX line %s" % value
+            assert len(x) == 2, "I don't understand RX line {0!s}".format(value)
             reference.references.append((x[0], x[1].rstrip(";")))
     # otherwise we assume we have the type 'RX   MEDLINE; 85132727.'
     else:
@@ -492,7 +490,7 @@ def _read_rx(reference, value):
     if warn:
         import warnings
         from Bio import BiopythonParserWarning
-        warnings.warn("Possibly corrupt RX line %r" % value,
+        warnings.warn("Possibly corrupt RX line {0!r}".format(value),
                       BiopythonParserWarning)
 
 
@@ -553,7 +551,7 @@ def _read_ft(record, line):
         assert not from_res and not to_res
         name, from_res, to_res, old_description, old_ft_id = record.features[-1]
         del record.features[-1]
-        description = ("%s %s" % (old_description, description)).strip()
+        description = ("{0!s} {1!s}".format(old_description, description)).strip()
 
         # special case -- VARSPLIC, reported by edvard@farmasi.uit.no
         if name == "VARSPLIC":
@@ -587,7 +585,7 @@ if __name__ == "__main__":
 
     import os
     if not os.path.isfile(example_filename):
-        print("Missing test file %s" % example_filename)
+        print("Missing test file {0!s}".format(example_filename))
     else:
         # Try parsing it!
 

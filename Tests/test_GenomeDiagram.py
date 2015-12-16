@@ -405,7 +405,7 @@ class SigilsTest(unittest.TestCase):
     def test_all_sigils(self):
         """All sigils."""
         for glyph in ["BOX", "OCTO", "JAGGY", "ARROW", "BIGARROW"]:
-            self.add_track_with_sigils(track_caption='  sigil="%s"' % glyph,
+            self.add_track_with_sigils(track_caption='  sigil="{0!s}"'.format(glyph),
                                        sigil=glyph)
         self.finish("GD_sigils")
 
@@ -545,7 +545,7 @@ class SigilsTest(unittest.TestCase):
         self.gds_features.add_feature(feature, color="lightgreen")
         self.gds_features.add_feature(feature, name="Standless", sigil=glyph,
                                       color="green", arrowhead_length=2.0)
-        self.finish("GD_sigil_long_%s" % glyph)
+        self.finish("GD_sigil_long_{0!s}".format(glyph))
 
     def test_long_arrow_heads(self):
         """Feature ARROW sigil heads within bounding box."""
@@ -642,14 +642,14 @@ class DiagramTest(unittest.TestCase):
             try:
                 gdd.write(filename, output)
                 assert False, \
-                    "Should have rejected %s as an output format" % output
+                    "Should have rejected {0!s} as an output format".format(output)
             except ValueError:
                 # Good!
                 pass
             try:
                 gdd.write_to_string(output)
                 assert False, \
-                    "Should have rejected %s as an output format" % output
+                    "Should have rejected {0!s} as an output format".format(output)
             except ValueError:
                 # Good!
                 pass
@@ -689,7 +689,7 @@ class DiagramTest(unittest.TestCase):
             # of ReportLab.  You need ReportLab 2.4 or later
             try:
                 url = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi" +\
-                      "?db=protein&id=%s" % feature.qualifiers["protein_id"][0]
+                      "?db=protein&id={0!s}".format(feature.qualifiers["protein_id"][0])
             except KeyError:
                 url = None
 
@@ -777,7 +777,7 @@ class DiagramTest(unittest.TestCase):
                 # of ReportLab.  You need ReportLab 2.4 or later
                 try:
                     url = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi" +\
-                          "?db=protein&id=%s" % feature.qualifiers["protein_id"][0]
+                          "?db=protein&id={0!s}".format(feature.qualifiers["protein_id"][0])
                 except KeyError:
                     url = None
 

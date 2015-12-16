@@ -29,7 +29,7 @@ file_a_vs_b = "af063097_v_b132222.crunch"
 
 for f in [file_a, file_b, file_a_vs_b]:
     if not os.path.isfile(os.path.join(input_folder, f)):
-        print("Missing input file %s.fna" % f)
+        print("Missing input file {0!s}.fna".format(f))
         sys.exit(1)
 
 # Only doing a_vs_b here, could also have b_vs_c and c_vs_d etc

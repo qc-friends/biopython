@@ -101,13 +101,12 @@ class SffRandomAccess(SeqFileRandomAccess):
                     yield name, offset, 0
                     count += 1
                 assert count == number_of_reads, \
-                    "Indexed %i records, expected %i" \
-                    % (count, number_of_reads)
+                    "Indexed {0:d} records, expected {1:d}".format(count, number_of_reads)
                 # If that worked, call _check_eof ...
             except ValueError as err:
                 import warnings
                 from Bio import BiopythonParserWarning
-                warnings.warn("Could not parse the SFF index: %s" % err,
+                warnings.warn("Could not parse the SFF index: {0!s}".format(err),
                               BiopythonParserWarning)
                 assert count == 0, "Partially populated index"
                 handle.seek(0)
@@ -130,7 +129,7 @@ class SffRandomAccess(SeqFileRandomAccess):
             yield name, offset, 0
             count += 1
         assert count == number_of_reads, \
-            "Indexed %i records, expected %i" % (count, number_of_reads)
+            "Indexed {0:d} records, expected {1:d}".format(count, number_of_reads)
         SeqIO.SffIO._check_eof(handle, index_offset, index_length)
 
     def get(self, offset):
@@ -180,7 +179,7 @@ class SequentialSeqFileRandomAccess(SeqFileRandomAccess):
                   "uniprot-xml": "<entry ",
                   }[format]
         self._marker = marker
-        self._marker_re = re.compile(_as_bytes("^%s" % marker))
+        self._marker_re = re.compile(_as_bytes("^{0!s}".format(marker)))
 
     def __iter__(self):
         """Returns (id,offset) tuples."""
@@ -406,8 +405,7 @@ class UniprotRandomAccess(SequentialSeqFileRandomAccess):
                 else:
                     length += len(line)
             if not key:
-                raise ValueError("Did not find <accession> line in bytes %i to %i"
-                                 % (start_offset, end_offset))
+                raise ValueError("Did not find <accession> line in bytes {0:d} to {1:d}".format(start_offset, end_offset))
             yield _bytes_to_string(key), start_offset, length
             # Find start of next record
             while not marker_re.match(line) and line:
@@ -443,9 +441,9 @@ class UniprotRandomAccess(SequentialSeqFileRandomAccess):
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://uniprot.org/uniprot
         http://www.uniprot.org/support/docs/uniprot.xsd">
-        %s
+        {0!s}
         </uniprot>
-        """ % _bytes_to_string(self.get_raw(offset))
+        """.format(_bytes_to_string(self.get_raw(offset)))
         # TODO - For consistency, this function should not accept a string:
         return next(SeqIO.UniprotIO.UniprotIterator(data))
 
@@ -547,7 +545,7 @@ class FastqRandomAccess(SeqFileRandomAccess):
         at_char = _as_bytes("@")
         plus_char = _as_bytes("+")
         if line[0:1] != at_char:
-            raise ValueError("Problem with FASTQ @ line:\n%r" % line)
+            raise ValueError("Problem with FASTQ @ line:\n{0!r}".format(line))
         while line:
             # assert line[0]=="@"
             # This record seems OK (so far)
@@ -572,12 +570,12 @@ class FastqRandomAccess(SeqFileRandomAccess):
                         # Special case, quality line should be just "\n"
                         line = handle.readline()
                         if line.strip():
-                            raise ValueError("Expected blank quality line, not %r" % line)
+                            raise ValueError("Expected blank quality line, not {0!r}".format(line))
                     # Should be end of record...
                     end_offset = handle.tell()
                     line = handle.readline()
                     if line and line[0:1] != at_char:
-                        raise ValueError("Problem with line %r" % line)
+                        raise ValueError("Problem with line {0!r}".format(line))
                     break
                 else:
                     line = handle.readline()
@@ -599,7 +597,7 @@ class FastqRandomAccess(SeqFileRandomAccess):
         at_char = _as_bytes("@")
         plus_char = _as_bytes("+")
         if line[0:1] != at_char:
-            raise ValueError("Problem with FASTQ @ line:\n%r" % line)
+            raise ValueError("Problem with FASTQ @ line:\n{0!r}".format(line))
         # Find the seq line(s)
         seq_len = 0
         while line:
@@ -619,12 +617,12 @@ class FastqRandomAccess(SeqFileRandomAccess):
                     # Special case, quality line should be just "\n"
                     line = handle.readline()
                     if line.strip():
-                        raise ValueError("Expected blank quality line, not %r" % line)
+                        raise ValueError("Expected blank quality line, not {0!r}".format(line))
                     data += line
                 # Should be end of record...
                 line = handle.readline()
                 if line and line[0:1] != at_char:
-                    raise ValueError("Problem with line %r" % line)
+                    raise ValueError("Problem with line {0!r}".format(line))
                 break
             else:
                 line = handle.readline()

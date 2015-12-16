@@ -147,7 +147,7 @@ class Hit(_BaseSearchObject):
             self.append(hsp)
 
     def __repr__(self):
-        return "Hit(id=%r, query_id=%r, %r hsps)" % (self.id, self.query_id,
+        return "Hit(id={0!r}, query_id={1!r}, {2!r} hsps)".format(self.id, self.query_id,
                 len(self))
 
     def __iter__(self):
@@ -170,18 +170,18 @@ class Hit(_BaseSearchObject):
         lines = []
 
         # set query id line
-        qid_line = 'Query: %s' % self.query_id
+        qid_line = 'Query: {0!s}'.format(self.query_id)
         if self.query_description:
-            qid_line += trim_str('\n       %s' %
-                    self.query_description, 80, '...')
+            qid_line += trim_str('\n       {0!s}'.format(
+                    self.query_description), 80, '...')
         lines.append(qid_line)
 
         # set hit id line
-        hid_line = '  Hit: %s' % self.id
+        hid_line = '  Hit: {0!s}'.format(self.id)
         if hasattr(self, 'seq_len'):
-            hid_line += ' (%i)' % self.seq_len
+            hid_line += ' ({0:d})'.format(self.seq_len)
         if self.description:
-            hid_line += trim_str('\n       %s' % self.description,
+            hid_line += trim_str('\n       {0!s}'.format(self.description),
                     80, '...')
         lines.append(hid_line)
 
@@ -189,8 +189,7 @@ class Hit(_BaseSearchObject):
         if not self.hsps:
             lines.append(' HSPs: ?')
         else:
-            lines.append(' HSPs: %s  %s  %s  %s  %s  %s' %
-                    ('-' * 4, '-' * 8, '-' * 9, '-' * 6, '-' * 15, '-' * 21))
+            lines.append(' HSPs: {0!s}  {1!s}  {2!s}  {3!s}  {4!s}  {5!s}'.format('-' * 4, '-' * 8, '-' * 9, '-' * 6, '-' * 15, '-' * 21))
             pattern = '%11s  %8s  %9s  %6s  %15s  %21s'
             lines.append(pattern % ('#', 'E-value', 'Bit score', 'Span',
                     'Query range', 'Hit range'))
@@ -205,13 +204,13 @@ class Hit(_BaseSearchObject):
                 # query region
                 query_start = getattr_str(hsp, 'query_start')
                 query_end = getattr_str(hsp, 'query_end')
-                query_range = '[%s:%s]' % (query_start, query_end)
+                query_range = '[{0!s}:{1!s}]'.format(query_start, query_end)
                 # max column length is 18
                 query_range = trim_str(query_range, 15, '~]')
                 # hit region
                 hit_start = getattr_str(hsp, 'hit_start')
                 hit_end = getattr_str(hsp, 'hit_end')
-                hit_range = '[%s:%s]' % (hit_start, hit_end)
+                hit_range = '[{0!s}:{1!s}]'.format(hit_start, hit_end)
                 hit_range = trim_str(hit_range, 21, '~]')
                 # append the hsp row
                 lines.append(pattern % (str(idx), evalue, bitscore, aln_span,

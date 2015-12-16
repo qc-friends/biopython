@@ -167,7 +167,7 @@ class TestReadAndWrite(unittest.TestCase):
             # This would be fine too, but don't get this (do we?)
             pass
         else:
-            raise ValueError("Mising expected <species> tag: %r" % output)
+            raise ValueError("Mising expected <species> tag: {0!r}".format(output))
 
 
 class TestReadCorruptFiles(unittest.TestCase):

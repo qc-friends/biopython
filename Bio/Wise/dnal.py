@@ -78,14 +78,14 @@ class Statistics(object):
     Calculate statistics from an ALB report
     """
     def __init__(self, filename, match, mismatch, gap, extension):
-        self.matches = _fgrep_count('"SEQUENCE" %s' % match, filename)
-        self.mismatches = _fgrep_count('"SEQUENCE" %s' % mismatch, filename)
-        self.gaps = _fgrep_count('"INSERT" %s' % gap, filename)
+        self.matches = _fgrep_count('"SEQUENCE" {0!s}'.format(match), filename)
+        self.mismatches = _fgrep_count('"SEQUENCE" {0!s}'.format(mismatch), filename)
+        self.gaps = _fgrep_count('"INSERT" {0!s}'.format(gap), filename)
 
         if gap == extension:
             self.extensions = 0
         else:
-            self.extensions = _fgrep_count('"INSERT" %s' % extension, filename)
+            self.extensions = _fgrep_count('"INSERT" {0!s}'.format(extension), filename)
 
         self.score = (match * self.matches +
                       mismatch * self.mismatches +
@@ -124,10 +124,10 @@ def align(pair, match=_SCORE_MATCH, mismatch=_SCORE_MISMATCH, gap=_SCORE_GAP_STA
 def main():
     import sys
     stats = align(sys.argv[1:3])
-    print("\n".join("%s: %s" % (attr, getattr(stats, attr))
+    print("\n".join("{0!s}: {1!s}".format(attr, getattr(stats, attr))
                     for attr in ("matches", "mismatches", "gaps", "extensions")))
-    print("identity_fraction: %s" % stats.identity_fraction())
-    print("coords: %s" % stats.coords)
+    print("identity_fraction: {0!s}".format(stats.identity_fraction()))
+    print("coords: {0!s}".format(stats.coords))
 
 
 def _test(*args, **keywds):

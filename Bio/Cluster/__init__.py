@@ -82,7 +82,7 @@ def _savetree(jobname, tree, order, transpose):
         for nodeindex in range(nnodes):
             min1 = tree[nodeindex].left
             min2 = tree[nodeindex].right
-            nodeID[nodeindex] = "NODE%dX" % (nodeindex + 1)
+            nodeID[nodeindex] = "NODE{0:d}X".format((nodeindex + 1))
             outputfile.write(nodeID[nodeindex])
             outputfile.write("\t")
             if min1 < 0:
@@ -94,7 +94,7 @@ def _savetree(jobname, tree, order, transpose):
             else:
                 order1 = order[min1]
                 counts1 = 1
-                outputfile.write("%s%dX\t" % (keyword, min1))
+                outputfile.write("{0!s}{1:d}X\t".format(keyword, min1))
             if min2 < 0:
                 index2 = -min2 - 1
                 order2 = nodeorder[index2]
@@ -104,7 +104,7 @@ def _savetree(jobname, tree, order, transpose):
             else:
                 order2 = order[min2]
                 counts2 = 1
-                outputfile.write("%s%dX\t" % (keyword, min2))
+                outputfile.write("{0!s}{1:d}X\t".format(keyword, min2))
             outputfile.write(str(1.0 - nodedist[nodeindex]))
             outputfile.write("\n")
             counts = counts1 + counts2
@@ -187,8 +187,7 @@ Cluster/TreeView program.
         for line in handle:
             line = line.strip("\r\n").split("\t")
             if len(line) != n:
-                raise ValueError("Line with %d columns found (expected %d)" %
-                                 (len(line), n))
+                raise ValueError("Line with {0:d} columns found (expected {1:d})".format(len(line), n))
             if line[0] == "EWEIGHT":
                 i = max(cols) + 1
                 self.eweight = numpy.array(line[i:], float)
@@ -540,9 +539,9 @@ Arguments:
             # This is a k-means clustering result.
             filename = jobname + "_K"
             k = max(geneclusters) + 1
-            kggfilename = "%s_K_G%d.kgg" % (jobname, k)
+            kggfilename = "{0!s}_K_G{1:d}.kgg".format(jobname, k)
             geneindex = self._savekmeans(kggfilename, geneclusters, gorder, 0)
-            postfix = "_G%d" % k
+            postfix = "_G{0:d}".format(k)
         else:
             geneindex = numpy.argsort(gorder)
         if isinstance(expclusters, Tree):
@@ -553,9 +552,9 @@ Arguments:
             # This is a k-means clustering result.
             filename = jobname + "_K"
             k = max(expclusters) + 1
-            kagfilename = "%s_K_A%d.kag" % (jobname, k)
+            kagfilename = "{0!s}_K_A{1:d}.kag".format(jobname, k)
             expindex = self._savekmeans(kagfilename, expclusters, eorder, 1)
-            postfix += "_A%d" % k
+            postfix += "_A{0:d}".format(k)
         else:
             expindex = numpy.argsort(eorder)
         filename = filename + postfix
@@ -579,7 +578,7 @@ Arguments:
             while counter < n:
                 for j in index:
                     if clusterids[j] == cluster:
-                        outputfile.write("%s\t%s\n" % (names[j], cluster))
+                        outputfile.write("{0!s}\t{1!s}\n".format(names[j], cluster))
                         sortedindex[counter] = j
                         counter += 1
                 cluster += 1
@@ -611,7 +610,7 @@ Arguments:
             outputfile.write('\tNAME\tGWEIGHT')
             # Now add headers for data columns.
             for j in expindex:
-                outputfile.write('\t%s' % self.expid[j])
+                outputfile.write('\t{0!s}'.format(self.expid[j]))
             outputfile.write('\n')
             if aid:
                 outputfile.write("AID")
@@ -619,20 +618,19 @@ Arguments:
                     outputfile.write('\t')
                 outputfile.write("\t\t")
                 for j in expindex:
-                    outputfile.write('\tARRY%dX' % j)
+                    outputfile.write('\tARRY{0:d}X'.format(j))
                 outputfile.write('\n')
             outputfile.write('EWEIGHT')
             if gid:
                 outputfile.write('\t')
             outputfile.write('\t\t')
             for j in expindex:
-                outputfile.write('\t%f' % eweight[j])
+                outputfile.write('\t{0:f}'.format(eweight[j]))
             outputfile.write('\n')
             for i in geneindex:
                 if gid:
-                    outputfile.write('GENE%dX\t' % i)
-                outputfile.write("%s\t%s\t%f" %
-                                 (self.geneid[i], genename[i], gweight[i]))
+                    outputfile.write('GENE{0:d}X\t'.format(i))
+                outputfile.write("{0!s}\t{1!s}\t{2:f}".format(self.geneid[i], genename[i], gweight[i]))
                 for j in expindex:
                     outputfile.write('\t')
                     if mask[i, j]:

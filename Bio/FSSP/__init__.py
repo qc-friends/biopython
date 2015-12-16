@@ -202,7 +202,7 @@ class FSSPAlignDict(dict):
                 mult_align_dict[j] += fssp_rec.pos_align_dict[j].aa
         out_str = ''
         for i in sorted(mult_align_dict):
-            out_str += '> %d\n' % i
+            out_str += '> {0:d}\n'.format(i)
             k = 0
             for j in mult_align_dict[i]:
                 k += 1

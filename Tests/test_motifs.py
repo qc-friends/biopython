@@ -1686,7 +1686,7 @@ class MotifTestPWM(unittest.TestCase):
         self.assertAlmostEqual(result[3], -38.04542542, places=5)
         self.assertAlmostEqual(result[4], -20.3014183, places=5)
         self.assertAlmostEqual(result[5], -25.18009186, places=5)
-        self.assertTrue(math.isnan(result[6]), "Expected nan, not %r" % result[6])
+        self.assertTrue(math.isnan(result[6]), "Expected nan, not {0!r}".format(result[6]))
 
 
 if __name__ == "__main__":

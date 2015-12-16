@@ -162,8 +162,7 @@ def __read(handle):
             record = Record()
             cols = value.split("; ")
             if len(cols) != 2:
-                raise ValueError("I don't understand identification line\n%s"
-                         % line)
+                raise ValueError("I don't understand identification line\n{0!s}".format(line))
             record.name = cols[0]
             record.type = cols[1].rstrip('.')    # don't want '.'
         elif keyword == 'AC':
@@ -173,7 +172,7 @@ def __read(handle):
             if (not dates[0].endswith('(CREATED)')) or \
                (not dates[1].endswith('(DATA UPDATE)')) or \
                (not dates[2].endswith('(INFO UPDATE)')):
-                raise ValueError("I don't understand date line\n%s" % line)
+                raise ValueError("I don't understand date line\n{0!s}".format(line))
             record.created = dates[0].rstrip(' (CREATED)')
             record.data_update = dates[1].rstrip(' (DATA UPDATE)')
             record.info_update = dates[2].rstrip(' (INFO UPDATE)')
@@ -204,8 +203,7 @@ def __read(handle):
                 elif qual in ['/TOTAL', '/POSITIVE', '/UNKNOWN', '/FALSE_POS']:
                     m = re.match(r'(\d+)\((\d+)\)', data)
                     if not m:
-                        raise Exception("Broken data %s in comment line\n%s"
-                                        % (repr(data), line))
+                        raise Exception("Broken data {0!s} in comment line\n{1!s}".format(repr(data), line))
                     hits = tuple(map(int, m.groups()))
                     if(qual == "/TOTAL"):
                         record.nr_total = hits
@@ -216,8 +214,7 @@ def __read(handle):
                     elif(qual == "/FALSE_POS"):
                         record.nr_false_pos = hits
                 else:
-                    raise ValueError("Unknown qual %s in comment line\n%s"
-                                     % (repr(qual), line))
+                    raise ValueError("Unknown qual {0!s} in comment line\n{1!s}".format(repr(qual), line))
         elif keyword == 'CC':
             # Expect CC lines like this:
             # CC   /TAXO-RANGE=??EPV; /MAX-REPEAT=2;
@@ -257,8 +254,7 @@ def __read(handle):
                 elif qual == '/VERSION':
                     record.cc_version = data
                 else:
-                    raise ValueError("Unknown qual %s in comment line\n%s"
-                                     % (repr(qual), line))
+                    raise ValueError("Unknown qual {0!s} in comment line\n{1!s}".format(repr(qual), line))
         elif keyword == 'DR':
             refs = value.split(";")
             for ref in refs:
@@ -276,7 +272,7 @@ def __read(handle):
                 elif type == '?':
                     record.dr_unknown.append((acc, name))
                 else:
-                    raise ValueError("I don't understand type flag %s" % type)
+                    raise ValueError("I don't understand type flag {0!s}".format(type))
         elif keyword == '3D':
             cols = value.split()
             for id in cols:
@@ -294,7 +290,7 @@ def __read(handle):
                 continue
             break
         else:
-            raise ValueError("Unknown keyword %s found" % keyword)
+            raise ValueError("Unknown keyword {0!s} found".format(keyword))
     else:
         return
     if not record:

@@ -40,10 +40,10 @@ VERBOSE = 0
 
 def main(num_queens):
 
-    print("Calculating for %s queens..." % num_queens)
+    print("Calculating for {0!s} queens...".format(num_queens))
 
     num_orgs = 1000
-    print("Generating an initial population of %s organisms..." % num_orgs)
+    print("Generating an initial population of {0!s} organisms...".format(num_orgs))
     queen_alphabet = QueensAlphabet(num_queens)
 
     start_population = Organism.random_population(queen_alphabet, num_queens,
@@ -70,9 +70,9 @@ def main(num_queens):
                 unique_solutions.append(org)
 
     if VERBOSE:
-        print("Search started at %s and ended at %s" % (start_time, end_time))
+        print("Search started at {0!s} and ended at {1!s}".format(start_time, end_time))
         for orgm in unique_solutions:
-            print("We did it! %s" % org)
+            print("We did it! {0!s}".format(org))
             display_board(org.genome)
 
 

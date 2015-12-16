@@ -70,7 +70,7 @@ class Paml(object):
     def print_options(self):
         """Print out all of the options and their current settings."""
         for option in self._options.items():
-            print("%s = %s" % (option[0], option[1]))
+            print("{0!s} = {1!s}".format(option[0], option[1]))
 
     def set_options(self, **kwargs):
         """Set the value of an option.
@@ -155,9 +155,7 @@ class Paml(object):
         if result_code > 0:
             # If the program fails for any reason
             raise PamlError(
-            "%s has failed (return code %i). Run with verbose = True to view error message"
-            % (command, result_code))
+            "{0!s} has failed (return code {1:d}). Run with verbose = True to view error message".format(command, result_code))
         if result_code < 0:
             # If the paml process is killed by a signal somehow
-            raise EnvironmentError("The %s process was killed (return code %i)."
-                  % (command, result_code))
+            raise EnvironmentError("The {0!s} process was killed (return code {1:d}).".format(command, result_code))

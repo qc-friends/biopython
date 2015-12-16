@@ -53,10 +53,10 @@ def UniprotIterator(handle, alphabet=Alphabet.ProteinAlphabet(), return_raw_comm
     skip_parsing_errors = True --> if parsing errors are found, skip to next entry
     """
     if isinstance(alphabet, Alphabet.NucleotideAlphabet):
-        raise ValueError("Wrong alphabet %r" % alphabet)
+        raise ValueError("Wrong alphabet {0!r}".format(alphabet))
     if isinstance(alphabet, Alphabet.Gapped):
         if isinstance(alphabet.alphabet, Alphabet.NucleotideAlphabet):
-            raise ValueError("Wrong alphabet %r" % alphabet)
+            raise ValueError("Wrong alphabet {0!r}".format(alphabet))
 
     if not hasattr(handle, "read"):
         if isinstance(handle, str):
@@ -113,7 +113,7 @@ class Parser(object):
                 if protein_element.tag in [NS + 'recommendedName', NS + 'alternativeName']:  # recommendedName tag are parsed before
                     # use protein fields for name and description
                     for rec_name in protein_element:
-                        ann_key = '%s_%s' % (protein_element.tag.replace(NS, ''),
+                        ann_key = '{0!s}_{1!s}'.format(protein_element.tag.replace(NS, ''),
                                              rec_name.tag.replace(NS, ''))
                         append_to_annotations(ann_key, rec_name.text)
                         if (rec_name.tag == NS + 'fullName') and not descr_set:
@@ -127,7 +127,7 @@ class Parser(object):
         def _parse_gene(element):
             for genename_element in element:
                 if 'type' in genename_element.attrib:
-                    ann_key = 'gene_%s_%s' % (genename_element.tag.replace(NS, ''),
+                    ann_key = 'gene_{0!s}_{1!s}'.format(genename_element.tag.replace(NS, ''),
                                               genename_element.attrib['type'])
                     if genename_element.attrib['type'] == 'primary':
                         self.ParsedSeqRecord.annotations[ann_key] = genename_element.text
@@ -156,7 +156,7 @@ class Parser(object):
                         if taxon_element.tag == NS + 'taxon':
                             append_to_annotations('taxonomy', taxon_element.text)
             if sci_name and com_name:
-                organism_name = '%s (%s)' % (sci_name, com_name)
+                organism_name = '{0!s} ({1!s})'.format(sci_name, com_name)
             elif sci_name:
                 organism_name = sci_name
             elif com_name:
@@ -240,7 +240,7 @@ class Parser(object):
                                ]
 
             if element.attrib['type'] in simple_comments:
-                ann_key = 'comment_%s' % element.attrib['type'].replace(' ', '')
+                ann_key = 'comment_{0!s}'.format(element.attrib['type'].replace(' ', ''))
                 for text_element in element.getiterator(NS + 'text'):
                     if text_element.text:
                         append_to_annotations(ann_key, text_element.text)
@@ -248,19 +248,19 @@ class Parser(object):
                 for subloc_element in element.getiterator(NS + 'subcellularLocation'):
                     for el in subloc_element:
                         if el.text:
-                            ann_key = 'comment_%s_%s' % (element.attrib['type'].replace(' ', ''), el.tag.replace(NS, ''))
+                            ann_key = 'comment_{0!s}_{1!s}'.format(element.attrib['type'].replace(' ', ''), el.tag.replace(NS, ''))
                             append_to_annotations(ann_key, el.text)
             elif element.attrib['type'] == 'interaction':
                 for interact_element in element.getiterator(NS + 'interactant'):
-                    ann_key = 'comment_%s_intactId' % element.attrib['type']
+                    ann_key = 'comment_{0!s}_intactId'.format(element.attrib['type'])
                     append_to_annotations(ann_key, interact_element.attrib['intactId'])
             elif element.attrib['type'] == 'alternative products':
                 for alt_element in element.getiterator(NS + 'isoform'):
-                    ann_key = 'comment_%s_isoform' % element.attrib['type'].replace(' ', '')
+                    ann_key = 'comment_{0!s}_isoform'.format(element.attrib['type'].replace(' ', ''))
                     for id_element in alt_element.getiterator(NS + 'id'):
                         append_to_annotations(ann_key, id_element.text)
             elif element.attrib['type'] == 'mass spectrometry':
-                ann_key = 'comment_%s' % element.attrib['type'].replace(' ', '')
+                ann_key = 'comment_{0!s}'.format(element.attrib['type'].replace(' ', ''))
                 start = end = 0
                 for loc_element in element.getiterator(NS + 'location'):
                     pos_els = loc_element.getiterator(NS + 'position')
@@ -278,21 +278,21 @@ class Parser(object):
                 mass = element.attrib['mass']
                 method = element.attrib['method']
                 if start == end == 0:
-                    append_to_annotations(ann_key, 'undefined:%s|%s' % (mass, method))
+                    append_to_annotations(ann_key, 'undefined:{0!s}|{1!s}'.format(mass, method))
                 else:
-                    append_to_annotations(ann_key, '%s..%s:%s|%s' % (start, end, mass, method))
+                    append_to_annotations(ann_key, '{0!s}..{1!s}:{2!s}|{3!s}'.format(start, end, mass, method))
             elif element.attrib['type'] == 'sequence caution':
                 pass  # not parsed: few information, complex structure
             elif element.attrib['type'] == 'online information':
                 for link_element in element.getiterator(NS + 'link'):
-                    ann_key = 'comment_%s' % element.attrib['type'].replace(' ', '')
+                    ann_key = 'comment_{0!s}'.format(element.attrib['type'].replace(' ', ''))
                     for id_element in link_element.getiterator(NS + 'link'):
                         append_to_annotations(ann_key,
-                                              '%s@%s' % (element.attrib['name'], link_element.attrib['uri']))
+                                              '{0!s}@{1!s}'.format(element.attrib['name'], link_element.attrib['uri']))
 
             # return raw XML comments if needed
             if self.return_raw_comments:
-                ann_key = 'comment_%s_xml' % element.attrib['type'].replace(' ', '')
+                ann_key = 'comment_{0!s}_xml'.format(element.attrib['type'].replace(' ', ''))
                 append_to_annotations(ann_key, ElementTree.tostring(element))
 
         def _parse_dbReference(element):
@@ -414,7 +414,7 @@ class Parser(object):
             elif status == 'uncertain':
                 return SeqFeature.UncertainPosition(position)
             else:
-                raise NotImplementedError("Position status %r" % status)
+                raise NotImplementedError("Position status {0!r}".format(status))
 
         def _parse_feature(element):
             feature = SeqFeature.SeqFeature()
@@ -454,9 +454,9 @@ class Parser(object):
         def _parse_sequence(element):
             for k, v in element.attrib.items():
                 if k in ("length", "mass", "version"):
-                    self.ParsedSeqRecord.annotations['sequence_%s' % k] = int(v)
+                    self.ParsedSeqRecord.annotations['sequence_{0!s}'.format(k)] = int(v)
                 else:
-                    self.ParsedSeqRecord.annotations['sequence_%s' % k] = v
+                    self.ParsedSeqRecord.annotations['sequence_{0!s}'.format(k)] = v
             seq = ''.join((element.text.split()))
             self.ParsedSeqRecord.seq = Seq.Seq(seq, self.alphabet)
 

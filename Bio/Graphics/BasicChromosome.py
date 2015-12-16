@@ -71,7 +71,7 @@ class _ChromosomeComponent(Widget):
         """Add a sub_component to the list of components under this item.
         """
         assert isinstance(component, _ChromosomeComponent), \
-               "Expected a _ChromosomeComponent object, got %s" % component
+               "Expected a _ChromosomeComponent object, got {0!s}".format(component)
 
         self._sub_components.append(component)
 
@@ -84,8 +84,8 @@ class _ChromosomeComponent(Widget):
         try:
             self._sub_components.remove(component)
         except ValueError:
-            raise ValueError("Component %s not found in sub_components." %
-                             component)
+            raise ValueError("Component {0!s} not found in sub_components.".format(
+                             component))
 
     def draw(self):
         """Draw the specified component.
@@ -517,10 +517,9 @@ def _spring_layout(desired, minimum, maximum, gap=0):
     if count <= 1:
         return desired  # Easy!
     if minimum >= maximum:
-        raise ValueError("Bad min/max %f and %f" % (minimum, maximum))
+        raise ValueError("Bad min/max {0:f} and {1:f}".format(minimum, maximum))
     if min(desired) < minimum or max(desired) > maximum:
-        raise ValueError("Data %f to %f out of bounds (%f to %f)"
-                         % (min(desired), max(desired), minimum, maximum))
+        raise ValueError("Data {0:f} to {1:f} out of bounds ({2:f} to {3:f})".format(min(desired), max(desired), minimum, maximum))
     equal_step = float(maximum - minimum) / (count - 1)
 
     if equal_step < gap:

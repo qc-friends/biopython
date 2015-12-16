@@ -48,7 +48,7 @@ class CheckRaw(unittest.TestCase):
 
         if os.path.isfile(filename + ".bgz"):
             # Do the tests again with the BGZF compressed file
-            print("[BONUS %s.bgz]" % filename)
+            print("[BONUS {0!s}.bgz]".format(filename))
             self.check_raw(filename + ".bgz", id, raw, **kwargs)
 
 
@@ -71,14 +71,12 @@ class CheckIndex(unittest.TestCase):
         # compare values by index
         indexed = SearchIO.index(filename, format, **kwargs)
         self.assertEqual(len(parsed), len(indexed),
-                         "Should be %i records in %s, index says %i"
-                         % (len(parsed), filename, len(indexed)))
+                         "Should be {0:d} records in {1!s}, index says {2:d}".format(len(parsed), filename, len(indexed)))
         # compare values by index_db, only if sqlite3 is present
         if sqlite3 is not None:
             db_indexed = SearchIO.index_db(':memory:', [filename], format, **kwargs)
             self.assertEqual(len(parsed), len(db_indexed),
-                             "Should be %i records in %s, index_db says %i"
-                             % (len(parsed), filename, len(db_indexed)))
+                             "Should be {0:d} records in {1!s}, index_db says {2:d}".format(len(parsed), filename, len(db_indexed)))
 
         for qres in parsed:
             idx_qres = indexed[qres.id]
@@ -99,7 +97,7 @@ class CheckIndex(unittest.TestCase):
 
         if os.path.isfile(filename + ".bgz"):
             # Do the tests again with the BGZF compressed file
-            print("[BONUS %s.bgz]" % filename)
+            print("[BONUS {0!s}.bgz]".format(filename))
             self.check_index(filename + ".bgz", format, **kwargs)
 
 
@@ -125,7 +123,7 @@ def compare_search_obj(obj_a, obj_b):
     # compare objects recursively if it's not an HSPFragment
     if not isinstance(obj_a, SearchIO.HSPFragment):
         # check the number of hits contained
-        assert len(obj_a) == len(obj_b), "length: %i vs %i for %r vs %r" % (len(obj_a),
+        assert len(obj_a) == len(obj_b), "length: {0:d} vs {1:d} for {2!r} vs {3!r}".format(len(obj_a),
                 len(obj_b), obj_a, obj_b)
         for item_a, item_b in zip(obj_a, obj_b):
             assert compare_search_obj(item_a, item_b)
@@ -151,11 +149,11 @@ def compare_attrs(obj_a, obj_b, attrs):
             # compare seq directly if it's a contiguous hsp
             if isinstance(val_a, SeqRecord) and isinstance(val_b, SeqRecord):
                 assert str(val_a.seq) == str(val_b.seq), \
-                        "%s: %r vs %r" % (attr, val_a, val_b)
+                        "{0!s}: {1!r} vs {2!r}".format(attr, val_a, val_b)
             elif isinstance(val_a, list) and isinstance(val_b, list):
                 for seq_a, seq_b in zip(val_a, val_b):
                     assert str(seq_a.seq) == str(seq_b.seq), \
-                            "%s: %r vs %r" % (attr, seq_a, seq_b)
+                            "{0!s}: {1!r} vs {2!r}".format(attr, seq_a, seq_b)
         # if it's a dictionary, compare values and keys
         elif isinstance(val_a, dict):
             assert isinstance(val_b, dict)
@@ -163,15 +161,15 @@ def compare_attrs(obj_a, obj_b, attrs):
             values_a = sorted(val_a.values())
             keys_b = sorted(val_b)
             values_b = sorted(val_b.values())
-            assert keys_a == keys_b, "%s: %r vs %r" % (attr, keys_a, keys_b)
-            assert values_a == values_b, "%s: %r vs %r" % (attr, values_a,
+            assert keys_a == keys_b, "{0!s}: {1!r} vs {2!r}".format(attr, keys_a, keys_b)
+            assert values_a == values_b, "{0!s}: {1!r} vs {2!r}".format(attr, values_a,
                     values_b)
         # if it's an alphabet, check the class names as alphabets are instances
         elif attr == '_alphabet':
             alph_a = val_a.__class__.__name__
             alph_b = val_b.__class__.__name__
-            assert alph_a == alph_b, "%s: %r vs %r" % (attr, alph_a, alph_b)
+            assert alph_a == alph_b, "{0!s}: {1!r} vs {2!r}".format(attr, alph_a, alph_b)
         else:
-            assert val_a == val_b, "%s: %r vs %r" % (attr, val_a, val_b)
+            assert val_a == val_b, "{0!s}: {1!r} vs {2!r}".format(attr, val_a, val_b)
 
     return True

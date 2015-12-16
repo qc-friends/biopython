@@ -188,12 +188,12 @@ class FeatureSet(object):
            complete account of the set is required
         """
         if not verbose:         # Short account only required
-            return "%s" % self
+            return "{0!s}".format(self)
         else:                   # Long account desired
-            outstr = ["\n<%s: %s>" % (self.__class__, self.name)]
-            outstr.append("%d features" % len(self.features))
+            outstr = ["\n<{0!s}: {1!s}>".format(self.__class__, self.name)]
+            outstr.append("{0:d} features".format(len(self.features)))
             for key in self.features:
-                outstr.append("feature: %s" % self.features[key])
+                outstr.append("feature: {0!s}".format(self.features[key]))
             return "\n".join(outstr)
 
     def __len__(self):
@@ -206,7 +206,7 @@ class FeatureSet(object):
 
     def __str__(self):
         """Returns a formatted string with information about the feature set."""
-        outstr = ["\n<%s: %s %d features>" % (self.__class__, self.name,
+        outstr = ["\n<{0!s}: {1!s} {2:d} features>".format(self.__class__, self.name,
                                               len(self.features))]
         return "\n".join(outstr)
 

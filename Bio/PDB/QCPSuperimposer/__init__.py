@@ -189,10 +189,10 @@ if __name__ == "__main__":
         y_on_x2 = sup.get_transformed()
     t1 = datetime.now()
     dif = t1 - t0
-    print("process wall time (msec): %d" % (dif.total_seconds() * 1000))
+    print("process wall time (msec): {0:d}".format((dif.total_seconds() * 1000)))
 
     print(y_on_x1)
     print("")
     print(y_on_x2)
     print("")
-    print("%.2f" % rms)
+    print("{0:.2f}".format(rms))

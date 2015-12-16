@@ -31,7 +31,7 @@ class TemplateTest(unittest.TestCase):
         handle = open(os.path.join('PopGen', 'simple_100_30.par'))
         new = handle.readlines()
         handle.close()
-        assert old == new, "Error - Old:\n%s\n\nNew:\n%s\n" % (old, new)
+        assert old == new, "Error - Old:\n{0!s}\n\nNew:\n{1!s}\n".format(old, new)
         # assert(os.stat('PopGen' + os.sep + 'simple.par').st_size ==
         #       os.stat('PopGen' + os.sep + 'simple_100_30.par').st_size)
 

@@ -160,7 +160,7 @@ for record, gene_colors in zip([A_rec, B_rec, C_rec], [A_colors, B_colors, C_col
         try:
             g_color = gene_colors[i]
         except IndexError:
-            print("Don't have color for %s gene %i" % (record.name, i))
+            print("Don't have color for {0!s} gene {1:d}".format(record.name, i))
             g_color = grey
         gd_feature_set.add_feature(feature, sigil="BIGARROW",
                                    color=g_color, label=True,

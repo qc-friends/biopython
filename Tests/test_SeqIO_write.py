@@ -47,7 +47,7 @@ test_records = [
     ([SeqRecord(Seq("AATAAACCTTGCTGGCCATTGTGATCCATCCA", Alphabet.generic_dna), id="X",
                 name="The\nMystery\rSequece:\r\nX"),
       SeqRecord(Seq("ACTCAACCTTGCTGGTCATTGTGACCCCAGCA", Alphabet.generic_dna), id="Y",
-                description="an%sevil\rdescription right\nhere" % os.linesep),
+                description="an{0!s}evil\rdescription right\nhere".format(os.linesep)),
       SeqRecord(Seq("TTTCCTCGGAGGCCAATCTGGATCAAGACCAT", Alphabet.generic_dna), id="Z")],
      "3 DNA seq alignment with CR/LF in name/descr",
       [(["genbank"], ValueError, r"Locus identifier 'The\nMystery\rSequece:\r\nX' is too long")]),
@@ -62,10 +62,10 @@ test_records = [
 # Meddle with the annotation too:
 assert test_records[4][1] == "3 DNA seq alignment with CR/LF in name/descr"
 # Add a list of strings,
-test_records[4][0][2].annotations["note"] = ["Note%salso" % os.linesep
+test_records[4][0][2].annotations["note"] = ["Note{0!s}also".format(os.linesep)
                                     + "\r\nhas\n evil line\rbreaks!", "Wow"]
 # Add a simple string
-test_records[4][0][2].annotations["comment"] = "More%sof" % os.linesep \
+test_records[4][0][2].annotations["comment"] = "More{0!s}of".format(os.linesep) \
                                           + "\r\nthese\n evil line\rbreaks!"
 # Add a float too:
 test_records[4][0][2].annotations["weight"] = 2.5
@@ -152,10 +152,10 @@ for (records, descr, errs) in test_records:
         # Assume no errors expected...
         def funct(records, format, descr):
             f = lambda x: x.check(records, format)
-            f.__doc__ = "%s for %s" % (format, descr)
+            f.__doc__ = "{0!s} for {1!s}".format(format, descr)
             return f
         setattr(WriterTests,
-                "test_%s_%s" % (format, descr.replace(" ", "_")),
+                "test_{0!s}_{1!s}".format(format, descr.replace(" ", "_")),
                 funct(records, format, descr))
         # Replace the method with an error specific one?
         for err_formats, err_type, err_msg in errs:
@@ -163,10 +163,10 @@ for (records, descr, errs) in test_records:
                 def funct_e(records, format, descr, err_type, err_msg):
                     f = lambda x: x.check_write_fails(records, format,
                                                        err_type, err_msg)
-                    f.__doc__ = "%s for %s" % (format, descr)
+                    f.__doc__ = "{0!s} for {1!s}".format(format, descr)
                     return f
                 setattr(WriterTests,
-                        "test_%s_%s" % (format, descr.replace(" ", "_")),
+                        "test_{0!s}_{1!s}".format(format, descr.replace(" ", "_")),
                         funct_e(records, format, descr, err_type, err_msg))
                 break
         del funct

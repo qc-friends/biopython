@@ -63,7 +63,7 @@ def crc64(s):
         crch = temp1h ^ _table_h[idx]
         crcl = temp1l
 
-    return "CRC-%08X%08X" % (crch, crcl)
+    return "CRC-{0:08X}{1:08X}".format(crch, crcl)
 
 
 def gcg(seq):

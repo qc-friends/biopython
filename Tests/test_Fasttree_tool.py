@@ -55,7 +55,7 @@ else:
     likely_exes = ["FastTree", "fasttree"]
     for filename in likely_exes:
         # Checking the -help argument
-        output = getoutput("%s -help" % filename)
+        output = getoutput("{0!s} -help".format(filename))
         # Since "is not recognized" may be in another language, try and be sure this
         # is really the fasttree tool's output
         if "is not recognized" not in output and "protein_alignment" in output \
@@ -79,7 +79,7 @@ assert not os.path.isfile(input_file)
 cline = FastTreeCommandline(fasttree_exe, input=input_file)
 try:
     stdout, stderr = cline()
-    assert False, "Should have failed, returned:\n%s\n%s" % (stdout, stderr)
+    assert False, "Should have failed, returned:\n{0!s}\n{1!s}".format(stdout, stderr)
 except ApplicationError as err:
     print("Failed (good)")
     # Python 2.3 on Windows gave (0, 'Error')
@@ -99,7 +99,7 @@ try:
     if "Unique: 1/1" in stderr:
         print("Failed (good)")
     else:
-        assert False, "Should have failed, returned:\n%s\n%s" % (stdout, stderr)
+        assert False, "Should have failed, returned:\n{0!s}\n{1!s}".format(stdout, stderr)
 except ApplicationError as err:
     print("Failed (good)")
     # assert str(err) == "No records found in handle", str(err)
@@ -111,7 +111,7 @@ assert os.path.isfile(input_file)
 cline = FastTreeCommandline(fasttree_exe, input=input_file)
 try:
     stdout, stderr = cline()
-    assert False, "Should have failed, returned:\n%s\n%s" % (stdout, stderr)
+    assert False, "Should have failed, returned:\n{0!s}\n{1!s}".format(stdout, stderr)
 except ApplicationError as err:
     print("Failed (good)")
     # Ideally we'd catch the return code and raise the specific
@@ -139,8 +139,7 @@ handle.close()
 for input_file in ["Quality/example.fasta", "Clustalw/temp horses.fasta"]:
     input_records = SeqIO.to_dict(SeqIO.parse(input_file, "fasta"))
     print("")
-    print("Calling fasttree on %s (with %i records)"
-          % (repr(input_file), len(input_records)))
+    print("Calling fasttree on {0!s} (with {1:d} records)".format(repr(input_file), len(input_records)))
 
     # Any filesnames with spaces should get escaped with quotes automatically.
     # Using keyword arguments here.
@@ -159,7 +158,7 @@ for input_file in ["Quality/example.fasta", "Clustalw/temp horses.fasta"]:
         for clade in tree.find_clades():
             if clade.name:
                 if clade.name in names:
-                    raise ValueError("Duplicate key: %s" % clade.name)
+                    raise ValueError("Duplicate key: {0!s}".format(clade.name))
                 names[clade.name] = clade
         return names
 

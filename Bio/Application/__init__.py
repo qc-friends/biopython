@@ -84,15 +84,12 @@ class ApplicationError(_ProcessCalledError):
         except Exception:  # TODO, ValueError? AttributeError?
             msg = ""
         if msg:
-            return "Non-zero return code %d from %r, message %r" \
-                   % (self.returncode, self.cmd, msg)
+            return "Non-zero return code {0:d} from {1!r}, message {2!r}".format(self.returncode, self.cmd, msg)
         else:
-            return "Non-zero return code %d from %r" \
-                   % (self.returncode, self.cmd)
+            return "Non-zero return code {0:d} from {1!r}".format(self.returncode, self.cmd)
 
     def __repr__(self):
-        return "ApplicationError(%i, %s, %s, %s)" \
-               % (self.returncode, self.cmd, self.stdout, self.stderr)
+        return "ApplicationError({0:d}, {1!s}, {2!s}, {3!s})".format(self.returncode, self.cmd, self.stdout, self.stderr)
 
 
 class AbstractCommandline(object):
@@ -210,8 +207,7 @@ class AbstractCommandline(object):
                 continue
             for name in p.names:
                 if name in aliases:
-                    raise ValueError("Parameter alias %s multiply defined"
-                                     % name)
+                    raise ValueError("Parameter alias {0!s} multiply defined".format(name))
                 aliases.add(name)
             name = p.names[-1]
             if _re_prop_name.match(name) is None:
@@ -262,8 +258,7 @@ class AbstractCommandline(object):
         for p in self.parameters:
             # Check for missing required parameters:
             if p.is_required and not(p.is_set):
-                raise ValueError("Parameter %s is not set."
-                                 % p.names[-1])
+                raise ValueError("Parameter {0!s} is not set.".format(p.names[-1]))
             # Also repeat the parameter validation here, just in case?
 
     def __str__(self):
@@ -281,7 +276,7 @@ class AbstractCommandline(object):
         'water -outfile=temp_water.txt -asequence=asis:ACCCGGGCGCGGT -bsequence=asis:ACCCGAGCGCGGT -gapopen=10 -gapextend=0.5'
         """
         self._validate()
-        commandline = "%s " % _escape_filename(self.program_name)
+        commandline = "{0!s} ".format(_escape_filename(self.program_name))
         for parameter in self.parameters:
             if parameter.is_set:
                 # This will include a trailing space:
@@ -302,14 +297,13 @@ class AbstractCommandline(object):
         >>> cline
         WaterCommandline(cmd='water', outfile='temp_water.txt', asequence='asis:ACCCGGGCGCGGT', bsequence='asis:ACCCGAGCGCGGT', gapopen=10, gapextend=0.5)
         """
-        answer = "%s(cmd=%s" % (self.__class__.__name__, repr(self.program_name))
+        answer = "{0!s}(cmd={1!s}".format(self.__class__.__name__, repr(self.program_name))
         for parameter in self.parameters:
             if parameter.is_set:
                 if isinstance(parameter, _Switch):
-                    answer += ", %s=True" % parameter.names[-1]
+                    answer += ", {0!s}=True".format(parameter.names[-1])
                 else:
-                    answer += ", %s=%s" \
-                              % (parameter.names[-1], repr(parameter.value))
+                    answer += ", {0!s}={1!s}".format(parameter.names[-1], repr(parameter.value))
         answer += ")"
         return answer
 
@@ -321,7 +315,7 @@ class AbstractCommandline(object):
                     return parameter.is_set
                 else:
                     return parameter.value
-        raise ValueError("Option name %s was not found." % name)
+        raise ValueError("Option name {0!s} was not found.".format(name))
 
     def _clear_parameter(self, name):
         """Reset or clear a commandline option value."""
@@ -332,7 +326,7 @@ class AbstractCommandline(object):
                 parameter.is_set = False
                 cleared_option = True
         if not cleared_option:
-            raise ValueError("Option name %s was not found." % name)
+            raise ValueError("Option name {0!s} was not found.".format(name))
 
     def set_parameter(self, name, value=None):
         """Set a commandline option for a program (OBSOLETE).
@@ -361,7 +355,7 @@ class AbstractCommandline(object):
                     parameter.is_set = True
                     set_option = True
         if not set_option:
-            raise ValueError("Option name %s was not found." % name)
+            raise ValueError("Option name {0!s} was not found.".format(name))
 
     def _check_value(self, value, name, check_function):
         """Check whether the given value is valid.
@@ -377,8 +371,7 @@ class AbstractCommandline(object):
             is_good = check_function(value)  # May raise an exception
             assert is_good in [0, 1, True, False]
             if not is_good:
-                raise ValueError("Invalid parameter value %r for parameter %s"
-                                 % (value, name))
+                raise ValueError("Invalid parameter value {0!r} for parameter {1!s}".format(value, name))
 
     def __setattr__(self, name, value):
         """Set attribute name to value (PRIVATE).
@@ -574,7 +567,7 @@ class _Option(_AbstractParameter):
                  is_required=False, equate=True):
         self.names = names
         assert isinstance(description, basestring), \
-               "%r for %s" % (description, names[-1])
+               "{0!r} for {1!s}".format(description, names[-1])
         self.is_filename = filename
         self.checker_function = checker_function
         self.description = description
@@ -594,15 +587,15 @@ class _Option(_AbstractParameter):
         # or " -name " or " -name value ".  This choice is now
         # now made explicitly when setting up the option.
         if self.value is None:
-            return "%s " % self.names[0]
+            return "{0!s} ".format(self.names[0])
         if self.is_filename:
             v = _escape_filename(self.value)
         else:
             v = str(self.value)
         if self.equate:
-            return "%s=%s " % (self.names[0], v)
+            return "{0!s}={1!s} ".format(self.names[0], v)
         else:
-            return "%s %s " % (self.names[0], v)
+            return "{0!s} {1!s} ".format(self.names[0], v)
 
 
 class _Switch(_AbstractParameter):
@@ -641,7 +634,7 @@ class _Switch(_AbstractParameter):
         """
         assert not hasattr(self, "value")
         if self.is_set:
-            return "%s " % self.names[0]
+            return "{0!s} ".format(self.names[0])
         else:
             return ""
 
@@ -661,7 +654,7 @@ class _Argument(_AbstractParameter):
         #                     "single entry list with a PEP8 property name.")
         self.names = names
         assert isinstance(description, basestring), \
-               "%r for %s" % (description, names[-1])
+               "{0!r} for {1!s}".format(description, names[-1])
         self.is_filename = filename
         self.checker_function = checker_function
         self.description = description
@@ -673,9 +666,9 @@ class _Argument(_AbstractParameter):
         if self.value is None:
             return " "
         elif self.is_filename:
-            return "%s " % _escape_filename(self.value)
+            return "{0!s} ".format(_escape_filename(self.value))
         else:
-            return "%s " % self.value
+            return "{0!s} ".format(self.value)
 
 
 class _ArgumentList(_Argument):
@@ -709,7 +702,7 @@ class _StaticArgument(_AbstractParameter):
         self.value = value
 
     def __str__(self):
-        return "%s " % self.value
+        return "{0!s} ".format(self.value)
 
 
 def _escape_filename(filename):
@@ -742,7 +735,7 @@ def _escape_filename(filename):
         # Its already quoted
         return filename
     else:
-        return '"%s"' % filename
+        return '"{0!s}"'.format(filename)
 
 
 def _test():

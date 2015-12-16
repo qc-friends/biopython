@@ -347,7 +347,7 @@ class TestCrossover(object):
             new_org1_genome = str(int(org1_genome) + 1)
             new_org2_genome = str(int(org2_genome) + 1)
         else:
-            raise ValueError("Got type %s" % self.type)
+            raise ValueError("Got type {0!s}".format(self.type))
 
         new_org_1.genome = MutableSeq(new_org1_genome,
                                       org_1.genome.alphabet)

@@ -58,8 +58,7 @@ def _extract_alignment_region(alignment_seq_with_flanking, annotation):
               - int(annotation['al_stop']) + 1
     end += align_stripped.count("-")
     assert 0 <= start and start < end and end <= len(align_stripped), \
-           "Problem with sequence start/stop,\n%s[%i:%i]\n%s" \
-           % (alignment_seq_with_flanking, start, end, annotation)
+           "Problem with sequence start/stop,\n{0!s}[{1:d}:{2:d}]\n{3!s}".format(alignment_seq_with_flanking, start, end, annotation)
     return align_stripped[start:end]
 
 
@@ -107,8 +106,7 @@ def FastaM10Iterator(handle, alphabet=single_letter_alphabet):
 
     def build_hsp():
         if not query_tags and not match_tags:
-            raise ValueError("No data for query %r, match %r"
-                             % (query_id, match_id))
+            raise ValueError("No data for query {0!r}, match {1!r}".format(query_id, match_id))
         assert query_tags, query_tags
         assert match_tags, match_tags
         evalue = align_tags.get("fa_expect", None)
@@ -129,10 +127,10 @@ def FastaM10Iterator(handle, alphabet=single_letter_alphabet):
             print(tool)
             print(query_seq)
             print(query_tags)
-            print("%s %i" % (q, len(q)))
+            print("{0!s} {1:d}".format(q, len(q)))
             print(match_seq)
             print(match_tags)
-            print("%s %i" % (m, len(m)))
+            print("{0!s} {1:d}".format(m, len(m)))
             print(handle.name)
             raise err
 
@@ -312,7 +310,7 @@ def FastaM10Iterator(handle, alphabet=single_letter_alphabet):
                 # Can get > as the last line of a histogram
                 pass
             else:
-                assert False, "state %i got %r" % (state, line)
+                assert False, "state {0:d} got {1!r}".format(state, line)
         elif line.startswith("; al_cons"):
             assert state == state_ALIGN_MATCH, line
             state = state_ALIGN_CONS
@@ -324,11 +322,11 @@ def FastaM10Iterator(handle, alphabet=single_letter_alphabet):
                 import warnings
                 # Seen in lalign36, specifically version 36.3.4 Apr, 2011
                 # Fixed in version 36.3.5b Oct, 2011(preload8)
-                warnings.warn("Missing colon in line: %r" % line)
+                warnings.warn("Missing colon in line: {0!r}".format(line))
                 try:
                     key, value = [s.strip() for s in line[2:].split(" ", 1)]
                 except ValueError:
-                    raise ValueError("Bad line: %r" % line)
+                    raise ValueError("Bad line: {0!r}".format(line))
             if state == state_QUERY_HEADER:
                 header_tags[key] = value
             elif state == state_ALIGN_HEADER:
@@ -338,7 +336,7 @@ def FastaM10Iterator(handle, alphabet=single_letter_alphabet):
             elif state == state_ALIGN_MATCH:
                 match_tags[key] = value
             else:
-                assert False, "Unexpected state %r, %r" % (state, line)
+                assert False, "Unexpected state {0!r}, {1!r}".format(state, line)
         elif state == state_ALIGN_QUERY:
             query_seq += line.strip()
         elif state == state_ALIGN_MATCH:
@@ -601,10 +599,9 @@ Function used was FASTA [version 34.26 January 12, 2007]
     assert len(alignments) == 4, len(alignments)
     assert len(alignments[0]) == 2
     for a in alignments:
-        print("Alignment %i sequences of length %i"
-              % (len(a), a.get_alignment_length()))
+        print("Alignment {0:d} sequences of length {1:d}".format(len(a), a.get_alignment_length()))
         for r in a:
-            print("%s %s %i" % (r.seq, r.id, r.annotations["original_length"]))
+            print("{0!s} {1!s} {2:d}".format(r.seq, r.id, r.annotations["original_length"]))
         # print(a.annotations)
     print("Done")
 
@@ -617,7 +614,7 @@ Function used was FASTA [version 34.26 January 12, 2007]
             print(filename)
             print("=" * len(filename))
             for i, a in enumerate(FastaM10Iterator(open(os.path.join(path, filename)))):
-                print("#%i, %s" % (i + 1, a))
+                print("#{0:d}, {1!s}".format(i + 1, a))
                 for r in a:
                     if "-" in r.seq:
                         assert r.seq.alphabet.gap_char == "-"

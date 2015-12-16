@@ -294,7 +294,7 @@ class Polypeptide(list):
         """
         start = self[0].get_id()[1]
         end = self[-1].get_id()[1]
-        s = "<Polypeptide start=%s end=%s>" % (start, end)
+        s = "<Polypeptide start={0!s} end={1!s}>".format(start, end)
         return s
 
 
@@ -473,7 +473,7 @@ if __name__ == "__main__":
 
     for pp in ppb.build_peptides(s):
         for phi, psi in pp.get_phi_psi_list():
-            print("%f %f" % (phi, psi))
+            print("{0:f} {1:f}".format(phi, psi))
 
     ppb = CaPPBuilder()
 

@@ -49,8 +49,7 @@ def NexusIterator(handle, seq_count=None):
     assert len(n.unaltered_taxlabels) == len(n.taxlabels)
 
     if seq_count and seq_count != len(n.unaltered_taxlabels):
-        raise ValueError("Found %i sequences, but seq_count=%i"
-               % (len(n.unaltered_taxlabels), seq_count))
+        raise ValueError("Found {0:d} sequences, but seq_count={1:d}".format(len(n.unaltered_taxlabels), seq_count))
 
     # TODO - Can we extract any annotation too?
     records = (SeqRecord(n.matrix[new_name], id=new_name,
@@ -108,8 +107,7 @@ class NexusWriter(AlignmentWriter):
         if columns == 0:
             raise ValueError("Non-empty sequences are required")
         minimal_record = "#NEXUS\nbegin data; dimensions ntax=0 nchar=0; " \
-                         + "format datatype=%s; end;"  \
-                         % self._classify_alphabet_for_nexus(alignment._alphabet)
+                         + "format datatype={0!s}; end;".format(self._classify_alphabet_for_nexus(alignment._alphabet))
         n = Nexus.Nexus(minimal_record)
         n.alphabet = alignment._alphabet
         for record in alignment:
@@ -163,7 +161,7 @@ if __name__ == "__main__":
     for a in NexusIterator(handle):
         print(a)
         for r in a:
-            print("%r %s %s" % (r.seq, r.name, r.id))
+            print("{0!r} {1!s} {2!s}".format(r.seq, r.name, r.id))
     print("Done")
 
     print("")
@@ -193,7 +191,7 @@ if __name__ == "__main__":
     for a in NexusIterator(handle):
         print(a)
         for r in a:
-            print("%r %s %s" % (r.seq, r.name, r.id))
+            print("{0!r} {1!s} {2!s}".format(r.seq, r.name, r.id))
     print("Done")
     print("")
     print("Reading an empty file")

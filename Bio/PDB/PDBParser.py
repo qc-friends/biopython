@@ -178,8 +178,7 @@ class PDBParser(object):
                 except Exception:
                     # Should we allow parsing to continue in permissive mode?
                     # If so, what coordinates should we default to?  Easier to abort!
-                    raise PDBConstructionException("Invalid or missing coordinate(s) at line %i."
-                                                   % global_line_counter)
+                    raise PDBConstructionException("Invalid or missing coordinate(s) at line {0:d}.".format(global_line_counter))
                 coord = numpy.array((x, y, z), "f")
                 # occupancy & B factor
                 try:
@@ -278,7 +277,7 @@ class PDBParser(object):
         object (if PERMISSIVE), or raises it again, this time adding the
         PDB line number to the error message.
         """
-        message = "%s at line %i." % (message, line_counter)
+        message = "{0!s} at line {1:d}.".format(message, line_counter)
         if self.PERMISSIVE:
             # just print a warning - some residues/atoms may be missing
             warnings.warn("PDBConstructionException: %s\n"
@@ -312,4 +311,4 @@ if __name__ == "__main__":
                 for a in r:
                     p = a.get_parent()
                     if p is not r:
-                        print("%s %s" % (p, r))
+                        print("{0!s} {1!s}".format(p, r))

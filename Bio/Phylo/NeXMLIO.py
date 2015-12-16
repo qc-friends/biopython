@@ -66,7 +66,7 @@ def qUri(s):
 
 def cdao_to_obo(s):
     """Optionally converts a CDAO-prefixed URI into an OBO-prefixed URI."""
-    return 'obo:%s' % cdao_elements[s[len('cdao:'):]]
+    return 'obo:{0!s}'.format(cdao_elements[s[len('cdao:'):]])
 
 
 def matches(s):
@@ -226,9 +226,9 @@ class Writer(object):
         self.tree_counter = 0
 
     def new_label(self, obj_type):
-        counter = '%s_counter' % obj_type
+        counter = '{0!s}_counter'.format(obj_type)
         setattr(self, counter, getattr(self, counter) + 1)
-        return '%s%s' % (obj_type, getattr(self, counter))
+        return '{0!s}{1!s}'.format(obj_type, getattr(self, counter))
 
     def write(self, handle, cdao_to_obo=True, **kwargs):
         """Write this instance's trees to a file handle."""
@@ -242,7 +242,7 @@ class Writer(object):
         root_node.set('xsi:schemaLocation', SCHEMA)
 
         for prefix, uri in NAMESPACES.items():
-            root_node.set('xmlns:%s' % prefix, uri)
+            root_node.set('xmlns:{0!s}'.format(prefix), uri)
 
         otus = ElementTree.SubElement(root_node, 'otus',
                                       **{'id': 'tax', 'label': 'RootTaxaBlock'})
@@ -313,7 +313,7 @@ class Writer(object):
                 attrib.update({
                     'property': convert_uri('cdao:has_Support_Value'),
                     'datatype': 'xsd:float',
-                    'content': '%1.2f' % clade.confidence,
+                    'content': '{0:1.2f}'.format(clade.confidence),
                 })
             node = ElementTree.SubElement(tree, 'edge', **attrib)
 

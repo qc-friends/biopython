@@ -159,8 +159,7 @@ class Tree(Nodes.Chain):
             nc_start = text.find(NODECOMMENT_START)
             nc_end = text.find(NODECOMMENT_END)
             if nc_end == -1:
-                raise TreeError('Error in tree description: Found %s without matching %s'
-                                % (NODECOMMENT_START, NODECOMMENT_END))
+                raise TreeError('Error in tree description: Found {0!s} without matching {1!s}'.format(NODECOMMENT_START, NODECOMMENT_END))
             nodecomment = text[nc_start:nc_end + 1]
             text = text[:nc_start] + text[nc_end + 1:]
 
@@ -196,7 +195,7 @@ class Tree(Nodes.Chain):
         node = node(self,node_id)
         """
         if node_id not in self.chain:
-            raise TreeError('Unknown node_id: %d' % node_id)
+            raise TreeError('Unknown node_id: {0:d}'.format(node_id))
         return self.chain[node_id]
 
     def split(self, parent_id=None, n=2, branchlength=1.0):
@@ -240,9 +239,9 @@ class Tree(Nodes.Chain):
 
         id = self.search_taxon(taxon)
         if id is None:
-            raise TreeError('Taxon not found: %s' % taxon)
+            raise TreeError('Taxon not found: {0!s}'.format(taxon))
         elif id not in self.get_terminals():
-            raise TreeError('Not a terminal taxon: %s' % taxon)
+            raise TreeError('Not a terminal taxon: {0!s}'.format(taxon))
         else:
             prev = self.unlink(id)
             self.kill(id)
@@ -267,7 +266,7 @@ class Tree(Nodes.Chain):
         if node_id is None:
             node_id = self.root
         if node_id not in self.chain:
-            raise TreeError('Unknown node_id: %d.' % node_id)
+            raise TreeError('Unknown node_id: {0:d}.'.format(node_id))
         if self.chain[node_id].succ == []:
             if self.chain[node_id].data:
                 return [self.chain[node_id].data.taxon]
@@ -364,7 +363,7 @@ class Tree(Nodes.Chain):
                 print(node)
                 print(self.node(node).succ)
                 for n in self.node(node).succ:
-                    print("%s %s" % (n, self.set_subtree(n)))
+                    print("{0!s} {1!s}".format(n, self.set_subtree(n)))
                 print([self.set_subtree(n) for n in self.node(node).succ])
                 raise
 
@@ -386,9 +385,9 @@ class Tree(Nodes.Chain):
         missing1 = set(tree2.get_taxa()) - set(self.get_taxa())
         if strict and (missing1 or missing2):
             if missing1:
-                print('Taxon/taxa %s is/are missing in tree %s' % (','.join(missing1), self.name))
+                print('Taxon/taxa {0!s} is/are missing in tree {1!s}'.format(','.join(missing1), self.name))
             if missing2:
-                print('Taxon/taxa %s is/are missing in tree %s' % (','.join(missing2), tree2.name))
+                print('Taxon/taxa {0!s} is/are missing in tree {1!s}'.format(','.join(missing2), tree2.name))
             raise TreeError('Can\'t compare trees with different taxon compositions.')
         t1 = [(set(self.get_taxa(n)), self.node(n).data.support) for n in self.all_ids() if
             self.node(n).succ and
@@ -538,24 +537,24 @@ class Tree(Nodes.Chain):
                 tx = n.data.taxon
                 if not tx:
                     tx = '-'
-                blength = "%0.2f" % n.data.branchlength
+                blength = "{0:0.2f}".format(n.data.branchlength)
                 if blength is None:
                     blength = '-'
                     sum_blength = '-'
                 else:
-                    sum_blength = "%0.2f" % self.sum_branchlength(node=i)
+                    sum_blength = "{0:0.2f}".format(self.sum_branchlength(node=i))
                 support = n.data.support
                 if support is None:
                     support = '-'
                 else:
-                    support = "%0.2f" % support
+                    support = "{0:0.2f}".format(support)
                 comment = n.data.comment
                 if comment is None:
                     comment = '-'
                 table.append((str(i), tx, str(n.prev), str(n.succ),
                              blength, sum_blength, support, comment))
-        print('\n'.join('%3s %32s %15s %15s %8s %10s %8s %20s' % l for l in table))
-        print('\nRoot:  %s' % self.root)
+        print('\n'.join('{0:3!s} {1:32!s} {2:15!s} {3:15!s} {4:8!s} {5:10!s} {6:8!s} {7:20!s}'.format(*l) for l in table))
+        print('\nRoot:  {0!s}'.format(self.root))
 
     def to_string(self, support_as_branchlengths=False, branchlengths_only=False, plain=True, plain_newick=False, ladderize=None, ignore_comments=True):
         """Return a paup compatible tree line."""
@@ -574,23 +573,23 @@ class Tree(Nodes.Chain):
                 info_string = ''
             elif self.support_as_branchlengths:  # support as branchlengths (eg. PAUP), ignore actual branchlengths
                 if terminal:    # terminal branches have 100% support
-                    info_string = ':%1.2f' % self.max_support
+                    info_string = ':{0:1.2f}'.format(self.max_support)
                 elif data.support:
-                    info_string = ':%1.2f' % (data.support)
+                    info_string = ':{0:1.2f}'.format((data.support))
                 else:
                     info_string = ':0.00'
             elif self.branchlengths_only:  # write only branchlengths, ignore support
-                info_string = ':%1.5f' % (data.branchlength)
+                info_string = ':{0:1.5f}'.format((data.branchlength))
             else:   # write suport and branchlengths (e.g. .con tree of mrbayes)
                 if terminal:
-                    info_string = ':%1.5f' % (data.branchlength)
+                    info_string = ':{0:1.5f}'.format((data.branchlength))
                 else:
                     if data.branchlength is not None and data.support is not None:  # we have blen and suppport
-                        info_string = '%1.2f:%1.5f' % (data.support, data.branchlength)
+                        info_string = '{0:1.2f}:{1:1.5f}'.format(data.support, data.branchlength)
                     elif data.branchlength is not None:                             # we have only blen
-                        info_string = '0.00000:%1.5f' % (data.branchlength)
+                        info_string = '0.00000:{0:1.5f}'.format((data.branchlength))
                     elif data.support is not None:                                  # we have only support
-                        info_string = '%1.2f:0.00000' % (data.support)
+                        info_string = '{0:1.2f}:0.00000'.format((data.support))
                     else:
                         info_string = '0.00:0.00000'
             if not ignore_comments and hasattr(data, 'nodecomment'):
@@ -619,7 +618,7 @@ class Tree(Nodes.Chain):
             else:
                 succnodes = ladderize_nodes(self.node(node).succ, ladderize=ladderize)
                 subtrees = [newickize(sn, ladderize=ladderize) for sn in succnodes]
-                return '(%s)%s' % (','.join(subtrees), make_info_string(self.node(node).data))
+                return '({0!s}){1!s}'.format(','.join(subtrees), make_info_string(self.node(node).data))
 
         treeline = ['tree']
         if self.name:
@@ -628,12 +627,12 @@ class Tree(Nodes.Chain):
             treeline.append('a_tree')
         treeline.append('=')
         if self.weight != 1:
-            treeline.append('[&W%s]' % str(round(float(self.weight), 3)))
+            treeline.append('[&W{0!s}]'.format(str(round(float(self.weight), 3))))
         if self.rooted:
             treeline.append('[&R]')
         succnodes = ladderize_nodes(self.node(self.root).succ)
         subtrees = [newickize(sn, ladderize=ladderize) for sn in succnodes]
-        treeline.append('(%s)' % ','.join(subtrees))
+        treeline.append('({0!s})'.format(','.join(subtrees)))
         if plain_newick:
             return treeline[-1]
         else:
@@ -674,8 +673,7 @@ class Tree(Nodes.Chain):
             elif b1[3] == 0 or b2[3] == 0:
                 newbranch.append(b1[3] + b2[3])  # one is 0, take the other
             else:
-                raise TreeError('Support mismatch in bifurcating root: %f, %f'
-                                % (float(b1[3]), float(b2[3])))
+                raise TreeError('Support mismatch in bifurcating root: {0:f}, {1:f}'.format(float(b1[3]), float(b2[3])))
             self.unrooted.append(newbranch)
 
     def root_with_outgroup(self, outgroup=None):
@@ -687,8 +685,7 @@ class Tree(Nodes.Chain):
                     branch = self.unrooted.pop(i)
                     break
             else:
-                raise TreeError('Unable to connect nodes for rooting: nodes %d and %d are not connected'
-                                % (parent, child))
+                raise TreeError('Unable to connect nodes for rooting: nodes {0:d} and {1:d} are not connected'.format(parent, child))
             self.link(parent, child)
             self.node(child).data.branchlength = branch[2]
             self.node(child).data.support = branch[3]
@@ -740,8 +737,7 @@ class Tree(Nodes.Chain):
         # if theres still a lonely node in self.chain, then it's the old root, and we delete it
         oldroot = [i for i in self.all_ids() if self.node(i).prev is None and i != self.root]
         if len(oldroot) > 1:
-            raise TreeError('Isolated nodes in tree description: %s'
-                            % ','.join(oldroot))
+            raise TreeError('Isolated nodes in tree description: {0!s}'.format(','.join(oldroot)))
         elif len(oldroot) == 1:
             self.kill(oldroot[0])
         return self.root
@@ -819,7 +815,7 @@ def consensus(trees, threshold=0.5, outgroup=None):
     for c in delclades:
         del clades[c]
     # create a tree with a root node
-    consensus = Tree(name='consensus_%2.1f' % float(threshold), data=dataclass)
+    consensus = Tree(name='consensus_{0:2.1f}'.format(float(threshold)), data=dataclass)
     # each clade needs a node in the new tree, add them as isolated nodes
     for c, s in clades.items():
         node = Nodes.Node(data=dataclass())

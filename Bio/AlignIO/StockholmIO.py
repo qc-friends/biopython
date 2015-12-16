@@ -179,7 +179,7 @@ class StockholmWriter(SequentialAlignmentWriter):
             raise ValueError("Non-empty sequences are required")
 
         self.handle.write("# STOCKHOLM 1.0\n")
-        self.handle.write("#=GF SQ %i\n" % count)
+        self.handle.write("#=GF SQ {0:d}\n".format(count))
         for record in alignment:
             self._write_record(record)
         self.handle.write("//\n")
@@ -201,17 +201,17 @@ class StockholmWriter(SequentialAlignmentWriter):
 
         if "start" in record.annotations \
         and "end" in record.annotations:
-            suffix = "/%s-%s" % (str(record.annotations["start"]),
+            suffix = "/{0!s}-{1!s}".format(str(record.annotations["start"]),
                                  str(record.annotations["end"]))
             if seq_name[-len(suffix):] != suffix:
-                seq_name = "%s/%s-%s" % (seq_name,
+                seq_name = "{0!s}/{1!s}-{2!s}".format(seq_name,
                                         str(record.annotations["start"]),
                                         str(record.annotations["end"]))
 
         if seq_name in self._ids_written:
-            raise ValueError("Duplicate record identifier: %s" % seq_name)
+            raise ValueError("Duplicate record identifier: {0!s}".format(seq_name))
         self._ids_written.append(seq_name)
-        self.handle.write("%s %s\n" % (seq_name, str(record.seq)))
+        self.handle.write("{0!s} {1!s}\n".format(seq_name, str(record.seq)))
 
         # The recommended placement for GS lines (per sequence annotation)
         # is above the alignment (as a header block) or just below the
@@ -226,29 +226,24 @@ class StockholmWriter(SequentialAlignmentWriter):
 
         # AC = Accession
         if "accession" in record.annotations:
-            self.handle.write("#=GS %s AC %s\n"
-                % (seq_name, self.clean(record.annotations["accession"])))
+            self.handle.write("#=GS {0!s} AC {1!s}\n".format(seq_name, self.clean(record.annotations["accession"])))
         elif record.id:
-            self.handle.write("#=GS %s AC %s\n"
-                % (seq_name, self.clean(record.id)))
+            self.handle.write("#=GS {0!s} AC {1!s}\n".format(seq_name, self.clean(record.id)))
 
         # DE = description
         if record.description:
-            self.handle.write("#=GS %s DE %s\n"
-                % (seq_name, self.clean(record.description)))
+            self.handle.write("#=GS {0!s} DE {1!s}\n".format(seq_name, self.clean(record.description)))
 
         # DE = database links
         for xref in record.dbxrefs:
-            self.handle.write("#=GS %s DR %s\n"
-                % (seq_name, self.clean(xref)))
+            self.handle.write("#=GS {0!s} DR {1!s}\n".format(seq_name, self.clean(xref)))
 
         # GS = other per sequence annotation
         for key, value in record.annotations.items():
             if key in self.pfam_gs_mapping:
                 data = self.clean(str(value))
                 if data:
-                    self.handle.write("#=GS %s %s %s\n"
-                                      % (seq_name,
+                    self.handle.write("#=GS {0!s} {1!s} {2!s}\n".format(seq_name,
                                          self.clean(self.pfam_gs_mapping[key]),
                                          data))
             else:
@@ -261,8 +256,7 @@ class StockholmWriter(SequentialAlignmentWriter):
             if key in self.pfam_gr_mapping and len(str(value)) == len(record.seq):
                 data = self.clean(str(value))
                 if data:
-                    self.handle.write("#=GR %s %s %s\n"
-                                      % (seq_name,
+                    self.handle.write("#=GR {0!s} {1!s} {2!s}\n".format(seq_name,
                                          self.clean(self.pfam_gr_mapping[key]),
                                          data))
             else:
@@ -431,8 +425,7 @@ class StockholmIterator(AlignmentIterator):
 
             if self.records_per_alignment is not None \
             and self.records_per_alignment != len(ids):
-                raise ValueError("Found %i records in this alignment, told to expect %i"
-                                 % (len(ids), self.records_per_alignment))
+                raise ValueError("Found {0:d} records in this alignment, told to expect {1:d}".format(len(ids), self.records_per_alignment))
 
             alignment_length = len(list(seqs.values())[0])
             records = []  # Alignment obj will put them all in a list anyway

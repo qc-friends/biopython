@@ -46,11 +46,11 @@ def pretty_print_prediction(emissions, real_state, predicted_state,
         else:
             extension = len(emissions) - cur_position
 
-        print("%s%s" % (emission_title,
+        print("{0!s}{1!s}".format(emission_title,
                         emissions[cur_position:cur_position + seq_length]))
-        print("%s%s" % (real_title,
+        print("{0!s}{1!s}".format(real_title,
                         real_state[cur_position:cur_position + seq_length]))
-        print("%s%s\n" % (predicted_title,
+        print("{0!s}{1!s}\n".format(predicted_title,
                           predicted_state[cur_position:
                                           cur_position + seq_length]))
 

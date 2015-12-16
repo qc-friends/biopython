@@ -32,7 +32,7 @@ def _get_location_string(feature, record_length):
     using_sub_features = _insdc_feature_location_string(feature, record_length)
     using_compound_location = _insdc_location_string(feature.location, record_length)
     assert using_sub_features == using_compound_location, \
-        "%r vs %r from:\n%s" % (using_sub_features, using_compound_location, feature)
+        "{0!r} vs {1!r} from:\n{2!s}".format(using_sub_features, using_compound_location, feature)
     return using_compound_location
 
 
@@ -55,29 +55,27 @@ def compare_record(old, new, expect_minor_diffs=False):
     and old.id != new.id and old.name != new.name \
     and (old.id not in new.id) and (new.id not in old.id) \
     and (old.id.replace(" ", "_") != new.id.replace(" ", "_")):
-        raise ValueError("'%s' or '%s' vs '%s' or '%s' records"
-                         % (old.id, old.name, new.id, new.name))
+        raise ValueError("'{0!s}' or '{1!s}' vs '{2!s}' or '{3!s}' records".format(old.id, old.name, new.id, new.name))
     if len(old.seq) != len(new.seq):
-        raise ValueError("%i vs %i" % (len(old.seq), len(new.seq)))
+        raise ValueError("{0:d} vs {1:d}".format(len(old.seq), len(new.seq)))
     if isinstance(old.seq, UnknownSeq) \
     and isinstance(new.seq, UnknownSeq):
         # Jython didn't like us comparing the string of very long
         # UnknownSeq object (out of heap memory error)
         if old.seq._character.upper() != new.seq._character:
-            raise ValueError("%s vs %s" % (repr(old.seq), repr(new.seq)))
+            raise ValueError("{0!s} vs {1!s}".format(repr(old.seq), repr(new.seq)))
     elif str(old.seq).upper() != str(new.seq).upper():
         if len(old.seq) < 200:
-            raise ValueError("'%s' vs '%s'" % (old.seq, new.seq))
+            raise ValueError("'{0!s}' vs '{1!s}'".format(old.seq, new.seq))
         else:
-            raise ValueError("'%s...' vs '%s...'" % (old.seq[:100], new.seq[:100]))
+            raise ValueError("'{0!s}...' vs '{1!s}...'".format(old.seq[:100], new.seq[:100]))
     if old.features and new.features:
         if not compare_features(old.features, new.features):
             return False
     # Just insist on at least one word in common:
     if (old.description or new.description) \
     and not set(old.description.split()).intersection(new.description.split()):
-        raise ValueError("%s versus %s"
-                         % (repr(old.description), repr(new.description)))
+        raise ValueError("{0!s} versus {1!s}".format(repr(old.description), repr(new.description)))
     # This only checks common annotation
     # Would a white list be easier?
     for key in set(old.annotations).intersection(new.annotations):
@@ -89,8 +87,7 @@ def compare_record(old, new, expect_minor_diffs=False):
         if key == "comment":
             # Ignore whitespace
             if old.annotations[key].split() != new.annotations[key].split():
-                raise ValueError("Annotation mis-match for comment:\n%s\n%s"
-                                % (old.annotations[key], new.annotations[key]))
+                raise ValueError("Annotation mis-match for comment:\n{0!s}\n{1!s}".format(old.annotations[key], new.annotations[key]))
             continue
         if key == "references":
             if expect_minor_diffs:
@@ -100,7 +97,7 @@ def compare_record(old, new, expect_minor_diffs=False):
             for r1, r2 in zip(old.annotations[key], new.annotations[key]):
                 assert r1.title == r2.title
                 assert r1.authors == r2.authors, \
-                       "Old: '%s'\nNew: '%s'" % (r1.authors, r2.authors)
+                       "Old: '{0!s}'\nNew: '{1!s}'".format(r1.authors, r2.authors)
                 assert r1.journal == r2.journal
                 if r1.consrtm and r2.consrtm:
                     # Not held in EMBL files
@@ -111,15 +108,14 @@ def compare_record(old, new, expect_minor_diffs=False):
                 assert r1.pubmed_id == r2.pubmed_id
             continue
         if repr(old.annotations[key]) != repr(new.annotations[key]):
-            raise ValueError("Annotation mis-match for %s:\n%s\n%s"
-                             % (key, old.annotations[key], new.annotations[key]))
+            raise ValueError("Annotation mis-match for {0!s}:\n{1!s}\n{2!s}".format(key, old.annotations[key], new.annotations[key]))
     return True
 
 
 def compare_records(old_list, new_list, expect_minor_diffs=False):
     """Check two lists of SeqRecords agree, raises a ValueError if mismatch."""
     if len(old_list) != len(new_list):
-        raise ValueError("%i vs %i records" % (len(old_list), len(new_list)))
+        raise ValueError("{0:d} vs {1:d} records".format(len(old_list), len(new_list)))
     for old, new in zip(old_list, new_list):
         if not compare_record(old, new, expect_minor_diffs):
             return False
@@ -129,27 +125,24 @@ def compare_records(old_list, new_list, expect_minor_diffs=False):
 def compare_feature(old, new, ignore_sub_features=False):
     """Check two SeqFeatures agree."""
     if old.type != new.type:
-        raise ValueError("Type %s versus %s" % (repr(old.type), repr(new.type)))
+        raise ValueError("Type {0!s} versus {1!s}".format(repr(old.type), repr(new.type)))
     if old.location.nofuzzy_start != new.location.nofuzzy_start \
     or old.location.nofuzzy_end != new.location.nofuzzy_end:
-        raise ValueError("%s versus %s:\n%s\nvs:\n%s"
-                         % (old.location, new.location, repr(old), repr(new)))
+        raise ValueError("{0!s} versus {1!s}:\n{2!s}\nvs:\n{3!s}".format(old.location, new.location, repr(old), repr(new)))
     if old.strand is not None and old.strand != new.strand:
-        raise ValueError("Different strand:\n%s\nvs:\n%s" % (repr(old), repr(new)))
+        raise ValueError("Different strand:\n{0!s}\nvs:\n{1!s}".format(repr(old), repr(new)))
     if old.ref != new.ref:
-        raise ValueError("Different ref:\n%s\nvs:\n%s" % (repr(old), repr(new)))
+        raise ValueError("Different ref:\n{0!s}\nvs:\n{1!s}".format(repr(old), repr(new)))
     if old.ref_db != new.ref_db:
-        raise ValueError("Different ref_db:\n%s\nvs:\n%s" % (repr(old), repr(new)))
+        raise ValueError("Different ref_db:\n{0!s}\nvs:\n{1!s}".format(repr(old), repr(new)))
     if old.location_operator != new.location_operator:
-        raise ValueError("Different location_operator:\n%s\nvs:\n%s" % (repr(old), repr(new)))
+        raise ValueError("Different location_operator:\n{0!s}\nvs:\n{1!s}".format(repr(old), repr(new)))
     if old.location.start != new.location.start \
     or str(old.location.start) != str(new.location.start):
-        raise ValueError("Start %s versus %s:\n%s\nvs:\n%s"
-                         % (old.location.start, new.location.start, repr(old), repr(new)))
+        raise ValueError("Start {0!s} versus {1!s}:\n{2!s}\nvs:\n{3!s}".format(old.location.start, new.location.start, repr(old), repr(new)))
     if old.location.end != new.location.end \
     or str(old.location.end) != str(new.location.end):
-        raise ValueError("End %s versus %s:\n%s\nvs:\n%s"
-                         % (old.location.end, new.location.end, repr(old), repr(new)))
+        raise ValueError("End {0!s} versus {1!s}:\n{2!s}\nvs:\n{3!s}".format(old.location.end, new.location.end, repr(old), repr(new)))
     if not ignore_sub_features:
         # Using private variable to avoid deprecation warnings,
         if len(old._sub_features) != len(new._sub_features):
@@ -165,15 +158,14 @@ def compare_feature(old, new, ignore_sub_features=False):
             # EMBL and GenBank files are use different references/notes/etc
             continue
         if old.qualifiers[key] != new.qualifiers[key]:
-            raise ValueError("Qualifier mis-match for %s:\n%s\n%s"
-                             % (key, old.qualifiers[key], new.qualifiers[key]))
+            raise ValueError("Qualifier mis-match for {0!s}:\n{1!s}\n{2!s}".format(key, old.qualifiers[key], new.qualifiers[key]))
     return True
 
 
 def compare_features(old_list, new_list, ignore_sub_features=False):
     """Check two lists of SeqFeatures agree, raises a ValueError if mismatch."""
     if len(old_list) != len(new_list):
-        raise ValueError("%i vs %i features" % (len(old_list), len(new_list)))
+        raise ValueError("{0:d} vs {1:d} features".format(len(old_list), len(new_list)))
     for old, new in zip(old_list, new_list):
         # This assumes they are in the same order
         if not compare_feature(old, new, ignore_sub_features):
@@ -1061,7 +1053,7 @@ class NC_000932(unittest.TestCase):
                        "gi|7525057|ref|NP_051038.1|",  # dual-strand
                        "gi|90110725|ref|NP_051109.2|",  # Invalid annotation? No start codon
                        ]
-    __doc__ = "Tests using %s GenBank and FASTA files from the NCBI" % basename
+    __doc__ = "Tests using {0!s} GenBank and FASTA files from the NCBI".format(basename)
     # TODO - neat way to change the docstrings...
 
     def setUp(self):
@@ -1091,7 +1083,7 @@ class NC_000932(unittest.TestCase):
                 pro = nuc.translate(table=self.table, cds=True)
             except TranslationError as e:
                 print(e)
-                print("%r, %r, %r" % (r.id, nuc, self.table))
+                print("{0!r}, {1!r}, {2!r}".format(r.id, nuc, self.table))
                 print(f)
                 raise
             if pro[-1] == "*":
@@ -1105,7 +1097,7 @@ class NC_005816(NC_000932):
     emblname = "AE017046"
     table = 11
     skip_trans_test = []
-    __doc__ = "Tests using %s GenBank and FASTA files from the NCBI" % basename
+    __doc__ = "Tests using {0!s} GenBank and FASTA files from the NCBI".format(basename)
 
     def test_GenBank_vs_EMBL(self):
         if not self.emblname:
@@ -1133,9 +1125,8 @@ class NC_005816(NC_000932):
             if (str(translation) != str(faa.seq)) \
             and (str(translation) != str(faa.seq) + "*"):
                 t = SeqRecord(translation, id="Translation",
-                              description="Table %s" % self.table)
-                raise ValueError("FAA vs FNA translation problem:\n%s\n%s\n%s\n"
-                                 % (fna.format("fasta"),
+                              description="Table {0!s}".format(self.table))
+                raise ValueError("FAA vs FNA translation problem:\n{0!s}\n{1!s}\n{2!s}\n".format(fna.format("fasta"),
                                     t.format("fasta"),
                                     faa.format("fasta")))
 

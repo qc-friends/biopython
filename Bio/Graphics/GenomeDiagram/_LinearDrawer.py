@@ -438,15 +438,13 @@ class LinearDrawer(AbstractDrawer):
             Returns a drawing element that is the tick on the scale
         """
         assert self.start <= tickpos and tickpos <= self.end, \
-               "Tick at %i, but showing %i to %i" \
-               % (tickpos, self.start, self.end)
+               "Tick at {0:d}, but showing {1:d} to {2:d}".format(tickpos, self.start, self.end)
         assert (track.start is None or track.start <= tickpos) and \
                (track.end is None or tickpos <= track.end), \
-               "Tick at %i, but showing %r to %r for track" \
-               % (tickpos, track.start, track.end)
+               "Tick at {0:d}, but showing {1!r} to {2!r} for track".format(tickpos, track.start, track.end)
         fragment, tickx = self.canvas_location(tickpos)  # Tick co-ordinates
         assert fragment >= 0, \
-               "Fragment %i, tickpos %i" % (fragment, tickpos)
+               "Fragment {0:d}, tickpos {1:d}".format(fragment, tickpos)
         tctr = ctr + self.fragment_lines[fragment][0]   # Center line of the track
         tickx += self.x0                # Tick X co-ord
         ticktop = tctr + ticklen        # Y co-ord of tick top
@@ -568,17 +566,17 @@ class LinearDrawer(AbstractDrawer):
                         minval, maxval = quartiles[0], quartiles[4]
                         if graph.center is None:
                             midval = (maxval + minval) / 2.
-                            graph_label_min.append("%.3f" % minval)
-                            graph_label_max.append("%.3f" % maxval)
+                            graph_label_min.append("{0:.3f}".format(minval))
+                            graph_label_max.append("{0:.3f}".format(maxval))
                         else:
                             diff = max((graph.center - minval),
                                        (maxval - graph.center))
                             minval = graph.center - diff
                             maxval = graph.center + diff
                             midval = graph.center
-                            graph_label_mid.append("%.3f" % midval)
-                            graph_label_min.append("%.3f" % minval)
-                            graph_label_max.append("%.3f" % maxval)
+                            graph_label_mid.append("{0:.3f}".format(midval))
+                            graph_label_min.append("{0:.3f}".format(minval))
+                            graph_label_max.append("{0:.3f}".format(maxval))
                     for fragment in range(start_f, end_f + 1):  # Add to all used fragment axes
                         tbtm = btm + self.fragment_lines[fragment][0]
                         tctr = ctr + self.fragment_lines[fragment][0]
@@ -992,13 +990,13 @@ class LinearDrawer(AbstractDrawer):
             top += self.fragment_lines[fragment][0]
         except:     # Only called if the method screws up big time
             print("We've got a screw-up")
-            print("%s %s" % (self.start, self.end))
+            print("{0!s} {1!s}".format(self.start, self.end))
             print(self.fragment_bases)
-            print("%r %r" % (x0, x1))
+            print("{0!r} {1!r}".format(x0, x1))
             for locstart, locend in feature.locations:
                 print(self.canvas_location(locstart))
                 print(self.canvas_location(locend))
-            print('FEATURE\n%s' % feature)
+            print('FEATURE\n{0!s}'.format(feature))
             raise
 
         # Distribution dictionary for various ways of drawing the feature

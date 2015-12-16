@@ -75,23 +75,23 @@ while line:
         one = line.strip().split()[-1]
         found_one = True
     if line.startswith('_chem_comp.three_letter_code'):
-        three = '%-3s' % (line.strip().split()[-1],)  # make it three-letter
+        three = '{0:<3!s}'.format(line.strip().split()[-1])  # make it three-letter
         found_three = True
 
     if found_one and found_three:
         if counter % 5 == 0:
-            three_to_one_buf.append('%s\n' % (current_line,))
+            three_to_one_buf.append('{0!s}\n'.format(current_line))
             current_line = '    '
 
-        current_line = '%s\'%s\':\'%s\',' % (current_line, three, one)
+        current_line = '{0!s}\'{1!s}\':\'{2!s}\','.format(current_line, three, one)
         counter += 1
 
         if one != '?':
             if counter_noq % 5 == 0:
-                three_to_one_buf_noq.append('%s\n' % (current_line_noq,))
+                three_to_one_buf_noq.append('{0!s}\n'.format(current_line_noq))
                 current_line_noq = '    '
 
-            current_line_noq = '%s\'%s\':\'%s\',' % (current_line_noq, three, one)
+            current_line_noq = '{0!s}\'{1!s}\':\'{2!s}\','.format(current_line_noq, three, one)
             counter_noq += 1
 
         found_one = False
@@ -103,13 +103,13 @@ if len(current_line) < 5:
     three_to_one_buf[-1] = three_to_one_buf[:-1]  # remove the last comma
     three_to_one_buf.append('}')
 else:
-    three_to_one_buf.append('%s }' % (current_line[:-1]))
+    three_to_one_buf.append('{0!s} }}'.format((current_line[:-1])))
 
 if len(current_line_noq) < 5:
     three_to_one_buf_noq[-1] = three_to_one_buf_noq[:-1]
     three_to_one_buf_noq.append('}')
 else:
-    three_to_one_buf_noq.append('%s }' % (current_line_noq[:-1]))
+    three_to_one_buf_noq.append('{0!s} }}'.format((current_line_noq[:-1])))
 
 # Find path of current script
 _scriptPath = os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0])

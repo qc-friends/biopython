@@ -74,13 +74,13 @@ def check_config(dbdriver, dbtype, dbhost, dbuser, dbpasswd, testdb):
             elif DBDRIVER in ["psycopg2"]:
                 import org.postgresql.Driver
         except ImportError:
-            message = "Install the JDBC driver for %s to use BioSQL " % DBTYPE
+            message = "Install the JDBC driver for {0!s} to use BioSQL ".format(DBTYPE)
             raise MissingExternalDependencyError(message)
     else:
         try:
             __import__(DBDRIVER)
         except ImportError:
-            message = "Install %s if you want to use %s with BioSQL " % (DBDRIVER, DBTYPE)
+            message = "Install {0!s} if you want to use {1!s} with BioSQL ".format(DBDRIVER, DBTYPE)
             raise MissingExternalDependencyError(message)
 
     try:
@@ -92,14 +92,14 @@ def check_config(dbdriver, dbtype, dbhost, dbuser, dbpasswd, testdb):
         server.close()
         del server
     except Exception as e:
-        message = "Connection failed, check settings if you plan to use BioSQL: %s" % e
+        message = "Connection failed, check settings if you plan to use BioSQL: {0!s}".format(e)
         raise MissingExternalDependencyError(message)
 
     DBSCHEMA = "biosqldb-" + DBTYPE + ".sql"
     SQL_FILE = os.path.join(os.getcwd(), "BioSQL", DBSCHEMA)
 
     if not os.path.isfile(SQL_FILE):
-        message = "Missing SQL schema file: %s" % SQL_FILE
+        message = "Missing SQL schema file: {0!s}".format(SQL_FILE)
         raise MissingExternalDependencyError(message)
 
 
@@ -138,7 +138,7 @@ def _do_db_create():
         pass
     except (server.module.IntegrityError,
             server.module.ProgrammingError) as e:  # ditto--perhaps
-        if str(e).find('database "%s" does not exist' % TESTDB) == -1:
+        if str(e).find('database "{0!s}" does not exist'.format(TESTDB)) == -1:
             server.close()
             raise
     # create a new database
@@ -161,7 +161,7 @@ def create_database():
                 except:
                     # Seen this with PyPy 2.1 (and older) on Windows -
                     # which suggests an open handle still exists?
-                    print("Could not remove %r" % TESTDB)
+                    print("Could not remove {0!r}".format(TESTDB))
                     pass
         # Now pick a new filename - just in case there is a stale handle
         # (which might be happening under Windows...)
@@ -411,8 +411,7 @@ class SeqInterfaceTest(unittest.TestCase):
             self.assertEqual(cds_feature.qualifiers["protein_id"], ["CAA44171.1"])
             self.assertEqual(cds_feature.qualifiers["codon_start"], ["1"])
         except KeyError:
-            raise KeyError("Missing expected entries, have %s"
-                           % repr(cds_feature.qualifiers))
+            raise KeyError("Missing expected entries, have {0!s}".format(repr(cds_feature.qualifiers)))
 
         self.assertTrue("db_xref" in cds_feature.qualifiers)
         multi_ann = cds_feature.qualifiers["db_xref"]
@@ -510,7 +509,7 @@ class DupLoadTest(unittest.TestCase):
                                                        "OperationalError"],
                             err.__class__.__name__)
             return
-        raise Exception("Should have failed! Loaded %i records" % count)
+        raise Exception("Should have failed! Loaded {0:d} records".format(count))
 
     def test_duplicate_load2(self):
         """Make sure can't import a single record twice (in steps)."""
@@ -526,7 +525,7 @@ class DupLoadTest(unittest.TestCase):
                                                        "AttributeError"],
                             err.__class__.__name__)
             return
-        raise Exception("Should have failed! Loaded %i records" % count)
+        raise Exception("Should have failed! Loaded {0:d} records".format(count))
 
     def test_duplicate_id_load(self):
         """Make sure can't import records with same ID (in one go)."""
@@ -542,7 +541,7 @@ class DupLoadTest(unittest.TestCase):
                                                        "AttributeError"],
                             err.__class__.__name__)
             return
-        raise Exception("Should have failed! Loaded %i records" % count)
+        raise Exception("Should have failed! Loaded {0:d} records".format(count))
 
 
 class ClosedLoopTest(unittest.TestCase):
@@ -589,7 +588,7 @@ class ClosedLoopTest(unittest.TestCase):
         server = BioSeqDatabase.open_database(driver=DBDRIVER,
                                               user=DBUSER, passwd=DBPASSWD,
                                               host=DBHOST, db=TESTDB)
-        db_name = "test_loop_%s" % filename  # new namespace!
+        db_name = "test_loop_{0!s}".format(filename)  # new namespace!
         db = server.new_database(db_name)
         count = db.load(original_records)
         self.assertEqual(count, len(original_records))
@@ -665,7 +664,7 @@ class TransferTest(unittest.TestCase):
         server = BioSeqDatabase.open_database(driver=DBDRIVER,
                                               user=DBUSER, passwd=DBPASSWD,
                                               host=DBHOST, db=TESTDB)
-        db_name = "test_trans1_%s" % filename  # new namespace!
+        db_name = "test_trans1_{0!s}".format(filename)  # new namespace!
         db = server.new_database(db_name)
         count = db.load(original_records)
         self.assertEqual(count, len(original_records))
@@ -676,7 +675,7 @@ class TransferTest(unittest.TestCase):
         # And check they agree
         self.assertTrue(compare_records(original_records, biosql_records))
         # Now write to a second name space...
-        db_name = "test_trans2_%s" % filename  # new namespace!
+        db_name = "test_trans2_{0!s}".format(filename)  # new namespace!
         db = server.new_database(db_name)
         count = db.load(biosql_records)
         self.assertEqual(count, len(original_records))
@@ -741,7 +740,7 @@ class InDepthLoadTest(unittest.TestCase):
                                                        "AttributeError"],
                             err.__class__.__name__)
             return
-        raise Exception("Should have failed! Loaded %i records" % count)
+        raise Exception("Should have failed! Loaded {0:d} records".format(count))
 
     def test_record_loading(self):
         """Make sure all records are correctly loaded.
@@ -868,7 +867,7 @@ class AutoSeqIOTests(unittest.TestCase):
             if "accessions" in record.annotations:
                 # Only expect FIRST accession to work!
                 key = record.annotations["accessions"][0]
-                assert key, "Blank accession in annotation %s" % repr(record.annotations)
+                assert key, "Blank accession in annotation {0!s}".format(repr(record.annotations))
                 if key != record.id:
                     # print(" - Retrieving by accession '%s'," % key)
                     db_rec = db.lookup(accession=key)

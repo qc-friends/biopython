@@ -171,7 +171,7 @@ class Fragment(object):
         Returns <Fragment length=L id=ID> where L=length of fragment
         and ID the identifier (rank in the library).
         """
-        return "<Fragment length=%i id=%i>" % (self.length, self.fid)
+        return "<Fragment length={0:d} id={1:d}>".format(self.length, self.fid)
 
 
 def _make_fragment_list(pp, length):
@@ -333,6 +333,6 @@ if __name__ == "__main__":
     fm = FragmentMapper(m, 10, 5, "levitt_data")
 
     for r in Selection.unfold_entities(m, "R"):
-        print("%s:" % r)
+        print("{0!s}:".format(r))
         if r in fm:
             print(fm[r])

@@ -459,7 +459,7 @@ def write(sequences, handle, format):
     if not format:
         raise ValueError("Format required (lower case string)")
     if format != format.lower():
-        raise ValueError("Format string '%s' should be lower case" % format)
+        raise ValueError("Format string '{0!s}' should be lower case".format(format))
 
     if isinstance(handle, SeqRecord):
         raise TypeError("Check arguments, handle should NOT be a SeqRecord")
@@ -492,10 +492,9 @@ def write(sequences, handle, format):
             count = len(alignment)
             del alignment_count, alignment
         elif format in _FormatToIterator or format in AlignIO._FormatToIterator:
-            raise ValueError("Reading format '%s' is supported, but not writing"
-                             % format)
+            raise ValueError("Reading format '{0!s}' is supported, but not writing".format(format))
         else:
-            raise ValueError("Unknown format '%s'" % format)
+            raise ValueError("Unknown format '{0!s}'".format(format))
 
         assert isinstance(count, int), "Internal error - the underlying %s " \
             "writer should have returned the record count, not %s" \
@@ -575,10 +574,10 @@ def parse(handle, format, alphabet=None):
     if not format:
         raise ValueError("Format required (lower case string)")
     if format != format.lower():
-        raise ValueError("Format string '%s' should be lower case" % format)
+        raise ValueError("Format string '{0!s}' should be lower case".format(format))
     if alphabet is not None and not (isinstance(alphabet, Alphabet) or
                                      isinstance(alphabet, AlphabetEncoder)):
-        raise ValueError("Invalid alphabet, %s" % repr(alphabet))
+        raise ValueError("Invalid alphabet, {0!s}".format(repr(alphabet)))
 
     with as_handle(handle, mode) as fp:
         # Map the file format to a sequence iterator:
@@ -597,7 +596,7 @@ def parse(handle, format, alphabet=None):
                                                   alphabet=alphabet)
                  for r in alignment)
         else:
-            raise ValueError("Unknown format '%s'" % format)
+            raise ValueError("Unknown format '{0!s}'".format(format))
         # This imposes some overhead... wait until we drop Python 2.4 to fix it
         for r in i:
             yield r
@@ -733,7 +732,7 @@ def to_dict(sequences, key_function=None):
     for record in sequences:
         key = key_function(record)
         if key in d:
-            raise ValueError("Duplicate key '%s'" % key)
+            raise ValueError("Duplicate key '{0!s}'".format(key))
         d[key] = record
     return d
 
@@ -854,10 +853,10 @@ def index(filename, format, alphabet=None, key_function=None):
     if not format:
         raise ValueError("Format required (lower case string)")
     if format != format.lower():
-        raise ValueError("Format string '%s' should be lower case" % format)
+        raise ValueError("Format string '{0!s}' should be lower case".format(format))
     if alphabet is not None and not (isinstance(alphabet, Alphabet) or
                                      isinstance(alphabet, AlphabetEncoder)):
-        raise ValueError("Invalid alphabet, %s" % repr(alphabet))
+        raise ValueError("Invalid alphabet, {0!s}".format(repr(alphabet)))
 
     # Map the file format to a sequence iterator:
     from ._index import _FormatToRandomAccess  # Lazy import
@@ -865,9 +864,8 @@ def index(filename, format, alphabet=None, key_function=None):
     try:
         proxy_class = _FormatToRandomAccess[format]
     except KeyError:
-        raise ValueError("Unsupported format %r" % format)
-    repr = "SeqIO.index(%r, %r, alphabet=%r, key_function=%r)" \
-        % (filename, format, alphabet, key_function)
+        raise ValueError("Unsupported format {0!r}".format(format))
+    repr = "SeqIO.index({0!r}, {1!r}, alphabet={2!r}, key_function={3!r})".format(filename, format, alphabet, key_function)
     return _IndexedSeqFileDict(proxy_class(filename, format, alphabet),
                                key_function, repr, "SeqRecord")
 
@@ -934,16 +932,15 @@ def index_db(index_filename, filenames=None, format=None, alphabet=None,
     if format is not None and not isinstance(format, basestring):
         raise TypeError("Need a string for the file format (lower case)")
     if format and format != format.lower():
-        raise ValueError("Format string '%s' should be lower case" % format)
+        raise ValueError("Format string '{0!s}' should be lower case".format(format))
     if alphabet is not None and not (isinstance(alphabet, Alphabet) or
                                      isinstance(alphabet, AlphabetEncoder)):
-        raise ValueError("Invalid alphabet, %s" % repr(alphabet))
+        raise ValueError("Invalid alphabet, {0!s}".format(repr(alphabet)))
 
     # Map the file format to a sequence iterator:
     from ._index import _FormatToRandomAccess  # Lazy import
     from Bio.File import _SQLiteManySeqFilesDict
-    repr = "SeqIO.index_db(%r, filenames=%r, format=%r, alphabet=%r, key_function=%r)" \
-               % (index_filename, filenames, format, alphabet, key_function)
+    repr = "SeqIO.index_db({0!r}, filenames={1!r}, format={2!r}, alphabet={3!r}, key_function={4!r})".format(index_filename, filenames, format, alphabet, key_function)
 
     def proxy_factory(format, filename=None):
         """Given a filename returns proxy object, else boolean if format OK."""

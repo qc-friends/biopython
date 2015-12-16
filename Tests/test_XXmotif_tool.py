@@ -95,7 +95,7 @@ class XXmotifTestErrorConditions(XXmotifTestCase):
         except ApplicationError as err:
             self.assertEqual(err.returncode, 255)
         else:
-            self.fail("Should have failed, returned:\n%s\n%s" % (stdout, stderr))
+            self.fail("Should have failed, returned:\n{0!s}\n{1!s}".format(stdout, stderr))
 
     def test_invalid_format(self):
         """Test an input file in an invalid format."""
@@ -109,7 +109,7 @@ class XXmotifTestErrorConditions(XXmotifTestCase):
         except ApplicationError as err:
             self.assertEqual(err.returncode, 255)
         else:
-            self.fail("Should have failed, returned:\n%s\n%s" % (stdout, stderr))
+            self.fail("Should have failed, returned:\n{0!s}\n{1!s}".format(stdout, stderr))
 
     def test_output_directory_with_space(self):
         """Test an output directory containing a space."""

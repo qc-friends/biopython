@@ -33,11 +33,11 @@ alignment = AlignIO.read("test.aln", "clustal",
 
 print(alignment)
 
-print('first description: %s' % alignment[0].description)
-print('first sequence: %s' % alignment[0].seq)
+print('first description: {0!s}'.format(alignment[0].description))
+print('first sequence: {0!s}'.format(alignment[0].seq))
 
 # get the length of the alignment
-print('length %i' % alignment.get_alignment_length())
+print('length {0:d}'.format(alignment.get_alignment_length()))
 
 print(alignment)
 
@@ -45,7 +45,7 @@ print(alignment)
 summary_align = AlignInfo.SummaryInfo(alignment)
 
 consensus = summary_align.dumb_consensus()
-print('consensus %s' % consensus)
+print('consensus {0!s}'.format(consensus))
 
 my_pssm = summary_align.pos_specific_score_matrix(consensus,
                                                   chars_to_ignore=['N'])
@@ -65,4 +65,4 @@ info_content = summary_align.information_content(5, 30,
                                                  chars_to_ignore=['N'],
                                                  e_freq_table=freq_table_info)
 
-print("relative info content: %f" % info_content)
+print("relative info content: {0:f}".format(info_content))

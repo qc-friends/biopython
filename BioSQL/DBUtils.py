@@ -28,7 +28,7 @@ class Generic_dbutils(object):
     def last_id(self, cursor, table):
         # XXX: Unsafe without transactions isolation
         table = self.tname(table)
-        sql = r"select max(%s_id) from %s" % (table, table)
+        sql = r"select max({0!s}_id) from {1!s}".format(table, table)
         cursor.execute(sql)
         rv = cursor.fetchone()
         return rv[0]
@@ -77,14 +77,14 @@ class _PostgreSQL_dbutils(Generic_dbutils):
 
     def next_id(self, cursor, table):
         table = self.tname(table)
-        sql = r"select nextval('%s_pk_seq')" % table
+        sql = r"select nextval('{0!s}_pk_seq')".format(table)
         cursor.execute(sql)
         rv = cursor.fetchone()
         return rv[0]
 
     def last_id(self, cursor, table):
         table = self.tname(table)
-        sql = r"select currval('%s_pk_seq')" % table
+        sql = r"select currval('{0!s}_pk_seq')".format(table)
         cursor.execute(sql)
         rv = cursor.fetchone()
         return rv[0]

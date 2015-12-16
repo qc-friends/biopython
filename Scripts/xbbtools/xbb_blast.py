@@ -99,7 +99,7 @@ class BlastIt(object):
         else:
             db = self.dbs.get()
             prog = self.blasts.get()
-            self.command = 'echo %s | nice blastall -d %s -p %s' % (self.seq, db, prog)
+            self.command = 'echo {0!s} | nice blastall -d {1!s} -p {2!s}'.format(self.seq, db, prog)
 
         self.Run()
 

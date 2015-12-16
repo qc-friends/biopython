@@ -62,7 +62,7 @@ class EntrezTests(unittest.TestCase):
                          (entry in record.id) or
                          ("gi" in record.annotations
                           and record.annotations["gi"] == entry),
-                         "%s got %s, %s" % (entry, record.name, record.id))
+                         "{0!s} got {1!s}, {2!s}".format(entry, record.name, record.id))
             self.assertEqual(len(record), length)
             self.assertEqual(seguid(record.seq), checksum)
 
@@ -77,10 +77,10 @@ for database, formats, entry, length, checksum in [
 
     def funct(d, f, e, l, c):
         method = lambda x: x.simple(d, f, e, l, c)
-        method.__doc__ = "Bio.Entrez.efetch(%r, id=%r, ...)" % (d, e)
+        method.__doc__ = "Bio.Entrez.efetch({0!r}, id={1!r}, ...)".format(d, e)
         return method
 
-    setattr(EntrezTests, "test_%s_%s" % (database, entry),
+    setattr(EntrezTests, "test_{0!s}_{1!s}".format(database, entry),
             funct(database, formats, entry, length, checksum))
     del funct
 del database, formats, entry, length, checksum

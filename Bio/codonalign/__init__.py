@@ -159,7 +159,7 @@ def build(pro_align, nucl_seqs, corr_dict=None, gap_char='-', unknown='X',
             try:
                 nucl_id = corr_dict[pro_rec.id]
             except KeyError:
-                print("Protein record (%s) is not in corr_dict!" % pro_rec.id)
+                print("Protein record ({0!s}) is not in corr_dict!".format(pro_rec.id))
                 exit(1)
             pro_nucl_pair.append((pro_rec, nucl_seqs[nucl_id]))
 
@@ -582,8 +582,7 @@ def _get_codon_rec(pro, nucl, span_mode, alphabet, gap_char="-",
                                             (span[0] + 3 * (aa_num + 1))]
                 if not str(Seq(this_codon.upper()).translate(table=codon_table)) == aa:
                     max_score -= 1
-                    warnings.warn("%s(%s %d) does not correspond to %s(%s)"
-                                  % (pro.id, aa, aa_num, nucl.id, this_codon))
+                    warnings.warn("{0!s}({1!s} {2:d}) does not correspond to {3!s}({4!s})".format(pro.id, aa, aa_num, nucl.id, this_codon))
                 if max_score == 0:
                     raise RuntimeError("max_score reached for {0}! Please "
                                        "raise up the tolerance to get an "

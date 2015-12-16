@@ -216,20 +216,20 @@ def _parse_qblast_ref_page(handle):
             msg = s[i + len('<div class="error msInf">'):].strip()
             msg = msg.split("</div>", 1)[0].split("\n", 1)[0].strip()
             if msg:
-                raise ValueError("Error message from NCBI: %s" % msg)
+                raise ValueError("Error message from NCBI: {0!s}".format(msg))
         # In spring 2010 the markup was like this:
         i = s.find('<p class="error">')
         if i != -1:
             msg = s[i + len('<p class="error">'):].strip()
             msg = msg.split("</p>", 1)[0].split("\n", 1)[0].strip()
             if msg:
-                raise ValueError("Error message from NCBI: %s" % msg)
+                raise ValueError("Error message from NCBI: {0!s}".format(msg))
         # Generic search based on the way the error messages start:
         i = s.find('Message ID#')
         if i != -1:
             # Break the message at the first HTML tag
             msg = s[i:].split("<", 1)[0].split("\n", 1)[0].strip()
-            raise ValueError("Error message from NCBI: %s" % msg)
+            raise ValueError("Error message from NCBI: {0!s}".format(msg))
         # We didn't recognise the error layout :(
         # print s
         raise ValueError("No RID and no RTOE found in the 'please wait' page, "

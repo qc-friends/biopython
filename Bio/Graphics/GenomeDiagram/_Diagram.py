@@ -354,9 +354,9 @@ class Diagram(object):
 
         __str__(self)
         """
-        outstr = ["\n<%s: %s>" % (self.__class__, self.name)]
-        outstr.append("%d tracks" % len(self.tracks))
+        outstr = ["\n<{0!s}: {1!s}>".format(self.__class__, self.name)]
+        outstr.append("{0:d} tracks".format(len(self.tracks)))
         for level in self.get_levels():
-            outstr.append("Track %d: %s\n" % (level, self.tracks[level]))
+            outstr.append("Track {0:d}: {1!s}\n".format(level, self.tracks[level]))
         outstr = '\n'.join(outstr)
         return outstr

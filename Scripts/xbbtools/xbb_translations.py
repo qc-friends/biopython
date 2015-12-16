@@ -52,17 +52,17 @@ class xbb_translations(object):
     def header_nice(self, txt, seq):
         length = len(seq)
         if length > 20:
-            short = '%s ... %s' % (seq[:10], seq[-10:])
+            short = '{0!s} ... {1!s}'.format(seq[:10], seq[-10:])
         else:
             short = seq
 
         date = time.strftime('%y %b %d, %X', time.localtime(time.time()))
-        res = '%s: %s, ' % (txt, date)
+        res = '{0!s}: {1!s}, '.format(txt, date)
 
         for nt in ['a', 't', 'g', 'c']:
-            res += '%s:%d ' % (nt, seq.count(nt.upper()))
+            res += '{0!s}:{1:d} '.format(nt, seq.count(nt.upper()))
 
-        res += '\nSequence: %s, %d nt, %0.2f %%GC\n' % (short.lower(), length, self.gc(seq))
+        res += '\nSequence: {0!s}, {1:d} nt, {2:0.2f} %GC\n'.format(short.lower(), length, self.gc(seq))
         res += '\n\n'
         return res
 
@@ -73,10 +73,10 @@ class xbb_translations(object):
         for i in range(0, length, 60):
             subseq = seq[i:i + 60]
             p = i // 3
-            res += '%d/%d\n' % (i + 1, i // 3 + 1)
+            res += '{0:d}/{1:d}\n'.format(i + 1, i // 3 + 1)
             res += '  '.join(protein[p:p + 20]) + '\n'
             # seq
-            res += subseq.lower() + '%5d %%\n' % int(self.gc(subseq))
+            res += subseq.lower() + '{0:5d} %\n'.format(int(self.gc(subseq)))
 
         return res
 
@@ -101,12 +101,12 @@ class xbb_translations(object):
             csubseq = comp[i:i + 60]
             p = i // 3
             # + frames
-            res += '%d/%d\n' % (i + 1, i // 3 + 1)
+            res += '{0:d}/{1:d}\n'.format(i + 1, i // 3 + 1)
             res += '  ' + '  '.join(frames[3][p:p + 20]) + '\n'
             res += ' ' + '  '.join(frames[2][p:p + 20]) + '\n'
             res += '  '.join(frames[1][p:p + 20]) + '\n'
             # seq
-            res += subseq.lower() + '%5d %%\n' % int(self.gc(subseq))
+            res += subseq.lower() + '{0:5d} %\n'.format(int(self.gc(subseq)))
             res += csubseq.lower() + '\n'
             # - frames
             res += '  '.join(frames[-2][p:p + 20]) + ' \n'

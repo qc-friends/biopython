@@ -71,8 +71,7 @@ class ExampleManagerTest(unittest.TestCase):
 
             wrong_percent = abs(expect - actual) / self.num_examples
             assert wrong_percent < .1, \
-                   "Deviation in how examples were added, expect %s, got %s" \
-                   % (expect, actual)
+                   "Deviation in how examples were added, expect {0!s}, got {1!s}".format(expect, actual)
 
     def test_partioning_examples(self):
         """Test that we can change how to partition the test examples.

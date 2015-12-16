@@ -80,7 +80,7 @@ def find_words(string, trie):
     Word boundaries are defined as any punctuation or whitespace.
 
     """
-    _boundary_re = re.compile(r"[%s]+" % re.escape(DEFAULT_BOUNDARY_CHARS))
+    _boundary_re = re.compile(r"[{0!s}]+".format(re.escape(DEFAULT_BOUNDARY_CHARS)))
 
     results = []
     start = 0     # index of word boundary

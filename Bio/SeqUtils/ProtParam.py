@@ -236,15 +236,14 @@ class ProteinAnalysis(object):
                     back = param_dict[subsequence[window - j - 1]]
                     score += weights[j] * front + weights[j] * back
                 except KeyError:
-                    sys.stderr.write('warning: %s or %s is not a standard amino acid.\n' %
-                             (subsequence[j], subsequence[window - j - 1]))
+                    sys.stderr.write('warning: {0!s} or {1!s} is not a standard amino acid.\n'.format(subsequence[j], subsequence[window - j - 1]))
 
             # Now add the middle value, which always has a weight of 1.
             middle = subsequence[window // 2]
             if middle in param_dict:
                 score += param_dict[middle]
             else:
-                sys.stderr.write('warning: %s  is not a standard amino acid.\n' % (middle))
+                sys.stderr.write('warning: {0!s}  is not a standard amino acid.\n'.format((middle)))
 
             scores.append(score / sum_of_weights)
 

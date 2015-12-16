@@ -285,8 +285,7 @@ class _Matrix(object):
 
     def __repr__(self):
         return self.__class__.__name__ \
-            + "(names=%s, matrix=%s)" \
-            % tuple(map(repr, (self.names, self.matrix)))
+            + "(names={0!s}, matrix={1!s})".format(*tuple(map(repr, (self.names, self.matrix))))
 
     def __str__(self):
         """Get a lower triangular matrix string"""
@@ -432,11 +431,9 @@ class DistanceCalculator(object):
                 if l1 in skip_letters or l2 in skip_letters:
                     continue
                 if l1 not in self.scoring_matrix.names:
-                    raise ValueError("Bad alphabet '%s' in sequence '%s' at position '%s'"
-                                     % (l1, seq1.id, i))
+                    raise ValueError("Bad alphabet '{0!s}' in sequence '{1!s}' at position '{2!s}'".format(l1, seq1.id, i))
                 if l2 not in self.scoring_matrix.names:
-                    raise ValueError("Bad alphabet '%s' in sequence '%s' at position '%s'"
-                                     % (l2, seq2.id, i))
+                    raise ValueError("Bad alphabet '{0!s}' in sequence '{1!s}' at position '{2!s}'".format(l2, seq2.id, i))
                 max_score1 += self.scoring_matrix[l1, l1]
                 max_score2 += self.scoring_matrix[l2, l2]
                 score += self.scoring_matrix[l1, l2]

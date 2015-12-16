@@ -56,7 +56,7 @@ def read(handle):
         if line.startswith("SUMMARY OF MOTIFS"):
             break
         if not line.startswith('MOTIF'):
-            raise ValueError("Line does not start with 'MOTIF':\n%s" % line)
+            raise ValueError("Line does not start with 'MOTIF':\n{0!s}".format(line))
     return record
 
 
@@ -150,13 +150,13 @@ def __read_datafile(record, handle):
     except StopIteration:
         raise ValueError("Unexpected end of stream: Expected to find line starting with '****'")
     if not line.startswith('****'):
-        raise ValueError("Line does not start with '****':\n%s" % line)
+        raise ValueError("Line does not start with '****':\n{0!s}".format(line))
     try:
         line = next(handle)
     except StopIteration:
         raise ValueError("Unexpected end of stream: Expected to find line starting with 'DATAFILE'")
     if not line.startswith('DATAFILE'):
-        raise ValueError("Line does not start with 'DATAFILE':\n%s" % line)
+        raise ValueError("Line does not start with 'DATAFILE':\n{0!s}".format(line))
     line = line.strip()
     line = line.replace('DATAFILE= ', '')
     record.datafile = line
@@ -168,7 +168,7 @@ def __read_alphabet(record, handle):
     except StopIteration:
         raise ValueError("Unexpected end of stream: Expected to find line starting with 'ALPHABET'")
     if not line.startswith('ALPHABET'):
-        raise ValueError("Line does not start with 'ALPHABET':\n%s" % line)
+        raise ValueError("Line does not start with 'ALPHABET':\n{0!s}".format(line))
     line = line.strip()
     line = line.replace('ALPHABET= ', '')
     if line == 'ACGT':
@@ -184,13 +184,13 @@ def __read_sequences(record, handle):
     except StopIteration:
         raise ValueError("Unexpected end of stream: Expected to find line starting with 'Sequence name'")
     if not line.startswith('Sequence name'):
-        raise ValueError("Line does not start with 'Sequence name':\n%s" % line)
+        raise ValueError("Line does not start with 'Sequence name':\n{0!s}".format(line))
     try:
         line = next(handle)
     except StopIteration:
         raise ValueError("Unexpected end of stream: Expected to find line starting with '----'")
     if not line.startswith('----'):
-        raise ValueError("Line does not start with '----':\n%s" % line)
+        raise ValueError("Line does not start with '----':\n{0!s}".format(line))
     for line in handle:
         if line.startswith('***'):
             break
@@ -256,19 +256,19 @@ def __read_motif_sequences(handle, motif_name, alphabet, length, revcomp):
     except StopIteration:
         raise ValueError('Unexpected end of stream: Failed to find motif sequences')
     if not line.startswith('---'):
-        raise ValueError("Line does not start with '---':\n%s" % line)
+        raise ValueError("Line does not start with '---':\n{0!s}".format(line))
     try:
         line = next(handle)
     except StopIteration:
         raise ValueError("Unexpected end of stream: Expected to find line starting with 'Sequence name'")
     if not line.startswith('Sequence name'):
-        raise ValueError("Line does not start with 'Sequence name':\n%s" % line)
+        raise ValueError("Line does not start with 'Sequence name':\n{0!s}".format(line))
     try:
         line = next(handle)
     except StopIteration:
         raise ValueError('Unexpected end of stream: Failed to find motif sequences')
     if not line.startswith('---'):
-        raise ValueError("Line does not start with '---':\n%s" % line)
+        raise ValueError("Line does not start with '---':\n{0!s}".format(line))
     instances = []
     for line in handle:
         if line.startswith('---'):
@@ -325,17 +325,17 @@ def __skip_unused_lines(handle):
     except StopIteration:
         raise ValueError('Unexpected end of stream: Expected to find blank line')
     if line.strip():
-        raise ValueError("Expected blank line, but got:\n%s" % line)
+        raise ValueError("Expected blank line, but got:\n{0!s}".format(line))
     try:
         line = next(handle)
     except StopIteration:
         raise ValueError("Unexpected end of stream: Expected to find line starting with '***'")
     if not line.startswith('***'):
-        raise ValueError("Line does not start with '***':\n%s" % line)
+        raise ValueError("Line does not start with '***':\n{0!s}".format(line))
     for line in handle:
         if line.strip():
             break
     else:
         raise ValueError("Unexpected end of stream: Expected to find line starting with '***'")
     if not line.startswith('***'):
-        raise ValueError("Line does not start with '***':\n%s" % line)
+        raise ValueError("Line does not start with '***':\n{0!s}".format(line))

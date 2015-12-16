@@ -25,11 +25,11 @@ def u_crc32(seq):
 
 def simple_LCC(s):
     # Avoid cross platforms with printing floats by doing conversion explicitly
-    return "%0.2f" % lcc_simp(s)
+    return "{0:0.2f}".format(lcc_simp(s))
 
 
 def windowed_LCC(s):
-    return ", ".join("%0.2f" % v for v in lcc_mult(s, 20))
+    return ", ".join("{0:0.2f}".format(v) for v in lcc_mult(s, 20))
 
 
 class SeqUtilsTests(unittest.TestCase):
@@ -48,7 +48,7 @@ class SeqUtilsTests(unittest.TestCase):
     def test_codon_usage_ecoli(self):
         """Test Codon Adaptation Index (CAI) using default E. coli data."""
         CAI = CodonAdaptationIndex()
-        self.assertEqual("%0.5f" % CAI.cai_for_gene("ATGCGTATCGATCGCGATACGATTAGGCGGATG"),
+        self.assertEqual("{0:0.5f}".format(CAI.cai_for_gene("ATGCGTATCGATCGCGATACGATTAGGCGGATG")),
                          "0.09978")
 
     def test_codon_usage_custom(self):
@@ -71,7 +71,7 @@ class SeqUtilsTests(unittest.TestCase):
                 # TODO - Use any cds_start option if/when added to deal with the met
                 a = "M" + str(seq[3:].translate(table))
                 b = feature.qualifiers["translation"][0] + "*"
-                self.assertEqual(a, b, "%r vs %r" % (a, b))
+                self.assertEqual(a, b, "{0!r} vs {1!r}".format(a, b))
                 records.append(SeqRecord(seq, id=feature.qualifiers["protein_id"][0],
                                         description=feature.qualifiers["product"][0]))
 
@@ -85,7 +85,7 @@ class SeqUtilsTests(unittest.TestCase):
         # Now check codon usage index (CAI) using this species
         self.assertEqual(record.annotations["source"],
                          "Yersinia pestis biovar Microtus str. 91001")
-        self.assertEqual("%0.5f" % CAI.cai_for_gene("ATGCGTATCGATCGCGATACGATTAGGCGGATG"),
+        self.assertEqual("{0:0.5f}".format(CAI.cai_for_gene("ATGCGTATCGATCGCGATACGATTAGGCGGATG")),
                          "0.67213")
         os.remove(dna_fasta_filename)
 

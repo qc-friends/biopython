@@ -257,45 +257,45 @@ class SeqFeature(object):
                 self.location.operator = value
             elif self.location is None:
                 raise ValueError(
-                    "Location is None so can't set its operator (to %r)" % value)
+                    "Location is None so can't set its operator (to {0!r})".format(value))
             else:
                 raise ValueError(
-                    "Only CompoundLocation gets an operator (%r)" % value)
+                    "Only CompoundLocation gets an operator ({0!r})".format(value))
     location_operator = property(fget=_get_location_operator, fset=_set_location_operator,
                                  doc="Location operator for compound locations (e.g. join).")
 
     def __repr__(self):
         """A string representation of the record for debugging."""
-        answer = "%s(%s" % (self.__class__.__name__, repr(self.location))
+        answer = "{0!s}({1!s}".format(self.__class__.__name__, repr(self.location))
         if self.type:
-            answer += ", type=%s" % repr(self.type)
+            answer += ", type={0!s}".format(repr(self.type))
         if self.location_operator:
-            answer += ", location_operator=%s" % repr(self.location_operator)
+            answer += ", location_operator={0!s}".format(repr(self.location_operator))
         if self.id and self.id != "<unknown id>":
-            answer += ", id=%s" % repr(self.id)
+            answer += ", id={0!s}".format(repr(self.id))
         if self.ref:
-            answer += ", ref=%s" % repr(self.ref)
+            answer += ", ref={0!s}".format(repr(self.ref))
         if self.ref_db:
-            answer += ", ref_db=%s" % repr(self.ref_db)
+            answer += ", ref_db={0!s}".format(repr(self.ref_db))
         answer += ")"
         return answer
 
     def __str__(self):
         """A readable summary of the feature intended to be printed to screen.
         """
-        out = "type: %s\n" % self.type
-        out += "location: %s\n" % self.location
+        out = "type: {0!s}\n".format(self.type)
+        out += "location: {0!s}\n".format(self.location)
         if self.id and self.id != "<unknown id>":
-            out += "id: %s\n" % self.id
+            out += "id: {0!s}\n".format(self.id)
         out += "qualifiers:\n"
         for qual_key in sorted(self.qualifiers):
-            out += "    Key: %s, Value: %s\n" % (qual_key,
+            out += "    Key: {0!s}, Value: {1!s}\n".format(qual_key,
                                                  self.qualifiers[qual_key])
         # TODO - Remove this from __str__ since deprecated
         if len(self._sub_features) != 0:
             out += "Sub-Features\n"
             for sub_feature in self._sub_features:
-                out += "%s\n" % sub_feature
+                out += "{0!s}\n".format(sub_feature)
         return out
 
     def _shift(self, offset):
@@ -531,20 +531,20 @@ class Reference(object):
         """
         out = ""
         for single_location in self.location:
-            out += "location: %s\n" % single_location
-        out += "authors: %s\n" % self.authors
+            out += "location: {0!s}\n".format(single_location)
+        out += "authors: {0!s}\n".format(self.authors)
         if self.consrtm:
-            out += "consrtm: %s\n" % self.consrtm
-        out += "title: %s\n" % self.title
-        out += "journal: %s\n" % self.journal
-        out += "medline id: %s\n" % self.medline_id
-        out += "pubmed id: %s\n" % self.pubmed_id
-        out += "comment: %s\n" % self.comment
+            out += "consrtm: {0!s}\n".format(self.consrtm)
+        out += "title: {0!s}\n".format(self.title)
+        out += "journal: {0!s}\n".format(self.journal)
+        out += "medline id: {0!s}\n".format(self.medline_id)
+        out += "pubmed id: {0!s}\n".format(self.pubmed_id)
+        out += "comment: {0!s}\n".format(self.comment)
         return out
 
     def __repr__(self):
         # TODO - Update this is __init__ later accpets values
-        return "%s(title=%s, ...)" % (self.__class__.__name__,
+        return "{0!s}(title={1!s}, ...)".format(self.__class__.__name__,
                                       repr(self.title))
 
 
@@ -675,13 +675,13 @@ class FeatureLocation(object):
         elif _is_int_or_long(start):
             self._start = ExactPosition(start)
         else:
-            raise TypeError("start=%r %s" % (start, type(start)))
+            raise TypeError("start={0!r} {1!s}".format(start, type(start)))
         if isinstance(end, AbstractPosition):
             self._end = end
         elif _is_int_or_long(end):
             self._end = ExactPosition(end)
         else:
-            raise TypeError("end=%r %s" % (end, type(end)))
+            raise TypeError("end={0!r} {1!s}".format(end, type(end)))
         self.strand = strand
         self.ref = ref
         self.ref_db = ref_db
@@ -691,8 +691,7 @@ class FeatureLocation(object):
 
     def _set_strand(self, value):
         if value not in [+1, -1, 0, None]:
-            raise ValueError("Strand should be +1, -1, 0 or None, not %r"
-                             % value)
+            raise ValueError("Strand should be +1, -1, 0 or None, not {0!r}".format(value))
         self._strand = value
 
     strand = property(fget=_get_strand, fset=_set_strand,
@@ -705,9 +704,9 @@ class FeatureLocation(object):
         (zero based counting) which GenBank would call 123..150 (one based
         counting).
         """
-        answer = "[%s:%s]" % (self._start, self._end)
+        answer = "[{0!s}:{1!s}]".format(self._start, self._end)
         if self.ref and self.ref_db:
-            answer = "%s:%s%s" % (self.ref_db, self.ref, answer)
+            answer = "{0!s}:{1!s}{2!s}".format(self.ref_db, self.ref, answer)
         elif self.ref:
             answer = self.ref + answer
         # Is ref_db without ref meaningful?
@@ -725,13 +724,12 @@ class FeatureLocation(object):
         """A string representation of the location for debugging."""
         optional = ""
         if self.strand is not None:
-            optional += ", strand=%r" % self.strand
+            optional += ", strand={0!r}".format(self.strand)
         if self.ref is not None:
-            optional += ", ref=%r" % self.ref
+            optional += ", ref={0!r}".format(self.ref)
         if self.ref_db is not None:
-            optional += ", ref_db=%r" % self.ref_db
-        return "%s(%r, %r%s)" \
-            % (self.__class__.__name__, self.start, self.end, optional)
+            optional += ", ref_db={0!r}".format(self.ref_db)
+        return "{0!s}({1!r}, {2!r}{3!s})".format(self.__class__.__name__, self.start, self.end, optional)
 
     def __add__(self, other):
         """Combine location with another feature location, or shift it.
@@ -1036,15 +1034,15 @@ class CompoundLocation(object):
                                  "FeatureLocation objects, not %s" % loc.__class__)
         if len(parts) < 2:
             raise ValueError(
-                "CompoundLocation should have at least 2 parts, not %r" % parts)
+                "CompoundLocation should have at least 2 parts, not {0!r}".format(parts))
 
     def __str__(self):
         """Returns a representation of the location (with python counting)."""
-        return "%s{%s}" % (self.operator, ", ".join(str(loc) for loc in self.parts))
+        return "{0!s}{{{1!s}}}".format(self.operator, ", ".join(str(loc) for loc in self.parts))
 
     def __repr__(self):
         """String representation of the location for debugging."""
-        return "%s(%r, %r)" % (self.__class__.__name__,
+        return "{0!s}({1!r}, {2!r})".format(self.__class__.__name__,
                                self.parts, self.operator)
 
     def _get_strand(self):
@@ -1132,8 +1130,7 @@ class CompoundLocation(object):
         elif isinstance(other, CompoundLocation):
             if self.operator != other.operator:
                 # Handle join+order -> order as a special case?
-                raise ValueError("Mixed operators %s and %s"
-                                 % (self.operator, other.operator))
+                raise ValueError("Mixed operators {0!s} and {1!s}".format(self.operator, other.operator))
             return CompoundLocation(self.parts + other.parts, self.operator)
         elif isinstance(other, int):
             return self._shift(other)
@@ -1324,7 +1321,7 @@ class AbstractPosition(object):
 
     def __repr__(self):
         """String representation of the location for debugging."""
-        return "%s(...)" % (self.__class__.__name__)
+        return "{0!s}(...)".format((self.__class__.__name__))
 
 
 class ExactPosition(int, AbstractPosition):
@@ -1362,13 +1359,12 @@ class ExactPosition(int, AbstractPosition):
     """
     def __new__(cls, position, extension=0):
         if extension != 0:
-            raise AttributeError("Non-zero extension %s for exact position."
-                                 % extension)
+            raise AttributeError("Non-zero extension {0!s} for exact position.".format(extension))
         return int.__new__(cls, position)
 
     def __repr__(self):
         """String representation of the ExactPosition location for debugging."""
-        return "%s(%i)" % (self.__class__.__name__, int(self))
+        return "{0!s}({1:d})".format(self.__class__.__name__, int(self))
 
     @property
     def position(self):
@@ -1406,7 +1402,7 @@ class UnknownPosition(AbstractPosition):
 
     def __repr__(self):
         """String representation of the UnknownPosition location for debugging."""
-        return "%s()" % self.__class__.__name__
+        return "{0!s}()".format(self.__class__.__name__)
 
     def __hash__(self):
         return hash(None)
@@ -1514,8 +1510,7 @@ class WithinPosition(int, AbstractPosition):
     """
     def __new__(cls, position, left, right):
         assert position == left or position == right, \
-            "WithinPosition: %r should match left %r or right %r" \
-            % (position, left, right)
+            "WithinPosition: {0!r} should match left {1!r} or right {2!r}".format(position, left, right)
         obj = int.__new__(cls, position)
         obj._left = left
         obj._right = right
@@ -1523,12 +1518,11 @@ class WithinPosition(int, AbstractPosition):
 
     def __repr__(self):
         """String representation of the WithinPosition location for debugging."""
-        return "%s(%i, left=%i, right=%i)" \
-               % (self.__class__.__name__, int(self),
+        return "{0!s}({1:d}, left={2:d}, right={3:d})".format(self.__class__.__name__, int(self),
                   self._left, self._right)
 
     def __str__(self):
-        return "(%s.%s)" % (self._left, self._right)
+        return "({0!s}.{1!s})".format(self._left, self._right)
 
     @property
     def position(self):
@@ -1625,12 +1619,11 @@ class BetweenPosition(int, AbstractPosition):
 
     def __repr__(self):
         """String representation of the WithinPosition location for debugging."""
-        return "%s(%i, left=%i, right=%i)" \
-               % (self.__class__.__name__, int(self),
+        return "{0!s}({1:d}, left={2:d}, right={3:d})".format(self.__class__.__name__, int(self),
                   self._left, self._right)
 
     def __str__(self):
-        return "(%s^%s)" % (self._left, self._right)
+        return "({0!s}^{1!s})".format(self._left, self._right)
 
     @property
     def position(self):
@@ -1688,8 +1681,7 @@ class BeforePosition(int, AbstractPosition):
     # Subclasses int so can't use __init__
     def __new__(cls, position, extension=0):
         if extension != 0:
-            raise AttributeError("Non-zero extension %s for exact position."
-                                 % extension)
+            raise AttributeError("Non-zero extension {0!s} for exact position.".format(extension))
         return int.__new__(cls, position)
 
     @property
@@ -1704,10 +1696,10 @@ class BeforePosition(int, AbstractPosition):
 
     def __repr__(self):
         """A string representation of the location for debugging."""
-        return "%s(%i)" % (self.__class__.__name__, int(self))
+        return "{0!s}({1:d})".format(self.__class__.__name__, int(self))
 
     def __str__(self):
-        return "<%s" % self.position
+        return "<{0!s}".format(self.position)
 
     def _shift(self, offset):
         return self.__class__(int(self) + offset)
@@ -1758,8 +1750,7 @@ class AfterPosition(int, AbstractPosition):
     # Subclasses int so can't use __init__
     def __new__(cls, position, extension=0):
         if extension != 0:
-            raise AttributeError("Non-zero extension %s for exact position."
-                                 % extension)
+            raise AttributeError("Non-zero extension {0!s} for exact position.".format(extension))
         return int.__new__(cls, position)
 
     @property
@@ -1774,10 +1765,10 @@ class AfterPosition(int, AbstractPosition):
 
     def __repr__(self):
         """A string representation of the location for debugging."""
-        return "%s(%i)" % (self.__class__.__name__, int(self))
+        return "{0!s}({1:d})".format(self.__class__.__name__, int(self))
 
     def __str__(self):
-        return ">%s" % self.position
+        return ">{0!s}".format(self.position)
 
     def _shift(self, offset):
         return self.__class__(int(self) + offset)
@@ -1845,7 +1836,7 @@ class OneOfPosition(int, AbstractPosition):
         position is an integer specifying the default behaviour.
         """
         assert position in choices, \
-            "OneOfPosition: %r should match one of %r" % (position, choices)
+            "OneOfPosition: {0!r} should match one of {1!r}".format(position, choices)
         obj = int.__new__(cls, position)
         obj.position_choices = choices
         return obj
@@ -1863,13 +1854,13 @@ class OneOfPosition(int, AbstractPosition):
 
     def __repr__(self):
         """String representation of the OneOfPosition location for debugging."""
-        return "%s(%i, choices=%r)" % (self.__class__.__name__,
+        return "{0!s}({1:d}, choices={2!r})".format(self.__class__.__name__,
                                        int(self), self.position_choices)
 
     def __str__(self):
         out = "one-of("
         for position in self.position_choices:
-            out += "%s," % position
+            out += "{0!s},".format(position)
         # replace the last comma with the closing parenthesis
         out = out[:-1] + ")"
         return out
@@ -1893,10 +1884,10 @@ class PositionGap(object):
 
     def __repr__(self):
         """A string representation of the position gap for debugging."""
-        return "%s(%s)" % (self.__class__.__name__, repr(self.gap_size))
+        return "{0!s}({1!s})".format(self.__class__.__name__, repr(self.gap_size))
 
     def __str__(self):
-        out = "gap(%s)" % self.gap_size
+        out = "gap({0!s})".format(self.gap_size)
         return out
 
 

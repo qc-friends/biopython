@@ -71,7 +71,7 @@ def random_population(genome_alphabet, genome_size, num_organisms,
         alphabet_type = "d"
     else:
         raise ValueError(
-            "Alphabet type is unsupported: %s" % genome_alphabet.letters)
+            "Alphabet type is unsupported: {0!s}".format(genome_alphabet.letters))
 
     for org_num in range(num_organisms):
         new_genome = MutableSeq(array.array(alphabet_type), genome_alphabet)
@@ -131,7 +131,7 @@ class Organism(object):
     def __str__(self):
         """Provide a string output for debugging.
         """
-        return "Genome: %s; Fitness %s" % (str(self.genome), self.fitness)
+        return "Genome: {0!s}; Fitness {1!s}".format(str(self.genome), self.fitness)
 
     def __eq__(self, other):
         """Compare organisms by their genomes (as strings of letters).

@@ -220,7 +220,7 @@ class Vector(object):
 
     def __repr__(self):
         x, y, z = self._ar
-        return "<Vector %.2f, %.2f, %.2f>" % (x, y, z)
+        return "<Vector {0:.2f}, {1:.2f}, {2:.2f}>".format(x, y, z)
 
     def __neg__(self):
         "Return Vector(-x, -y, -z)"
@@ -337,7 +337,7 @@ if __name__ == "__main__":
     dih = calc_dihedral(v1, v2, v3, v4)
     # Test dihedral sign
     assert(dih > 0)
-    print("DIHEDRAL %f" % dih)
+    print("DIHEDRAL {0:f}".format(dih))
 
     ref = refmat(v1, v3)
     rot = rotmat(v1, v3)

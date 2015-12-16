@@ -86,19 +86,18 @@ def alignment_summary(alignment, index="  ", vertical_threshold=5):
     if rec_count < vertical_threshold:
         # Show each sequence row horizontally
         for record in alignment:
-            answer.append("%s%s %s"
-            % (index, str_summary(str(record.seq)), record.id))
+            answer.append("{0!s}{1!s} {2!s}".format(index, str_summary(str(record.seq)), record.id))
     else:
         # Show each sequence row vertically
         for i in range(min(5, alignment_len)):
             answer.append(index + str_summary(alignment[:, i])
-                                + " alignment column %i" % i)
+                                + " alignment column {0:d}".format(i))
         if alignment_len > 5:
             i = alignment_len - 1
             answer.append(index + str_summary("|" * rec_count)
                                 + " ...")
             answer.append(index + str_summary(alignment[:, i])
-                                + " alignment column %i" % i)
+                                + " alignment column {0:d}".format(i))
     return "\n".join(answer)
 
 
@@ -114,7 +113,7 @@ def check_simple_write_read(alignments, indent=" "):
         and format not in test_write_read_alignment_formats:
             continue
 
-        print(indent + "Checking can write/read as '%s' format" % format)
+        print(indent + "Checking can write/read as '{0!s}' format".format(format))
 
         # Going to write to a handle...
         handle = StringIO()
@@ -125,7 +124,7 @@ def check_simple_write_read(alignments, indent=" "):
         except ValueError as e:
             # This is often expected to happen, for example when we try and
             # write sequences of different lengths to an alignment file.
-            print(indent + "Failed: %s" % str(e))
+            print(indent + "Failed: {0!s}".format(str(e)))
             # Carry on to the next format:
             continue
 
@@ -141,8 +140,7 @@ def check_simple_write_read(alignments, indent=" "):
                 # I want to see the output when called from the test harness,
                 # run_tests.py (which can be funny about new lines on Windows)
                 handle.seek(0)
-                raise ValueError("%s\n\n%s\n\n%s"
-                                  % (str(e), repr(handle.read()), repr(alignments2)))
+                raise ValueError("{0!s}\n\n{1!s}\n\n{2!s}".format(str(e), repr(handle.read()), repr(alignments2)))
             simple_alignment_comparison(alignments, alignments2, format)
 
         if format in test_write_read_alignment_formats:
@@ -156,8 +154,7 @@ def check_simple_write_read(alignments, indent=" "):
                 # I want to see the output when called from the test harness,
                 # run_tests.py (which can be funny about new lines on Windows)
                 handle.seek(0)
-                raise ValueError("%s\n\n%s\n\n%s"
-                                  % (str(e), repr(handle.read()), repr(alignments2)))
+                raise ValueError("{0!s}\n\n{1!s}\n\n{2!s}".format(str(e), repr(handle.read()), repr(alignments2)))
             simple_alignment_comparison(alignments, alignments2, format)
 
         if len(alignments) > 1:
@@ -183,21 +180,21 @@ def simple_alignment_comparison(alignments, alignments2, format):
             # valid character sets and the identifier lengths!
             if format in ["phylip", "phylip-sequential"]:
                 assert r1.id.replace("[", "").replace("]", "")[:10] == r2.id, \
-                       "'%s' vs '%s'" % (r1.id, r2.id)
+                       "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "phylip-relaxed":
                 assert r1.id.replace(" ", "").replace(':', '|') == r2.id, \
-                        "'%s' vs '%s'" % (r1.id, r2.id)
+                        "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "clustal":
                 assert r1.id.replace(" ", "_")[:30] == r2.id, \
-                       "'%s' vs '%s'" % (r1.id, r2.id)
+                       "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "stockholm":
                 assert r1.id.replace(" ", "_") == r2.id, \
-                       "'%s' vs '%s'" % (r1.id, r2.id)
+                       "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
             elif format == "fasta":
                 assert r1.id.split()[0] == r2.id
             else:
                 assert r1.id == r2.id, \
-                       "'%s' vs '%s'" % (r1.id, r2.id)
+                       "'{0!s}' vs '{1!s}'".format(r1.id, r2.id)
     return True
 
 
@@ -233,8 +230,7 @@ for t_format in AlignIO._FormatToIterator:
 for t_format in list(AlignIO._FormatToWriter) + list(SeqIO._FormatToWriter):
     handle = StringIO()
     assert 0 == AlignIO.write([], handle, t_format), \
-           "Writing no alignments to %s format should work!" \
-           % t_format
+           "Writing no alignments to {0!s} format should work!".format(t_format)
     handle.close()
 
 # Check writers reject non-alignments
@@ -243,8 +239,7 @@ for t_format in list(AlignIO._FormatToWriter) + list(SeqIO._FormatToWriter):
     handle = StringIO()
     try:
         AlignIO.write([list_of_records], handle, t_format)
-        assert False, "Writing non-alignment to %s format should fail!" \
-            % t_format
+        assert False, "Writing non-alignment to {0!s} format should fail!".format(t_format)
     except (TypeError, AttributeError, ValueError):
         pass
     handle.close()
@@ -253,19 +248,17 @@ del list_of_records, t_format
 
 # Main tests...
 for (t_format, t_per, t_count, t_filename) in test_files:
-    print("Testing reading %s format file %s with %i alignments"
-          % (t_format, t_filename, t_count))
+    print("Testing reading {0!s} format file {1!s} with {2:d} alignments".format(t_format, t_filename, t_count))
     assert os.path.isfile(t_filename), t_filename
 
     # Try as an iterator using handle
     with open(t_filename, "r") as handle:
         alignments = list(AlignIO.parse(handle, format=t_format))
     assert len(alignments) == t_count, \
-         "Found %i alignments but expected %i" % (len(alignments), t_count)
+         "Found {0:d} alignments but expected {1:d}".format(len(alignments), t_count)
     for alignment in alignments:
         assert len(alignment) == t_per, \
-            "Expected %i records per alignment, got %i" \
-            % (t_per, len(alignment))
+            "Expected {0:d} records per alignment, got {1:d}".format(t_per, len(alignment))
 
     # Try using the iterator with a for loop and a filename not handle
     alignments2 = []
@@ -328,8 +321,7 @@ for (t_format, t_per, t_count, t_filename) in test_files:
     # Show the alignment
     for i, alignment in enumerate(alignments):
         if i < 3 or i + 1 == t_count:
-            print(" Alignment %i, with %i sequences of length %i"
-                  % (i,
+            print(" Alignment {0:d}, with {1:d} sequences of length {2:d}".format(i,
                      len(alignment),
                      alignment.get_alignment_length()))
             print(alignment_summary(alignment))

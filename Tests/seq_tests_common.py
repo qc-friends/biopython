@@ -20,8 +20,7 @@ def checksum_summary(record):
     else:
         short = str(record.seq)[:19] \
               + "..." + str(record.seq)[-3:]
-    return "%s [%s] len %i" \
-           % (short, seguid(record.seq), len(record.seq))
+    return "{0!s} [{1!s}] len {2:d}".format(short, seguid(record.seq), len(record.seq))
 
 
 def compare_reference(old_r, new_r):
@@ -31,13 +30,13 @@ def compare_reference(old_r, new_r):
     of the BioSQL table structure.
     """
     assert old_r.title == new_r.title, \
-           "%s vs %s" % (old_r.title, new_r.title)
+           "{0!s} vs {1!s}".format(old_r.title, new_r.title)
     assert old_r.authors == new_r.authors, \
-           "%s vs %s" % (old_r.authors, new_r.authors)
+           "{0!s} vs {1!s}".format(old_r.authors, new_r.authors)
     assert old_r.journal == new_r.journal, \
-           "%s vs %s" % (old_r.journal, new_r.journal)
+           "{0!s} vs {1!s}".format(old_r.journal, new_r.journal)
     assert old_r.medline_id == new_r.medline_id, \
-           "%s vs %s" % (old_r.medline_id, new_r.medline_id)
+           "{0!s} vs {1!s}".format(old_r.medline_id, new_r.medline_id)
 
     if old_r.pubmed_id and new_r.pubmed_id:
         assert old_r.pubmed_id == new_r.pubmed_id
@@ -50,7 +49,7 @@ def compare_reference(old_r, new_r):
     # Looking at the tables, I *think* the current schema does not
     # allow us to store a reference comment.  Must confirm this.
     assert old_r.comment == new_r.comment or new_r.comment == "", \
-                          "%r vs %r" % (old_r.comment, new_r.comment)
+                          "{0!r} vs {1!r}".format(old_r.comment, new_r.comment)
 
     # TODO - assert old_r.consrtm == new_r.consrtm
     # Looking at the tables, I *think* the current schema does not
@@ -76,16 +75,16 @@ def compare_feature(old_f, new_f):
     assert isinstance(new_f, SeqFeature)
 
     assert old_f.type == new_f.type, \
-        "%s -> %s" % (old_f.type, new_f.type)
+        "{0!s} -> {1!s}".format(old_f.type, new_f.type)
 
     assert old_f.strand == new_f.strand, \
-        "%s -> %s" % (old_f.strand, new_f.strand)
+        "{0!s} -> {1!s}".format(old_f.strand, new_f.strand)
 
     assert old_f.ref == new_f.ref, \
-        "%s -> %s" % (old_f.ref, new_f.ref)
+        "{0!s} -> {1!s}".format(old_f.ref, new_f.ref)
 
     assert old_f.ref_db == new_f.ref_db, \
-        "%s -> %s" % (old_f.ref_db, new_f.ref_db)
+        "{0!s} -> {1!s}".format(old_f.ref_db, new_f.ref_db)
 
     # TODO - BioSQL does not store/retrieve feature's id (Bug 2526)
     assert old_f.id == new_f.id or new_f.id == "<unknown id>"
@@ -99,12 +98,12 @@ def compare_feature(old_f, new_f):
     assert old_f.location.start == new_f.location.start \
     or (isinstance(old_f.location.start, UnknownPosition) and
         isinstance(new_f.location.start, UnknownPosition)), \
-               "%s -> %s" % (old_f.location.start,
+               "{0!s} -> {1!s}".format(old_f.location.start,
                              new_f.location.start)
     assert old_f.location.end == new_f.location.end \
     or (isinstance(old_f.location.end, UnknownPosition) and
         isinstance(new_f.location.end, UnknownPosition)), \
-               "%s -> %s" % (old_f.location.end,
+               "{0!s} -> {1!s}".format(old_f.location.end,
                              new_f.location.end)
 
     assert isinstance(old_f.location, CompoundLocation) == \
@@ -127,22 +126,21 @@ def compare_feature(old_f, new_f):
 
     # Using private variable to avoid deprecation warnings
     assert len(old_f._sub_features) == len(new_f._sub_features), \
-        "number of sub_features: %s -> %s" % \
-        (len(old_f._sub_features), len(new_f._sub_features))
+        "number of sub_features: {0!s} -> {1!s}".format(len(old_f._sub_features), len(new_f._sub_features))
 
     for old_sub, new_sub in zip(old_f._sub_features, new_f._sub_features):
         # These are SeqFeature objects
         assert old_sub.type == new_sub.type, \
-            "%s -> %s" % (old_sub.type, new_sub.type)
+            "{0!s} -> {1!s}".format(old_sub.type, new_sub.type)
 
         assert old_sub.strand == new_sub.strand, \
-            "%s -> %s" % (old_sub.strand, new_sub.strand)
+            "{0!s} -> {1!s}".format(old_sub.strand, new_sub.strand)
 
         assert old_sub.ref == new_sub.ref, \
-            "%s -> %s" % (old_sub.ref, new_sub.ref)
+            "{0!s} -> {1!s}".format(old_sub.ref, new_sub.ref)
 
         assert old_sub.ref_db == new_sub.ref_db, \
-            "%s -> %s" % (old_sub.ref_db, new_sub.ref_db)
+            "{0!s} -> {1!s}".format(old_sub.ref_db, new_sub.ref_db)
 
         # TODO - Work out how the location_qualifier_value table should
         # be used, given BioPerl seems to ignore it (Bug 2766)
@@ -158,7 +156,7 @@ def compare_feature(old_f, new_f):
 
         try:
             assert str(old_sub.location) == str(new_sub.location), \
-               "%s -> %s" % (str(old_sub.location), str(new_sub.location))
+               "{0!s} -> {1!s}".format(str(old_sub.location), str(new_sub.location))
         except AssertionError as e:
             if isinstance(old_sub.location.start, ExactPosition) and \
                isinstance(old_sub.location.end, ExactPosition):
@@ -168,11 +166,11 @@ def compare_feature(old_f, new_f):
                 # At least one of the locations is fuzzy
                 assert old_sub.location.nofuzzy_start == \
                        new_sub.location.nofuzzy_start, \
-                       "%s -> %s" % (old_sub.location.nofuzzy_start,
+                       "{0!s} -> {1!s}".format(old_sub.location.nofuzzy_start,
                                      new_sub.location.nofuzzy_start)
                 assert old_sub.location.nofuzzy_end == \
                        new_sub.location.nofuzzy_end, \
-                       "%s -> %s" % (old_sub.location.nofuzzy_end,
+                       "{0!s} -> {1!s}".format(old_sub.location.nofuzzy_end,
                                      new_sub.location.nofuzzy_end)
 
     assert len(old_f.qualifiers) == len(new_f.qualifiers)
@@ -184,21 +182,20 @@ def compare_feature(old_f, new_f):
             elif isinstance(new_f.qualifiers[key], list):
                 # Maybe a string turning into a list of strings?
                 assert [old_f.qualifiers[key]] == new_f.qualifiers[key], \
-                        "%s -> %s" \
-                        % (repr(old_f.qualifiers[key]),
+                        "{0!s} -> {1!s}".format(repr(old_f.qualifiers[key]),
                            repr(new_f.qualifiers[key]))
             else:
-                assert False, "Problem with feature's '%s' qualifier" % key
+                assert False, "Problem with feature's '{0!s}' qualifier".format(key)
         else:
             # Should both be lists of strings...
             assert old_f.qualifiers[key] == new_f.qualifiers[key], \
-                "%s -> %s" % (old_f.qualifiers[key], new_f.qualifiers[key])
+                "{0!s} -> {1!s}".format(old_f.qualifiers[key], new_f.qualifiers[key])
     return True
 
 
 def compare_sequence(old, new):
     """Compare two Seq or DBSeq objects"""
-    assert len(old) == len(new), "%i vs %i" % (len(old), len(new))
+    assert len(old) == len(new), "{0:d} vs {1:d}".format(len(old), len(new))
     assert str(old) == str(new)
 
     if isinstance(old, UnknownSeq):
@@ -232,9 +229,9 @@ def compare_sequence(old, new):
         for j in indices:
             expected = s[i:j]
             assert expected == str(old[i:j]), \
-                   "Slice %s vs %s" % (repr(expected), repr(old[i:j]))
+                   "Slice {0!s} vs {1!s}".format(repr(expected), repr(old[i:j]))
             assert expected == str(new[i:j]), \
-                   "Slice %s vs %s" % (repr(expected), repr(new[i:j]))
+                   "Slice {0!s} vs {1!s}".format(repr(expected), repr(new[i:j]))
             # Slicing with step of 1 should make no difference.
             # Slicing with step 3 might be useful for codons.
             for step in [1, 3]:
@@ -278,8 +275,7 @@ def compare_record(old, new):
     assert old.name == new.name
     assert old.description == new.description
     assert old.dbxrefs == new.dbxrefs, \
-           "dbxrefs mismatch\nOld: %s\nNew: %s" \
-           % (old.dbxrefs, new.dbxrefs)
+           "dbxrefs mismatch\nOld: {0!s}\nNew: {1!s}".format(old.dbxrefs, new.dbxrefs)
     # Features:
     if not compare_features(old.features, new.features):
         return False
@@ -292,13 +288,11 @@ def compare_record(old, new):
     new_keys = set(new.annotations).difference(old.annotations)
     new_keys = new_keys.difference(['cross_references', 'date',
                                     'data_file_division', 'ncbi_taxid', 'gi'])
-    assert not new_keys, "Unexpected new annotation keys: %s" \
-           % ", ".join(new_keys)
+    assert not new_keys, "Unexpected new annotation keys: {0!s}".format(", ".join(new_keys))
     missing_keys = set(old.annotations).difference(new.annotations)
     missing_keys = missing_keys.difference(['ncbi_taxid',  # Can't store chimeras
                                             ])
-    assert not missing_keys, "Unexpectedly missing annotation keys: %s" \
-           % ", ".join(missing_keys)
+    assert not missing_keys, "Unexpectedly missing annotation keys: {0!s}".format(", ".join(missing_keys))
 
     # In the short term, just compare any shared keys:
     for key in set(old.annotations).intersection(new.annotations):
@@ -332,20 +326,17 @@ def compare_record(old, new):
                 or isinstance(new.annotations[key], list)
         elif type(old.annotations[key]) == type(new.annotations[key]):
             assert old.annotations[key] == new.annotations[key], \
-                "Annotation '%s' changed by load/retrieve\nWas:%s\nNow:%s" \
-                % (key, old.annotations[key], new.annotations[key])
+                "Annotation '{0!s}' changed by load/retrieve\nWas:{1!s}\nNow:{2!s}".format(key, old.annotations[key], new.annotations[key])
         elif isinstance(old.annotations[key], str) \
         and isinstance(new.annotations[key], list):
             # Any annotation which is a single string gets turned into
             # a list containing one string by BioSQL at the moment.
             assert [old.annotations[key]] == new.annotations[key], \
-                "Annotation '%s' changed by load/retrieve\nWas:%s\nNow:%s" \
-                % (key, old.annotations[key], new.annotations[key])
+                "Annotation '{0!s}' changed by load/retrieve\nWas:{1!s}\nNow:{2!s}".format(key, old.annotations[key], new.annotations[key])
         elif isinstance(old.annotations[key], list) \
         and isinstance(new.annotations[key], str):
             assert old.annotations[key] == [new.annotations[key]], \
-                "Annotation '%s' changed by load/retrieve\nWas:%s\nNow:%s" \
-                % (key, old.annotations[key], new.annotations[key])
+                "Annotation '{0!s}' changed by load/retrieve\nWas:{1!s}\nNow:{2!s}".format(key, old.annotations[key], new.annotations[key])
     return True
 
 

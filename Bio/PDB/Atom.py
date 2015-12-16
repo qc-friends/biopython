@@ -88,12 +88,10 @@ class Atom(object):
                     putative_element = self.name[0]
 
             if putative_element.capitalize() in IUPACData.atom_weights:
-                msg = "Used element %r for Atom (name=%s) with given element %r" \
-                      % (putative_element, self.name, element)
+                msg = "Used element {0!r} for Atom (name={1!s}) with given element {2!r}".format(putative_element, self.name, element)
                 element = putative_element
             else:
-                msg = "Could not assign element %r for Atom (name=%s) with given element %r" \
-                      % (putative_element, self.name, element)
+                msg = "Could not assign element {0!r} for Atom (name={1!s}) with given element {2!r}".format(putative_element, self.name, element)
                 element = ""
             warnings.warn(msg, PDBConstructionWarning)
 
@@ -110,7 +108,7 @@ class Atom(object):
 
     def __repr__(self):
         """Print Atom object as <Atom atom_name>."""
-        return "<Atom %s>" % self.get_id()
+        return "<Atom {0!s}>".format(self.get_id())
 
     def __sub__(self, other):
         """Calculate distance between two atoms.
@@ -313,7 +311,7 @@ class DisorderedAtom(DisorderedEntityWrapper):
     # Special methods
 
     def __repr__(self):
-        return "<Disordered Atom %s>" % self.get_id()
+        return "<Disordered Atom {0!s}>".format(self.get_id())
 
     def disordered_add(self, atom):
         """Add a disordered atom."""

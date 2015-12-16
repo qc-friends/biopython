@@ -99,7 +99,7 @@ class DiversitySelectionTest(unittest.TestCase):
 
         new_org = self.selector._get_new_organism(new_pop, old_pop)
         self.assertEqual(new_org, org,
-                         "Got an unexpected organism %s" % new_org)
+                         "Got an unexpected organism {0!s}".format(new_org))
 
     def test_no_retrieve_organism(self):
         """Test not getting an organism already in the new population."""

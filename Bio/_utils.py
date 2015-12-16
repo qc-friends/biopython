@@ -91,7 +91,7 @@ def find_test_dir(start_dir=None):
             # Reached root
             break
         target = new
-    raise ValueError("Not within Biopython source tree: %r" % os.path.abspath(start_dir))
+    raise ValueError("Not within Biopython source tree: {0!r}".format(os.path.abspath(start_dir)))
 
 
 def run_doctest(target_dir=None, *args, **kwargs):

@@ -90,7 +90,7 @@ def parse(handle, format):
         record = jaspar.read(handle, format)
         return record
     else:
-        raise ValueError("Unknown format %s" % format)
+        raise ValueError("Unknown format {0!s}".format(format))
 
 
 def read(handle, format):
@@ -162,7 +162,7 @@ class Instances(list):
             if self.length is None:
                 self.length = len(instance)
             elif self.length != len(instance):
-                message = "All instances should have the same length (%d found, %d expected)" % (len(instance), self.length)
+                message = "All instances should have the same length ({0:d} found, {1:d} expected)".format(len(instance), self.length)
                 raise ValueError(message)
             try:
                 a = instance.alphabet
@@ -270,7 +270,7 @@ class Motif(object):
                 elif char == " ":
                     self.__mask.append(0)
                 else:
-                    raise ValueError("Mask should contain only '*' or ' ' and not a '%s'" % char)
+                    raise ValueError("Mask should contain only '*' or ' ' and not a '{0!s}'".format(char))
             self.__mask = tuple(self.__mask)
         else:
             self.__mask = tuple(int(bool(c)) for c in mask)
@@ -507,7 +507,7 @@ class Motif(object):
             motifs = [self]
             return transfac.write(motifs)
         else:
-            raise ValueError("Unknown format type %s" % format)
+            raise ValueError("Unknown format type {0!s}".format(format))
 
 
 def write(motifs, format):
@@ -527,7 +527,7 @@ def write(motifs, format):
         from Bio.motifs import transfac
         return transfac.write(motifs)
     else:
-        raise ValueError("Unknown format type %s" % format)
+        raise ValueError("Unknown format type {0!s}".format(format))
 
 
 if __name__ == "__main__":

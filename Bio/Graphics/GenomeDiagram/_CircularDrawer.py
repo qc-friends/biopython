@@ -408,7 +408,7 @@ class CircularDrawer(AbstractDrawer):
         if feature.label:   # Feature needs a label
             # The spaces are a hack to force a little space between the label
             # and the edge of the feature
-            label = String(0, 0, " %s " % feature.name.strip(),
+            label = String(0, 0, " {0!s} ".format(feature.name.strip()),
                            fontName=feature.label_font,
                            fontSize=feature.label_size,
                            fillColor=feature.label_color)
@@ -842,18 +842,18 @@ class CircularDrawer(AbstractDrawer):
                             minval, maxval = quartiles[0], quartiles[4]
                             if graph.center is None:
                                 midval = (maxval + minval) / 2.
-                                graph_label_min.append("%.3f" % minval)
-                                graph_label_max.append("%.3f" % maxval)
-                                graph_label_mid.append("%.3f" % midval)
+                                graph_label_min.append("{0:.3f}".format(minval))
+                                graph_label_max.append("{0:.3f}".format(maxval))
+                                graph_label_mid.append("{0:.3f}".format(midval))
                             else:
                                 diff = max((graph.center - minval),
                                            (maxval - graph.center))
                                 minval = graph.center - diff
                                 maxval = graph.center + diff
                                 midval = graph.center
-                                graph_label_mid.append("%.3f" % midval)
-                                graph_label_min.append("%.3f" % minval)
-                                graph_label_max.append("%.3f" % maxval)
+                                graph_label_mid.append("{0:.3f}".format(midval))
+                                graph_label_min.append("{0:.3f}".format(minval))
+                                graph_label_max.append("{0:.3f}".format(maxval))
                         xmid, ymid = (x0 + x1) / 2., (y0 + y1) / 2.
                         for limit, x, y, in [(graph_label_min, x0, y0),
                                              (graph_label_max, x1, y1),
@@ -1266,8 +1266,7 @@ class CircularDrawer(AbstractDrawer):
         # else:
         startangle, endangle = min(startangle, endangle), max(startangle, endangle)
         if orientation != "left" and orientation != "right":
-            raise ValueError("Invalid orientation %s, should be 'left' or 'right'"
-                             % repr(orientation))
+            raise ValueError("Invalid orientation {0!s}, should be 'left' or 'right'".format(repr(orientation)))
 
         angle = float(endangle - startangle)    # angle subtended by arc
         middle_radius = 0.5 * (inner_radius + outer_radius)

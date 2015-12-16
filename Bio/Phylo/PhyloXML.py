@@ -38,7 +38,7 @@ class PhyloXMLWarning(BiopythonWarning):
 def _check_str(text, testfunc):
     """Check a string using testfunc, and warn if there's no match."""
     if text is not None and not testfunc(text):
-        warnings.warn("String %s doesn't match the given regexp" % text,
+        warnings.warn("String {0!s} doesn't match the given regexp".format(text),
                       PhyloXMLWarning, stacklevel=2)
 
 
@@ -80,7 +80,7 @@ class Phyloxml(PhyloElement):
         if isinstance(index, (int, slice)):
             return self.phylogenies[index]
         if not isinstance(index, basestring):
-            raise KeyError("can't use %s as an index" % type(index))
+            raise KeyError("can't use {0!s} as an index".format(type(index)))
         for tree in self.phylogenies:
             if tree.name == index:
                 return tree
@@ -96,7 +96,7 @@ class Phyloxml(PhyloElement):
         return len(self.phylogenies)
 
     def __str__(self):
-        return '%s([%s])' % (self.__class__.__name__,
+        return '{0!s}([{1!s}])'.format(self.__class__.__name__,
                              ',\n'.join(map(str, self.phylogenies)))
 
 
@@ -452,7 +452,7 @@ class Accession(PhyloElement):
 
     def __str__(self):
         """Show the class name and an identifying attribute."""
-        return '%s:%s' % (self.source, self.value)
+        return '{0!s}:{1!s}'.format(self.source, self.value)
 
 
 class Annotation(PhyloElement):
@@ -718,7 +718,7 @@ class Date(PhyloElement):
     def __str__(self):
         """Show the class name and the human-readable date."""
         if self.unit and self.value is not None:
-            return '%s %s' % (self.value, self.unit)
+            return '{0!s} {1!s}'.format(self.value, self.unit)
         if self.desc is not None:
             return self.desc
         return self.__class__.__name__
@@ -796,7 +796,7 @@ class Events(PhyloElement):
             raise KeyError(key)
         val = getattr(self, key)
         if val is None:
-            raise KeyError("%s has not been set in this object" % repr(key))
+            raise KeyError("{0!s} has not been set in this object".format(repr(key)))
         return val
 
     def __setitem__(self, key, val):
@@ -825,7 +825,7 @@ class Id(PhyloElement):
 
     def __str__(self):
         if self.provider is not None:
-            return '%s:%s' % (self.provider, self.value)
+            return '{0!s}:{1!s}'.format(self.provider, self.value)
         return self.value
 
 
@@ -887,7 +887,7 @@ class Polygon(PhyloElement):
         self.points = points or []
 
     def __str__(self):
-        return '%s([%s])' % (self.__class__.__name__,
+        return '{0!s}([{1!s}])'.format(self.__class__.__name__,
                              ',\n'.join(map(str, self.points)))
 
 

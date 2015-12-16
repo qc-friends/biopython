@@ -142,7 +142,7 @@ class TestMutator(object):
                                         org_genome_seq.alphabet)
             return new_org
         else:
-            raise ValueError("Got type %s" % self.type)
+            raise ValueError("Got type {0!s}".format(self.type))
 
 
 class SafeFitnessTest(unittest.TestCase):

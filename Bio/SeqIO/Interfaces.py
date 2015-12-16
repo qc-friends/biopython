@@ -95,11 +95,9 @@ class SequenceWriter(object):
         if not isinstance(record, SeqRecord):
             raise TypeError("Expected a SeqRecord object")
         if record.seq is None:
-            raise TypeError("SeqRecord (id=%s) has None for its sequence."
-                            % record.id)
+            raise TypeError("SeqRecord (id={0!s}) has None for its sequence.".format(record.id))
         elif not isinstance(record.seq, (Seq, MutableSeq)):
-            raise TypeError("SeqRecord (id=%s) has an invalid sequence."
-                            % record.id)
+            raise TypeError("SeqRecord (id={0!s}) has an invalid sequence.".format(record.id))
         return str(record.seq)
 
     def clean(self, text):

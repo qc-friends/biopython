@@ -35,7 +35,7 @@ class EmbossWriter(SequentialAlignmentWriter):
         handle.write("########################################\n")
         handle.write("# Program: Biopython\n")
         try:
-            handle.write("# Report_file: %s\n" % handle.name)
+            handle.write("# Report_file: {0!s}\n".format(handle.name))
         except AttributeError:
             pass
         handle.write("########################################\n")
@@ -50,11 +50,11 @@ class EmbossWriter(SequentialAlignmentWriter):
         handle = self.handle
         handle.write("#=======================================\n")
         handle.write("#\n")
-        handle.write("# Aligned_sequences: %i\n" % len(alignment))
+        handle.write("# Aligned_sequences: {0:d}\n".format(len(alignment)))
         for i, record in enumerate(alignment):
-            handle.write("# %i: %s\n" % (i + 1, record.id))
+            handle.write("# {0:d}: {1!s}\n".format(i + 1, record.id))
         handle.write("#\n")
-        handle.write("# Length: %i\n" % alignment.get_alignment_length())
+        handle.write("# Length: {0:d}\n".format(alignment.get_alignment_length()))
         handle.write("#\n")
         handle.write("#=======================================\n")
         handle.write("\n")
@@ -125,8 +125,7 @@ class EmbossIterator(AlignmentIterator):
 
         if self.records_per_alignment is not None \
         and self.records_per_alignment != number_of_seqs:
-            raise ValueError("Found %i records in this alignment, told to expect %i"
-                             % (number_of_seqs, self.records_per_alignment))
+            raise ValueError("Found {0:d} records in this alignment, told to expect {1:d}".format(number_of_seqs, self.records_per_alignment))
 
         seqs = ["" for id in ids]
         seq_starts = []
@@ -158,8 +157,7 @@ class EmbossIterator(AlignmentIterator):
 
                     # The identifier is truncated...
                     assert 0 <= index and index < number_of_seqs, \
-                           "Expected index %i in range [0,%i)" \
-                           % (index, number_of_seqs)
+                           "Expected index {0:d} in range [0,{1:d})".format(index, number_of_seqs)
                     assert id == ids[index] or id == ids[index][:len(id)]
 
                     if len(seq_starts) == index:
@@ -171,16 +169,14 @@ class EmbossIterator(AlignmentIterator):
                         assert seq.replace("-", "") == "", line
                     else:
                         assert start - seq_starts[index] == len(seqs[index].replace("-", "")), \
-                        "Found %i chars so far for sequence %i (%s, %s), line says start %i:\n%s" \
-                            % (len(seqs[index].replace("-", "")), index, id, repr(seqs[index]),
+                        "Found {0:d} chars so far for sequence {1:d} ({2!s}, {3!s}), line says start {4:d}:\n{5!s}".format(len(seqs[index].replace("-", "")), index, id, repr(seqs[index]),
                                start, line)
 
                     seqs[index] += seq
 
                     # Check the end ...
                     assert end == seq_starts[index] + len(seqs[index].replace("-", "")), \
-                        "Found %i chars so far for sequence %i (%s, %s, start=%i), file says end %i:\n%s" \
-                            % (len(seqs[index].replace("-", "")), index, id, repr(seqs[index]),
+                        "Found {0:d} chars so far for sequence {1:d} ({2!s}, {3!s}, start={4:d}), file says end {5:d}:\n{6!s}".format(len(seqs[index].replace("-", "")), index, id, repr(seqs[index]),
                                seq_starts[index], end, line)
 
                     index += 1
@@ -208,8 +204,7 @@ class EmbossIterator(AlignmentIterator):
 
         if self.records_per_alignment is not None \
         and self.records_per_alignment != len(ids):
-            raise ValueError("Found %i records in this alignment, told to expect %i"
-                             % (len(ids), self.records_per_alignment))
+            raise ValueError("Found {0:d} records in this alignment, told to expect {1:d}".format(len(ids), self.records_per_alignment))
 
         records = []
         for id, seq in zip(ids, seqs):

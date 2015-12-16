@@ -146,7 +146,7 @@ def _attribute_matcher(kwargs):
                 return (pattern == target)
             if pattern is None:
                 return (target is None)
-            raise TypeError('invalid query type: %s' % type(pattern))
+            raise TypeError('invalid query type: {0!s}'.format(type(pattern)))
         return True
     return match
 
@@ -184,8 +184,7 @@ def _object_matcher(obj):
         return _attribute_matcher(obj)
     if callable(obj):
         return _function_matcher(obj)
-    raise ValueError("%s (type %s) is not a valid type for comparison."
-                     % (obj, type(obj)))
+    raise ValueError("{0!s} (type {1!s}) is not a valid type for comparison.".format(obj, type(obj)))
 
 
 def _combine_matchers(target, kwargs, require_spec):
@@ -243,11 +242,9 @@ class TreeElement(object):
         """Show this object's constructor with its primitive arguments."""
         def pair_as_kwarg_string(key, val):
             if isinstance(val, basestring):
-                return ("%s='%s'"
-                        % (key, _utils.trim_str(as_string(val), 60, '...')))
-            return "%s=%s" % (key, val)
-        return ('%s(%s)'
-                % (self.__class__.__name__,
+                return ("{0!s}='{1!s}'".format(key, _utils.trim_str(as_string(val), 60, '...')))
+            return "{0!s}={1!s}".format(key, val)
+        return ('{0!s}({1!s})'.format(self.__class__.__name__,
                    ', '.join(pair_as_kwarg_string(key, val)
                              for key, val in sorted(self.__dict__.items())
                              if val is not None and
@@ -277,8 +274,7 @@ class TreeMixin(object):
         try:
             order_func = order_opts[order]
         except KeyError:
-            raise ValueError("Invalid order '%s'; must be one of: %s"
-                             % (order, tuple(order_opts)))
+            raise ValueError("Invalid order '{0!s}'; must be one of: {1!s}".format(order, tuple(order_opts)))
         if follow_attrs:
             get_children = _sorted_attrs
             root = self
@@ -429,7 +425,7 @@ class TreeMixin(object):
         # Validation -- otherwise izip throws a spooky error below
         for p, t in zip(paths, targets):
             if p is None:
-                raise ValueError("target %s is not in this tree" % repr(t))
+                raise ValueError("target {0!s} is not in this tree".format(repr(t)))
         mrca = self.root
         for level in zip(*paths):
             ref = level[0]
@@ -569,8 +565,7 @@ class TreeMixin(object):
         """
         path = self.get_path(target, **kwargs)
         if not path:
-            raise ValueError("couldn't collapse %s in this tree"
-                             % (target or kwargs))
+            raise ValueError("couldn't collapse {0!s} in this tree".format((target or kwargs)))
         if len(path) == 1:
             parent = self.root
         else:
@@ -750,7 +745,7 @@ class Tree(TreeElement, TreeMixin):
         :returns: a tree of the same type as this class.
         """
         if isinstance(taxa, int):
-            taxa = ['taxon%s' % (i + 1) for i in range(taxa)]
+            taxa = ['taxon{0!s}'.format((i + 1)) for i in range(taxa)]
         elif hasattr(taxa, '__iter__'):
             taxa = list(taxa)
         else:
@@ -1081,12 +1076,12 @@ class Clade(TreeElement, TreeMixin):
                 # HTML-style hex string
                 self._color = BranchColor.from_hex(arg)
             else:
-                raise ValueError("invalid color string %s" % arg)
+                raise ValueError("invalid color string {0!s}".format(arg))
         elif hasattr(arg, '__iter__') and len(arg) == 3:
             # RGB triplet
             self._color = BranchColor(*arg)
         else:
-            raise ValueError("invalid color value %s" % arg)
+            raise ValueError("invalid color value {0!s}".format(arg))
 
     color = property(_get_color, _set_color, doc="Branch color.")
 
@@ -1181,7 +1176,7 @@ class BranchColor(object):
             >>> bc.to_hex()
             '#0cc864'
         """
-        return "#%02x%02x%02x" % (self.red, self.green, self.blue)
+        return "#{0:02x}{1:02x}{2:02x}".format(self.red, self.green, self.blue)
 
     def to_rgb(self):
         """Return a tuple of RGB values (0 to 255) representing this color.
@@ -1196,9 +1191,8 @@ class BranchColor(object):
 
     def __repr__(self):
         """Preserve the standard RGB order when representing this object."""
-        return ('%s(red=%d, green=%d, blue=%d)'
-                % (self.__class__.__name__, self.red, self.green, self.blue))
+        return ('{0!s}(red={1:d}, green={2:d}, blue={3:d})'.format(self.__class__.__name__, self.red, self.green, self.blue))
 
     def __str__(self):
         """Show the color's RGB values."""
-        return "(%d, %d, %d)" % (self.red, self.green, self.blue)
+        return "({0:d}, {1:d}, {2:d})".format(self.red, self.green, self.blue)

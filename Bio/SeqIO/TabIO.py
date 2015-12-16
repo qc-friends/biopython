@@ -64,8 +64,7 @@ def TabIterator(handle, alphabet=single_letter_alphabet):
                 # It's a blank line, ignore it
                 continue
             raise ValueError("Each line should have one tab separating the" +
-                             " title and sequence, this line has %i tabs: %s"
-                             % (line.count("\t"), repr(line)))
+                             " title and sequence, this line has {0:d} tabs: {1!s}".format(line.count("\t"), repr(line)))
         title = title.strip()
         seq = seq.strip()  # removes the trailing new line
         yield SeqRecord(Seq(seq, alphabet),
@@ -94,7 +93,7 @@ class TabWriter(SequentialSequenceWriter):
         assert "\t" not in seq
         assert "\n" not in seq
         assert "\r" not in seq
-        self.handle.write("%s\t%s\n" % (title, seq))
+        self.handle.write("{0!s}\t{1!s}\n".format(title, seq))
 
 
 if __name__ == "__main__":

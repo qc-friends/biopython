@@ -24,12 +24,12 @@ between_pos_e = SeqFeature.BetweenPosition(24, left=20, right=24)
 before_pos = SeqFeature.BeforePosition(15)
 after_pos = SeqFeature.AfterPosition(40)
 
-print("Exact: %s" % exact_pos)
-print("Within (as start, %i): %s" % (int(within_pos_s), within_pos_s))
-print("Within (as end, %i): %s" % (int(within_pos_e), within_pos_e))
-print("Between (as end, %i): %s" % (int(between_pos_e), between_pos_e))
-print("Before: %s" % before_pos)
-print("After: %s" % after_pos)
+print("Exact: {0!s}".format(exact_pos))
+print("Within (as start, {0:d}): {1!s}".format(int(within_pos_s), within_pos_s))
+print("Within (as end, {0:d}): {1!s}".format(int(within_pos_e), within_pos_e))
+print("Between (as end, {0:d}): {1!s}".format(int(between_pos_e), between_pos_e))
+print("Before: {0!s}".format(before_pos))
+print("After: {0!s}".format(after_pos))
 
 # put these into Locations
 location1 = SeqFeature.FeatureLocation(exact_pos, within_pos_e)
@@ -37,13 +37,13 @@ location2 = SeqFeature.FeatureLocation(before_pos, between_pos_e)
 location3 = SeqFeature.FeatureLocation(within_pos_s, after_pos)
 
 for location in [location1, location2, location3]:
-    print("Location: %s" % location)
-    print("   Start: %s" % location.start)
-    print("   End  : %s" % location.end)
+    print("Location: {0!s}".format(location))
+    print("   Start: {0!s}".format(location.start))
+    print("   End  : {0!s}".format(location.end))
 
 # --- test non-fuzzy represenations
 print("Testing non-fuzzy representations...")
 for location in [location1, location2, location3]:
-    print("Location: %s" % location)
-    print("  Non-Fuzzy Start: %s" % location.nofuzzy_start)
-    print("  Non-Fuzzy End: %s" % location.nofuzzy_end)
+    print("Location: {0!s}".format(location))
+    print("  Non-Fuzzy Start: {0!s}".format(location.nofuzzy_start))
+    print("  Non-Fuzzy End: {0!s}".format(location.nofuzzy_end))

@@ -184,7 +184,7 @@ def _retrieve_seq(adaptor, primary_id):
         # for any generic or nucleotide alphabets.
         alphabet = Alphabet.single_letter_alphabet
     else:
-        raise AssertionError("Unknown moltype: %s" % moltype)
+        raise AssertionError("Unknown moltype: {0!s}".format(moltype))
 
     if have_seq:
         return DBSeq(primary_id, adaptor, alphabet, 0, int(length))
@@ -202,10 +202,10 @@ def _retrieve_dbxrefs(adaptor, primary_id):
         " ORDER BY rank", (primary_id,))
     for dbname, accession, version in dbxrefs:
         if version and version != "0":
-            v = "%s.%s" % (accession, version)
+            v = "{0!s}.{1!s}".format(accession, version)
         else:
             v = accession
-        _dbxrefs.append("%s:%s" % (dbname, v))
+        _dbxrefs.append("{0!s}:{1!s}".format(dbname, v))
     return _dbxrefs
 
 
@@ -233,7 +233,7 @@ def _retrieve_features(adaptor, primary_id):
             " WHERE seqfeature_dbxref.seqfeature_id = %s"
             " ORDER BY rank", (seqfeature_id,))
         for qv_name, qv_value in qvs:
-            value = "%s:%s" % (qv_name, qv_value)
+            value = "{0!s}:{1!s}".format(qv_name, qv_value)
             qualifiers.setdefault("db_xref", []).append(value)
         # Get locations
         results = adaptor.execute_and_fetchall(
@@ -271,7 +271,7 @@ def _retrieve_features(adaptor, primary_id):
         lookup = {}
         for location_id, dbname, accession, version in remote_results:
             if version and version != "0":
-                v = "%s.%s" % (accession, version)
+                v = "{0!s}.{1!s}".format(accession, version)
             else:
                 v = accession
             # subfeature remote location db_ref are stored as a empty string when
@@ -504,7 +504,7 @@ class DBSeqRecord(SeqRecord):
             " FROM bioentry"
             " WHERE bioentry_id = %s", (self._primary_id,))
         if version and version != "0":
-            self.id = "%s.%s" % (accession, version)
+            self.id = "{0!s}.{1!s}".format(accession, version)
         else:
             self.id = accession
         # We don't yet record any per-letter-annotations in the

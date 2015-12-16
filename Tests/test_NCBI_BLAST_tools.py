@@ -98,8 +98,7 @@ class Pairwise(unittest.TestCase):
                                  shell=(sys.platform != "win32"))
         stdoutdata, stderrdata = child.communicate()
         return_code = child.returncode
-        self.assertEqual(return_code, 0, "Got error code %i back from:\n%s"
-                         % (return_code, cline))
+        self.assertEqual(return_code, 0, "Got error code {0:d} back from:\n{1!s}".format(return_code, cline))
         self.assertEqual(10, stdoutdata.count("Query= "))
         if stdoutdata.count("***** No hits found *****") == 7:
             # This happens with BLAST 2.2.26+ which is potentially a bug
@@ -128,8 +127,7 @@ class Pairwise(unittest.TestCase):
                                  shell=(sys.platform != "win32"))
         stdoutdata, stderrdata = child.communicate()
         return_code = child.returncode
-        self.assertEqual(return_code, 0, "Got error code %i back from:\n%s"
-                         % (return_code, cline))
+        self.assertEqual(return_code, 0, "Got error code {0:d} back from:\n{1!s}".format(return_code, cline))
         self.assertEqual(10, stdoutdata.count("Query= "))
         self.assertEqual(0, stdoutdata.count("***** No hits found *****"))
         # TODO - Parse it?
@@ -151,8 +149,7 @@ class Pairwise(unittest.TestCase):
                                  shell=(sys.platform != "win32"))
         stdoutdata, stderrdata = child.communicate()
         return_code = child.returncode
-        self.assertEqual(return_code, 0, "Got error code %i back from:\n%s"
-                         % (return_code, cline))
+        self.assertEqual(return_code, 0, "Got error code {0:d} back from:\n{1!s}".format(return_code, cline))
         self.assertEqual(10, stdoutdata.count("Query= "))
         self.assertEqual(0, stdoutdata.count("***** No hits found *****"))
         # TODO - Parse it?
@@ -174,7 +171,7 @@ class CheckCompleteArgList(unittest.TestCase):
                                  shell=(sys.platform != "win32"))
         stdoutdata, stderrdata = child.communicate()
         self.assertEqual(stderrdata, "",
-                         "%s\n%s" % (str(cline), stderrdata))
+                         "{0!s}\n{1!s}".format(str(cline), stderrdata))
         names_in_tool = set()
         while stdoutdata:
             index = stdoutdata.find("[")

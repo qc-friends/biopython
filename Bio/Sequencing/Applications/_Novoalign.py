@@ -55,8 +55,7 @@ class NovoalignCommandline(AbstractCommandline):
                     filename=True,
                     equate=False),
             _Option(["-F", "format"],
-                    "Format of read files.\n\nAllowed values: %s"
-                    % ", ".join(READ_FORMAT),
+                    "Format of read files.\n\nAllowed values: {0!s}".format(", ".join(READ_FORMAT)),
                     checker_function=lambda x: x in READ_FORMAT,
                     equate=False),
 
@@ -111,8 +110,7 @@ class NovoalignCommandline(AbstractCommandline):
                     equate=False),
             # Reporting options
             _Option(["-o", "report"],
-                    "Specifies the report format.\n\nAllowed values: %s\nDefault: Native"
-                    % ", ".join(REPORT_FORMAT),
+                    "Specifies the report format.\n\nAllowed values: {0!s}\nDefault: Native".format(", ".join(REPORT_FORMAT)),
                     checker_function=lambda x: x in REPORT_FORMAT,
                     equate=False),
             _Option(["-Q", "quality"],

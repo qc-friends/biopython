@@ -137,10 +137,10 @@ for filename in single_nucleic_files:
 
     def funct(fn):
         f = lambda x: x.simple_check(fn, generic_nucleotide)
-        f.__doc__ = "Checking nucleotide file %s" % fn
+        f.__doc__ = "Checking nucleotide file {0!s}".format(fn)
         return f
 
-    setattr(TitleFunctions, "test_nuc_%s" % name, funct(filename))
+    setattr(TitleFunctions, "test_nuc_{0!s}".format(name), funct(filename))
     del funct
 
 for filename in multi_dna_files:
@@ -148,10 +148,10 @@ for filename in multi_dna_files:
 
     def funct(fn):
         f = lambda x: x.multi_check(fn, generic_dna)
-        f.__doc__ = "Checking multi DNA file %s" % fn
+        f.__doc__ = "Checking multi DNA file {0!s}".format(fn)
         return f
 
-    setattr(TitleFunctions, "test_mutli_dna_%s" % name, funct(filename))
+    setattr(TitleFunctions, "test_mutli_dna_{0!s}".format(name), funct(filename))
     del funct
 
 for filename in single_amino_files:
@@ -159,10 +159,10 @@ for filename in single_amino_files:
 
     def funct(fn):
         f = lambda x: x.simple_check(fn, generic_nucleotide)
-        f.__doc__ = "Checking protein file %s" % fn
+        f.__doc__ = "Checking protein file {0!s}".format(fn)
         return f
 
-    setattr(TitleFunctions, "test_pro_%s" % name, funct(filename))
+    setattr(TitleFunctions, "test_pro_{0!s}".format(name), funct(filename))
     del funct
 
 for filename in multi_amino_files:
@@ -170,10 +170,10 @@ for filename in multi_amino_files:
 
     def funct(fn):
         f = lambda x: x.multi_check(fn, generic_dna)
-        f.__doc__ = "Checking multi protein file %s" % fn
+        f.__doc__ = "Checking multi protein file {0!s}".format(fn)
         return f
 
-    setattr(TitleFunctions, "test_mutli_pro_%s" % name, funct(filename))
+    setattr(TitleFunctions, "test_mutli_pro_{0!s}".format(name), funct(filename))
     del funct
 
 if __name__ == "__main__":

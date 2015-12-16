@@ -65,11 +65,11 @@ def _get_entry_dbs():
 
 
 def _get_entry_fields(db):
-    return _get_fields(_BASE_URL + "/entry/%s?fields" % db)
+    return _get_fields(_BASE_URL + "/entry/{0!s}?fields".format(db))
 
 
 def _get_entry_formats(db):
-    return _get_fields(_BASE_URL + "/entry/%s?formats" % db)
+    return _get_fields(_BASE_URL + "/entry/{0!s}?formats".format(db))
 
 
 def _get_convert_formats():
@@ -137,7 +137,7 @@ def entry(db, id, format=None, field=None):
 
     if isinstance(id, list):
         id = ",".join(id)
-    url = _BASE_URL + "/entry/%s/%s" % (db, _quote(id))
+    url = _BASE_URL + "/entry/{0!s}/{1!s}".format(db, _quote(id))
     if field:
         url += "/" + field
     if format:
@@ -164,14 +164,14 @@ def search_count(db, query):
         import warnings
         warnings.warn("TogoWS search does not officially support database '%s'. "
                       "See %s/search/ for options." % (db, _BASE_URL))
-    url = _BASE_URL + "/search/%s/%s/count" % (db, _quote(query))
+    url = _BASE_URL + "/search/{0!s}/{1!s}/count".format(db, _quote(query))
     handle = _open(url)
     data = handle.read()
     handle.close()
     try:
         count = int(data.strip())
     except ValueError:
-        raise ValueError("Expected an integer from URL %s, got: %r" % (url, data))
+        raise ValueError("Expected an integer from URL {0!s}, got: {1!r}".format(url, data))
     return count
 
 
@@ -206,14 +206,13 @@ def search_iter(db, query, limit=None, batch=100):
         batch = min(batch, remain)
         # print("%r left, asking for %r" % (remain, batch))
         ids = search(db, query, offset, batch).read().strip().split()
-        assert len(ids) == batch, "Got %i, expected %i" % (len(ids), batch)
+        assert len(ids) == batch, "Got {0:d}, expected {1:d}".format(len(ids), batch)
         # print("offset %i, %s ... %s" % (offset, ids[0], ids[-1]))
         if ids == prev_ids:
             raise RuntimeError("Same search results for previous offset")
         for identifier in ids:
             if identifier in prev_ids:
-                raise RuntimeError("Result %s was in previous batch"
-                                   % identifier)
+                raise RuntimeError("Result {0!s} was in previous batch".format(identifier))
             yield identifier
         offset += batch
         remain -= batch
@@ -260,21 +259,21 @@ def search(db, query, offset=None, limit=None, format=None):
         import warnings
         warnings.warn("TogoWS search does not explicitly support database '%s'. "
                       "See %s/search/ for options." % (db, _BASE_URL))
-    url = _BASE_URL + "/search/%s/%s" % (db, _quote(query))
+    url = _BASE_URL + "/search/{0!s}/{1!s}".format(db, _quote(query))
     if offset is not None and limit is not None:
         try:
             offset = int(offset)
         except:
-            raise ValueError("Offset should be an integer (at least one), not %r" % offset)
+            raise ValueError("Offset should be an integer (at least one), not {0!r}".format(offset))
         try:
             limit = int(limit)
         except:
-            raise ValueError("Limit should be an integer (at least one), not %r" % limit)
+            raise ValueError("Limit should be an integer (at least one), not {0!r}".format(limit))
         if offset <= 0:
-            raise ValueError("Offset should be at least one, not %i" % offset)
+            raise ValueError("Offset should be at least one, not {0:d}".format(offset))
         if limit <= 0:
-            raise ValueError("Count should be at least one, not %i" % limit)
-        url += "/%i,%i" % (offset, limit)
+            raise ValueError("Count should be at least one, not {0:d}".format(limit))
+        url += "/{0:d},{1:d}".format(offset, limit)
     elif offset is not None or limit is not None:
         raise ValueError("Expect BOTH offset AND limit to be provided (or neither)")
     if format:
@@ -300,9 +299,9 @@ def convert(data, in_format, out_format):
     if not _convert_formats:
         _convert_formats = _get_convert_formats()
     if [in_format, out_format] not in _convert_formats:
-        msg = "\n".join("%s -> %s" % tuple(pair) for pair in _convert_formats)
-        raise ValueError("Unsupported conversion. Choose from:\n%s" % msg)
-    url = _BASE_URL + "/convert/%s.%s" % (in_format, out_format)
+        msg = "\n".join("{0!s} -> {1!s}".format(*tuple(pair)) for pair in _convert_formats)
+        raise ValueError("Unsupported conversion. Choose from:\n{0!s}".format(msg))
+    url = _BASE_URL + "/convert/{0!s}.{1!s}".format(in_format, out_format)
     # TODO - Should we just accept a string not a handle? What about a filename?
     if hasattr(data, "read"):
         # Handle

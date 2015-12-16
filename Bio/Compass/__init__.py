@@ -146,7 +146,7 @@ def __read_names(record, line):
     # Ali1: 60456.blo.gz.aln  Ali2: allscop//14984.blo.gz.aln
     #       ------query-----        -------hit-------------
     if "Ali1:" not in line:
-        raise ValueError("Line does not contain 'Ali1:':\n%s" % line)
+        raise ValueError("Line does not contain 'Ali1:':\n{0!s}".format(line))
     m = __regex["names"].search(line)
     record.query = m.group(1)
     record.hit = m.group(2)
@@ -154,14 +154,14 @@ def __read_names(record, line):
 
 def __read_threshold(record, line):
     if not line.startswith("Threshold"):
-        raise ValueError("Line does not start with 'Threshold':\n%s" % line)
+        raise ValueError("Line does not start with 'Threshold':\n{0!s}".format(line))
     m = __regex["threshold"].search(line)
     record.gap_threshold = float(m.group(1))
 
 
 def __read_lengths(record, line):
     if not line.startswith("length1="):
-        raise ValueError("Line does not start with 'length1=':\n%s" % line)
+        raise ValueError("Line does not start with 'length1=':\n{0!s}".format(line))
     m = __regex["lengths"].search(line)
     record.query_length = int(m.group(1))
     record.query_filtered_length = float(m.group(2))
@@ -171,7 +171,7 @@ def __read_lengths(record, line):
 
 def __read_profilewidth(record, line):
     if "Nseqs1" not in line:
-        raise ValueError("Line does not contain 'Nseqs1':\n%s" % line)
+        raise ValueError("Line does not contain 'Nseqs1':\n{0!s}".format(line))
     m = __regex["profilewidth"].search(line)
     record.query_nseqs = int(m.group(1))
     record.query_neffseqs = float(m.group(2))
@@ -181,7 +181,7 @@ def __read_profilewidth(record, line):
 
 def __read_scores(record, line):
     if not line.startswith("Smith-Waterman"):
-        raise ValueError("Line does not start with 'Smith-Waterman':\n%s" % line)
+        raise ValueError("Line does not start with 'Smith-Waterman':\n{0!s}".format(line))
     m = __regex["scores"].search(line)
     if m:
         record.sw_score = int(m.group(1))

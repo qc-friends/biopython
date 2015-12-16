@@ -44,22 +44,22 @@ class Yn00(Paml):
         # Make sure all paths are relative to the working directory
         self._set_rel_paths()
         with open(self.ctl_file, 'w') as ctl_handle:
-            ctl_handle.write("seqfile = %s\n" % self._rel_alignment)
-            ctl_handle.write("outfile = %s\n" % self._rel_out_file)
+            ctl_handle.write("seqfile = {0!s}\n".format(self._rel_alignment))
+            ctl_handle.write("outfile = {0!s}\n".format(self._rel_out_file))
             for option in self._options.items():
                 if option[1] is None:
                     # If an option has a value of None, there's no need
                     # to write it in the control file; it's normally just
                     # commented out.
                     continue
-                ctl_handle.write("%s = %s\n" % (option[0], option[1]))
+                ctl_handle.write("{0!s} = {1!s}\n".format(option[0], option[1]))
 
     def read_ctl_file(self, ctl_file):
         """Parse a control file and load the options into the yn00 instance.
         """
         temp_options = {}
         if not os.path.isfile(ctl_file):
-            raise IOError("File not found: %r" % ctl_file)
+            raise IOError("File not found: {0!r}".format(ctl_file))
         else:
             with open(ctl_file) as ctl_handle:
                 for line in ctl_handle:
@@ -68,7 +68,7 @@ class Yn00(Paml):
                     if uncommented != "":
                         if "=" not in uncommented:
                             raise AttributeError(
-                                "Malformed line in control file:\n%r" % line)
+                                "Malformed line in control file:\n{0!r}".format(line))
                         (option, value) = uncommented.split("=")
                         option = option.strip()
                         value = value.strip()
@@ -77,7 +77,7 @@ class Yn00(Paml):
                         elif option == "outfile":
                             self.out_file = value
                         elif option not in self._options:
-                            raise KeyError("Invalid option: %s" % option)
+                            raise KeyError("Invalid option: {0!s}".format(option))
                         else:
                             if "." in value or "e-" in value:
                                 try:

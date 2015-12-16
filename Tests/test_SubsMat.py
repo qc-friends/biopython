@@ -30,7 +30,7 @@ with open(ctab_file) as handle:
 f.write("Check differences between derived and true frequencies for each\n")
 f.write("letter. Differences should be very small\n")
 for i in ftab_prot.alphabet.letters:
-    f.write("%s %f\n" % (i, abs(ftab_prot[i] - ctab_prot[i])))
+    f.write("{0!s} {1:f}\n".format(i, abs(ftab_prot[i] - ctab_prot[i])))
 
 pickle_file = os.path.join('SubsMat', 'acc_rep_mat.pik')
 # Don't want to use text mode on Python 3,
@@ -44,15 +44,15 @@ obs_freq_mat.print_mat(f=f, format=" %4.3f")
 
 f.write("Diff between supplied and matrix-derived frequencies, should be small\n")
 for i in sorted(ftab_prot):
-    f.write("%s %.2f\n" % (i, abs(ftab_prot[i] - ftab_prot2[i])))
+    f.write("{0!s} {1:.2f}\n".format(i, abs(ftab_prot[i] - ftab_prot2[i])))
 
 s = 0.
 f.write("Calculating sum of letters for an observed frequency matrix\n")
 counts = obs_freq_mat.sum()
 for key in sorted(counts):
-    f.write("%s\t%.2f\n" % (key, counts[key]))
+    f.write("{0!s}\t{1:.2f}\n".format(key, counts[key]))
     s += counts[key]
-f.write("Total sum %.2f should be 1.0\n" % (s))
+f.write("Total sum {0:.2f} should be 1.0\n".format((s)))
 lo_mat_prot = \
 SubsMat.make_log_odds_matrix(acc_rep_mat=acc_rep_mat, round_digit=1)  # ,ftab_prot
 f.write("\nLog odds matrix\n")
@@ -66,11 +66,11 @@ lo_mat_prot.print_full_mat(f=f, format=" %d", alphabet='AVILMCFWYHSTNQKRDEGP')
 f.write("\nTesting MatrixInfo\n")
 for i in MatrixInfo.available_matrices:
     mat = SubsMat.SeqMat(getattr(MatrixInfo, i))
-    f.write("\n%s\n------------\n" % i)
+    f.write("\n{0!s}\n------------\n".format(i))
     mat.print_mat(f=f)
 f.write("\nTesting Entropy\n")
 relative_entropy = lo_mat_prot.calculate_relative_entropy(obs_freq_mat)
-f.write("relative entropy %.3f\n" % relative_entropy)
+f.write("relative entropy {0:.3f}\n".format(relative_entropy))
 
 # Will uncomment the following once the Bio.Tools.Statistics is in place
 f.write("\nmatrix correlations\n")
@@ -78,8 +78,8 @@ blosum90 = SubsMat.SeqMat(MatrixInfo.blosum90)
 blosum30 = SubsMat.SeqMat(MatrixInfo.blosum30)
 try:
     import numpy
-    f.write("BLOSUM30 & BLOSUM90 %.2f\n" % SubsMat.two_mat_correlation(blosum30, blosum90))
-    f.write("BLOSUM90 & BLOSUM30 %.2f\n" % SubsMat.two_mat_correlation(blosum90, blosum30))
+    f.write("BLOSUM30 & BLOSUM90 {0:.2f}\n".format(SubsMat.two_mat_correlation(blosum30, blosum90)))
+    f.write("BLOSUM90 & BLOSUM30 {0:.2f}\n".format(SubsMat.two_mat_correlation(blosum90, blosum30)))
 except ImportError:
     # Need numpy for the two_mat_correlation, but rather than splitting this
     # test into two, and have one raise MissingExternalDependencyError cheat:

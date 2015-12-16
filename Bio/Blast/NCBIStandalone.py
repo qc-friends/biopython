@@ -850,12 +850,12 @@ class _HeaderConsumer(object):
             # New style way to give the query length in BLAST 2.2.22+ (the C++ code)
             self._header.query_letters = _safe_int(line[7:].strip())
         elif not line.startswith('       '):  # continuation of query_info
-            self._header.query = "%s%s" % (self._header.query, line)
+            self._header.query = "{0!s}{1!s}".format(self._header.query, line)
         else:
             # Hope it is the old style way to give the query length:
             letters, = _re_search(
                 r"([0-9,]+) letters", line,
-                "I could not find the number of letters in line\n%s" % line)
+                "I could not find the number of letters in line\n{0!s}".format(line))
             self._header.query_letters = _safe_int(letters)
 
     def database_info(self, line):
@@ -871,7 +871,7 @@ class _HeaderConsumer(object):
         else:
             sequences, letters = _re_search(
                 r"([0-9,]+) sequences; ([0-9,-]+) total letters", line,
-                "I could not find the sequences and letters in line\n%s" % line)
+                "I could not find the sequences and letters in line\n{0!s}".format(line))
             self._header.database_sequences = _safe_int(sequences)
             self._header.database_letters = _safe_int(letters)
 
@@ -921,7 +921,7 @@ class _DescriptionConsumer(object):
 
     def round(self, line):
         if not line.startswith('Results from round'):
-            raise ValueError("I didn't understand the round line\n%s" % line)
+            raise ValueError("I didn't understand the round line\n{0!s}".format(line))
         self._roundnum = _safe_int(line[18:].strip())
 
     def end_descriptions(self):
@@ -941,7 +941,7 @@ class _DescriptionConsumer(object):
         cols = line.split()
         if len(cols) < 3:
             raise ValueError(
-                  "Line does not appear to contain description:\n%s" % line)
+                  "Line does not appear to contain description:\n{0!s}".format(line))
         if self.__has_n:
             i = line.rfind(cols[-1])        # find start of N
             i = line.rfind(cols[-2], 0, i)  # find start of p-value
@@ -993,7 +993,7 @@ class _AlignmentConsumer(object):
             try:
                 name, start, seq, end = line.split()
             except ValueError:
-                raise ValueError("I do not understand the line\n%s" % line)
+                raise ValueError("I do not understand the line\n{0!s}".format(line))
             self._start_index = line.index(start, len(name))
             self._seq_index = line.index(seq,
                                          self._start_index + len(start))
@@ -1133,13 +1133,13 @@ class _HSPConsumer(object):
     def score(self, line):
         self._hsp.bits, self._hsp.score = _re_search(
             r"Score =\s*([0-9.e+]+) bits \(([0-9]+)\)", line,
-            "I could not find the score in line\n%s" % line)
+            "I could not find the score in line\n{0!s}".format(line))
         self._hsp.score = _safe_float(self._hsp.score)
         self._hsp.bits = _safe_float(self._hsp.bits)
 
         x, y = _re_search(
             r"Expect\(?(\d*)\)? = +([0-9.e\-|\+]+)", line,
-            "I could not find the expect in line\n%s" % line)
+            "I could not find the expect in line\n{0!s}".format(line))
         if x:
             self._hsp.num_alignments = _safe_int(x)
         else:
@@ -1149,28 +1149,28 @@ class _HSPConsumer(object):
     def identities(self, line):
         x, y = _re_search(
             r"Identities = (\d+)\/(\d+)", line,
-            "I could not find the identities in line\n%s" % line)
+            "I could not find the identities in line\n{0!s}".format(line))
         self._hsp.identities = _safe_int(x), _safe_int(y)
         self._hsp.align_length = _safe_int(y)
 
         if 'Positives' in line:
             x, y = _re_search(
                 r"Positives = (\d+)\/(\d+)", line,
-                "I could not find the positives in line\n%s" % line)
+                "I could not find the positives in line\n{0!s}".format(line))
             self._hsp.positives = _safe_int(x), _safe_int(y)
             assert self._hsp.align_length == _safe_int(y)
 
         if 'Gaps' in line:
             x, y = _re_search(
                 r"Gaps = (\d+)\/(\d+)", line,
-                "I could not find the gaps in line\n%s" % line)
+                "I could not find the gaps in line\n{0!s}".format(line))
             self._hsp.gaps = _safe_int(x), _safe_int(y)
             assert self._hsp.align_length == _safe_int(y)
 
     def strand(self, line):
         self._hsp.strand = _re_search(
             r"Strand\s?=\s?(\w+)\s?/\s?(\w+)", line,
-            "I could not find the strand in line\n%s" % line)
+            "I could not find the strand in line\n{0!s}".format(line))
 
     def frame(self, line):
         # Frame can be in formats:
@@ -1179,11 +1179,11 @@ class _HSPConsumer(object):
         if '/' in line:
             self._hsp.frame = _re_search(
                 r"Frame\s?=\s?([-+][123])\s?/\s?([-+][123])", line,
-                "I could not find the frame in line\n%s" % line)
+                "I could not find the frame in line\n{0!s}".format(line))
         else:
             self._hsp.frame = _re_search(
                 r"Frame = ([-+][123])", line,
-                "I could not find the frame in line\n%s" % line)
+                "I could not find the frame in line\n{0!s}".format(line))
 
     # Match a space, if one is available.  Masahir Ishikawa found a
     # case where there's no space between the start and the sequence:
@@ -1202,7 +1202,7 @@ class _HSPConsumer(object):
                 self._query_len = 60  # number of dashes
                 self._query_start_index = 13  # offset of first dash
                 return
-            raise ValueError("I could not find the query in line\n%s" % line)
+            raise ValueError("I could not find the query in line\n{0!s}".format(line))
 
         # line below modified by Yair Benita, Sep 2004.
         # added the end attribute for the query
@@ -1226,8 +1226,7 @@ class _HSPConsumer(object):
             # Make sure the alignment is the same length as the query
             seq += ' ' * (self._query_len - len(seq))
         elif len(seq) < self._query_len:
-            raise ValueError("Match is longer than the query in line\n%s"
-                             % line)
+            raise ValueError("Match is longer than the query in line\n{0!s}".format(line))
         self._hsp.match = self._hsp.match + seq
 
     # To match how we do the query, cache the regular expression.
@@ -1237,7 +1236,7 @@ class _HSPConsumer(object):
     def sbjct(self, line):
         m = self._sbjct_re.search(line)
         if m is None:
-            raise ValueError("I could not find the sbjct in line\n%s" % line)
+            raise ValueError("I could not find the sbjct in line\n{0!s}".format(line))
         colon, start, seq, end = m.groups()
         # mikep 26/9/00
         # On occasion, there is a blast hit with no subject match
@@ -1254,8 +1253,7 @@ class _HSPConsumer(object):
         self._hsp.sbjct_end = _safe_int(end)
         if len(seq) != self._query_len:
             raise ValueError(
-                  "QUERY and SBJCT sequence lengths don't match (%i %r vs %i) in line\n%s"
-                  % (self._query_len, self._hsp.query, len(seq), line))
+                  "QUERY and SBJCT sequence lengths don't match ({0:d} {1!r} vs {2:d}) in line\n{3!s}".format(self._query_len, self._hsp.query, len(seq), line))
 
         del self._query_start_index   # clean up unused variables
         del self._query_len
@@ -1275,13 +1273,13 @@ class _DatabaseReportConsumer(object):
             self._dr.database_name.append(m.group(1))
         elif self._dr.database_name:
             # This must be a continuation of the previous name.
-            self._dr.database_name[-1] = "%s%s" % (self._dr.database_name[-1],
+            self._dr.database_name[-1] = "{0!s}{1!s}".format(self._dr.database_name[-1],
                                                    line.strip())
 
     def posted_date(self, line):
         self._dr.posted_date.append(_re_search(
             r"Posted date:\s*(.+)$", line,
-            "I could not find the posted date in line\n%s" % line))
+            "I could not find the posted date in line\n{0!s}".format(line)))
 
     def num_letters_in_database(self, line):
         letters, = _get_cols(
@@ -1430,7 +1428,7 @@ class _ParametersConsumer(object):
             self._params.threshold, = _get_cols(
                 line, (3,), ncols=4, expected={0: "Neighboring", 1: "words", 2: "threshold:"})
         else:
-            raise ValueError("Unrecognised threshold line:\n%s" % line)
+            raise ValueError("Unrecognised threshold line:\n{0!s}".format(line))
         self._params.threshold = _safe_int(self._params.threshold)
 
     def window_size(self, line):
@@ -1441,37 +1439,37 @@ class _ParametersConsumer(object):
             self._params.window_size, = _get_cols(
                 line, (4,), ncols=5, expected={0: "Window", 2: "multiple", 3: "hits:"})
         else:
-            raise ValueError("Unrecognised window size line:\n%s" % line)
+            raise ValueError("Unrecognised window size line:\n{0!s}".format(line))
         self._params.window_size = _safe_int(self._params.window_size)
 
     def dropoff_1st_pass(self, line):
         score, bits = _re_search(
             r"X1: (\d+) \(\s*([0-9,.]+) bits\)", line,
-            "I could not find the dropoff in line\n%s" % line)
+            "I could not find the dropoff in line\n{0!s}".format(line))
         self._params.dropoff_1st_pass = _safe_int(score), _safe_float(bits)
 
     def gap_x_dropoff(self, line):
         score, bits = _re_search(
             r"X2: (\d+) \(\s*([0-9,.]+) bits\)", line,
-            "I could not find the gap dropoff in line\n%s" % line)
+            "I could not find the gap dropoff in line\n{0!s}".format(line))
         self._params.gap_x_dropoff = _safe_int(score), _safe_float(bits)
 
     def gap_x_dropoff_final(self, line):
         score, bits = _re_search(
             r"X3: (\d+) \(\s*([0-9,.]+) bits\)", line,
-            "I could not find the gap dropoff final in line\n%s" % line)
+            "I could not find the gap dropoff final in line\n{0!s}".format(line))
         self._params.gap_x_dropoff_final = _safe_int(score), _safe_float(bits)
 
     def gap_trigger(self, line):
         score, bits = _re_search(
             r"S1: (\d+) \(\s*([0-9,.]+) bits\)", line,
-            "I could not find the gap trigger in line\n%s" % line)
+            "I could not find the gap trigger in line\n{0!s}".format(line))
         self._params.gap_trigger = _safe_int(score), _safe_float(bits)
 
     def blast_cutoff(self, line):
         score, bits = _re_search(
             r"S2: (\d+) \(\s*([0-9,.]+) bits\)", line,
-            "I could not find the blast cutoff in line\n%s" % line)
+            "I could not find the blast cutoff in line\n{0!s}".format(line))
         self._params.blast_cutoff = _safe_int(score), _safe_float(bits)
 
     def end_parameters(self):
@@ -1612,8 +1610,7 @@ class Iterator(object):
             handle.readline
         except AttributeError:
             raise ValueError(
-                "I expected a file handle or file-like object, got %s"
-                % type(handle))
+                "I expected a file handle or file-like object, got {0!s}".format(type(handle)))
         self._uhandle = File.UndoHandle(handle)
         self._parser = parser
         self._header = []
@@ -1689,14 +1686,12 @@ def _get_cols(line, cols_to_get, ncols=None, expected=None):
 
     # Check to make sure number of columns is correct
     if ncols is not None and len(cols) != ncols:
-        raise ValueError("I expected %d columns (got %d) in line\n%s"
-                         % (ncols, len(cols), line))
+        raise ValueError("I expected {0:d} columns (got {1:d}) in line\n{2!s}".format(ncols, len(cols), line))
 
     # Check to make sure columns contain the correct data
     for k in expected:
         if cols[k] != expected[k]:
-            raise ValueError("I expected '%s' in column %d in line\n%s"
-                             % (expected[k], k, line))
+            raise ValueError("I expected '{0!s}' in column {1:d} in line\n{2!s}".format(expected[k], k, line))
 
     # Construct the answer tuple
     results = []

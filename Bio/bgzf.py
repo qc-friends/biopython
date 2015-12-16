@@ -251,7 +251,7 @@ def open(filename, mode="rb"):
     elif "w" in mode.lower() or "a" in mode.lower():
         return BgzfWriter(filename, mode)
     else:
-        raise ValueError("Bad mode %r" % mode)
+        raise ValueError("Bad mode {0!r}".format(mode))
 
 
 def make_virtual_offset(block_start_offset, within_block_offset):
@@ -299,9 +299,9 @@ def make_virtual_offset(block_start_offset, within_block_offset):
 
     """
     if within_block_offset < 0 or within_block_offset >= 65536:
-        raise ValueError("Require 0 <= within_block_offset < 2**16, got %i" % within_block_offset)
+        raise ValueError("Require 0 <= within_block_offset < 2**16, got {0:d}".format(within_block_offset))
     if block_start_offset < 0 or block_start_offset >= 281474976710656:
-        raise ValueError("Require 0 <= block_start_offset < 2**48, got %i" % block_start_offset)
+        raise ValueError("Require 0 <= block_start_offset < 2**48, got {0:d}".format(block_start_offset))
     return (block_start_offset << 16) | within_block_offset
 
 
@@ -435,7 +435,7 @@ def _load_bgzf_block(handle, text_mode=False):
     expected_crc = handle.read(4)
     expected_size = struct.unpack("<I", handle.read(4))[0]
     assert expected_size == len(data), \
-           "Decompressed to %i, not %i" % (len(data), expected_size)
+           "Decompressed to {0:d}, not {1:d}".format(len(data), expected_size)
     # Should cope with a mix of Python platforms...
     crc = zlib.crc32(data)
     if crc < 0:
@@ -443,7 +443,7 @@ def _load_bgzf_block(handle, text_mode=False):
     else:
         crc = struct.pack("<I", crc)
     assert expected_crc == crc, \
-           "CRC is %s, not %s" % (crc, expected_crc)
+           "CRC is {0!s}, not {1!s}".format(crc, expected_crc)
     if text_mode:
         return block_size, _as_string(data)
     else:
@@ -614,8 +614,7 @@ class BgzfReader(object):
             assert start_offset == self._block_start_offset
         if within_block > len(self._buffer) \
         and not (within_block == 0 and len(self._buffer) == 0):
-            raise ValueError("Within offset %i but block size only %i"
-                             % (within_block, len(self._buffer)))
+            raise ValueError("Within offset {0:d} but block size only {1:d}".format(within_block, len(self._buffer)))
         self._within_block_offset = within_block
         # assert virtual_offset == self.tell(), \
         #    "Did seek to %i (%i, %i), but tell says %i (%i, %i)" \
@@ -724,7 +723,7 @@ class BgzfWriter(object):
         else:
             if "w" not in mode.lower() \
             and "a" not in mode.lower():
-                raise ValueError("Must use write or append mode, not %r" % mode)
+                raise ValueError("Must use write or append mode, not {0!r}".format(mode))
             if "a" in mode.lower():
                 handle = _open(filename, "ab")
             else:

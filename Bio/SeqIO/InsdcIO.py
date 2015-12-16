@@ -119,21 +119,20 @@ def _insdc_feature_position_string(pos, offset=0):
     Use offset=1 to add one to convert a start position from python counting.
     """
     if isinstance(pos, SeqFeature.ExactPosition):
-        return "%i" % (pos.position + offset)
+        return "{0:d}".format((pos.position + offset))
     elif isinstance(pos, SeqFeature.WithinPosition):
-        return "(%i.%i)" % (pos.position + offset,
+        return "({0:d}.{1:d})".format(pos.position + offset,
                             pos.position + pos.extension + offset)
     elif isinstance(pos, SeqFeature.BetweenPosition):
-        return "(%i^%i)" % (pos.position + offset,
+        return "({0:d}^{1:d})".format(pos.position + offset,
                             pos.position + pos.extension + offset)
     elif isinstance(pos, SeqFeature.BeforePosition):
-        return "<%i" % (pos.position + offset)
+        return "<{0:d}".format((pos.position + offset))
     elif isinstance(pos, SeqFeature.AfterPosition):
-        return ">%i" % (pos.position + offset)
+        return ">{0:d}".format((pos.position + offset))
     elif isinstance(pos, SeqFeature.OneOfPosition):
-        return "one-of(%s)" \
-               % ",".join(_insdc_feature_position_string(p, offset)
-                          for p in pos.position_choices)
+        return "one-of({0!s})".format(",".join(_insdc_feature_position_string(p, offset)
+                          for p in pos.position_choices))
     elif isinstance(pos, SeqFeature.AbstractPosition):
         raise NotImplementedError("Please report this as a bug in Biopython.")
     else:
@@ -142,7 +141,7 @@ def _insdc_feature_position_string(pos, offset=0):
 
 def _insdc_location_string_ignoring_strand_and_subfeatures(location, rec_length):
     if location.ref:
-        ref = "%s:" % location.ref
+        ref = "{0!s}:".format(location.ref)
     else:
         ref = ""
     assert not location.ref_db
@@ -155,16 +154,16 @@ def _insdc_location_string_ignoring_strand_and_subfeatures(location, rec_length)
             # Very special case, for a between position at the end of a
             # sequence (used on some circular genomes, Bug 3098) we have
             # N:N so return N^1
-            return "%s%i^1" % (ref, rec_length)
+            return "{0!s}{1:d}^1".format(ref, rec_length)
         else:
-            return "%s%i^%i" % (ref, location.end.position,
+            return "{0!s}{1:d}^{2:d}".format(ref, location.end.position,
                                 location.end.position + 1)
     if isinstance(location.start, SeqFeature.ExactPosition) \
         and isinstance(location.end, SeqFeature.ExactPosition) \
             and location.start.position + 1 == location.end.position:
         # Special case, for 11:12 return 12 rather than 12..12
         # (a length one slice, meaning a single letter)
-        return "%s%i" % (ref, location.end.position)
+        return "{0!s}{1:d}".format(ref, location.end.position)
     elif isinstance(location.start, SeqFeature.UnknownPosition) \
             or isinstance(location.end, SeqFeature.UnknownPosition):
         # Special case for features from SwissProt/UniProt files
@@ -175,14 +174,12 @@ def _insdc_location_string_ignoring_strand_and_subfeatures(location, rec_length)
             raise ValueError("Feature with unknown location")
         elif isinstance(location.start, SeqFeature.UnknownPosition):
             # Treat the unknown start position as a BeforePosition
-            return "%s<%i..%s" \
-                % (ref,
+            return "{0!s}<{1:d}..{2!s}".format(ref,
                    location.nofuzzy_end,
                    _insdc_feature_position_string(location.end))
         else:
             # Treat the unknown end position as an AfterPosition
-            return "%s%s..>%i" \
-                % (ref,
+            return "{0!s}{1!s}..>{2:d}".format(ref,
                    _insdc_feature_position_string(location.start),
                    location.nofuzzy_start)
     else:
@@ -209,17 +206,17 @@ def _insdc_location_string(location, rec_length):
         # CompoundFeatureLocation
         if location.strand == -1:
             # Special case, put complement outside the join/order/... and reverse order
-            return "complement(%s(%s))" % (location.operator,
+            return "complement({0!s}({1!s}))".format(location.operator,
                    ",".join(_insdc_location_string_ignoring_strand_and_subfeatures(p, rec_length)
                             for p in parts[::-1]))
         else:
-            return "%s(%s)" % (location.operator,
+            return "{0!s}({1!s})".format(location.operator,
                    ",".join(_insdc_location_string(p, rec_length) for p in parts))
     except AttributeError:
         # Simple FeatureLocation
         loc = _insdc_location_string_ignoring_strand_and_subfeatures(location, rec_length)
         if location.strand == -1:
-            return "complement(%s)" % loc
+            return "complement({0!s})".format(loc)
         else:
             return loc
 
@@ -254,16 +251,14 @@ def _insdc_feature_location_string(feature, rec_length):
         location = _insdc_location_string_ignoring_strand_and_subfeatures(
             feature.location, rec_length)
         if feature.strand == -1:
-            location = "complement(%s)" % location
+            location = "complement({0!s})".format(location)
         return location
     # As noted above, treat reverse complement strand features carefully:
     if feature.strand == -1:
         for f in feature._sub_features:
             if f.strand != -1:
-                raise ValueError("Inconsistent strands: %r for parent, %r for child"
-                                 % (feature.strand, f.strand))
-        return "complement(%s(%s))" \
-               % (feature.location_operator,
+                raise ValueError("Inconsistent strands: {0!r} for parent, {1!r} for child".format(feature.strand, f.strand))
+        return "complement({0!s}({1!s}))".format(feature.location_operator,
                   ",".join(_insdc_location_string_ignoring_strand_and_subfeatures(f.location, rec_length)
                            for f in feature._sub_features))
     # if feature.strand == +1:
@@ -271,7 +266,7 @@ def _insdc_feature_location_string(feature, rec_length):
     #        assert f.strand == +1
     # This covers typical forward strand features, and also an evil mixed strand:
     assert feature.location_operator != ""
-    return "%s(%s)" % (feature.location_operator,
+    return "{0!s}({1!s})".format(feature.location_operator,
                        ",".join(_insdc_feature_location_string(f, rec_length)
                                 for f in feature._sub_features))
 
@@ -290,7 +285,7 @@ class _InsdcWriter(SequentialSequenceWriter):
     def _write_feature_qualifier(self, key, value=None, quote=None):
         if value is None:
             # Value-less entry like /pseudo
-            self.handle.write("%s/%s\n" % (self.QUALIFIER_INDENT_STR, key))
+            self.handle.write("{0!s}/{1!s}\n".format(self.QUALIFIER_INDENT_STR, key))
             return
         # Quick hack with no line wrapping, may be useful for testing:
         # self.handle.write('%s/%s="%s"\n' % (self.QUALIFIER_INDENT_STR, key, value))
@@ -301,9 +296,9 @@ class _InsdcWriter(SequentialSequenceWriter):
             else:
                 quote = True
         if quote:
-            line = '%s/%s="%s"' % (self.QUALIFIER_INDENT_STR, key, value)
+            line = '{0!s}/{1!s}="{2!s}"'.format(self.QUALIFIER_INDENT_STR, key, value)
         else:
-            line = '%s/%s=%s' % (self.QUALIFIER_INDENT_STR, key, value)
+            line = '{0!s}/{1!s}={2!s}'.format(self.QUALIFIER_INDENT_STR, key, value)
         if len(line) <= self.MAX_WIDTH:
             self.handle.write(line + "\n")
             return
@@ -332,7 +327,7 @@ class _InsdcWriter(SequentialSequenceWriter):
         index = location[:length].rfind(",")
         if index == -1:
             # No good place to split (!)
-            warnings.warn("Couldn't split location:\n%s" % location,
+            warnings.warn("Couldn't split location:\n{0!s}".format(location),
                           BiopythonWarning)
             return location
         return location[:index + 1] + "\n" + \
@@ -433,9 +428,9 @@ class GenBankWriter(_InsdcWriter):
         """Used in the 'header' of each GenBank record."""
         assert len(tag) < self.HEADER_WIDTH
         if len(text) > self.MAX_WIDTH - self.HEADER_WIDTH:
-            warnings.warn("Annotation %r too long for %r line" % (text, tag),
+            warnings.warn("Annotation {0!r} too long for {1!r} line".format(text, tag),
                           BiopythonWarning)
-        self.handle.write("%s%s\n" % (tag.ljust(self.HEADER_WIDTH),
+        self.handle.write("{0!s}{1!s}\n".format(tag.ljust(self.HEADER_WIDTH),
                                       text.replace("\n", " ")))
 
     def _write_multi_line(self, tag, text):
@@ -552,7 +547,7 @@ class GenBankWriter(_InsdcWriter):
             locus = self._get_annotation_str(
                 record, "accession", just_first=True)
         if len(locus) > 16:
-            raise ValueError("Locus identifier %r is too long" % str(locus))
+            raise ValueError("Locus identifier {0!r} is too long".format(str(locus)))
 
         if len(record) > 99999999999:
             # Currently GenBank only officially support up to 350000, but
@@ -591,8 +586,7 @@ class GenBankWriter(_InsdcWriter):
         assert len(division) == 3
         # TODO - date
         # TODO - mol_type
-        line = "LOCUS       %s %s %s    %s           %s %s\n" \
-            % (locus.ljust(16),
+        line = "LOCUS       {0!s} {1!s} {2!s}    {3!s}           {4!s} {5!s}\n".format(locus.ljust(16),
                str(len(record)).rjust(11),
                units,
                mol_type.ljust(6),
@@ -645,7 +639,7 @@ class GenBankWriter(_InsdcWriter):
                     units = "residues"
                 else:
                     units = "bases"
-                data += "  (%s %i to %i)" % (units,
+                data += "  ({0!s} {1:d} to {2:d})".format(units,
                                              ref.location[0].nofuzzy_start + 1,
                                              ref.location[0].nofuzzy_end)
             self._write_single_line("REFERENCE", data)
@@ -721,7 +715,7 @@ class GenBankWriter(_InsdcWriter):
             self.handle.write(str(line_number + 1).rjust(SEQUENCE_INDENT))
             for words in range(line_number,
                                min(line_number + LETTERS_PER_LINE, seq_len), 10):
-                self.handle.write(" %s" % data[words:words + 10])
+                self.handle.write(" {0!s}".format(data[words:words + 10]))
             self.handle.write("\n")
 
     def write_record(self, record):
@@ -735,8 +729,7 @@ class GenBankWriter(_InsdcWriter):
         acc_with_version = accession
         if record.id.startswith(accession + "."):
             try:
-                acc_with_version = "%s.%i" \
-                                   % (accession,
+                acc_with_version = "{0!s}.{1:d}".format(accession,
                                       int(record.id.split(".", 1)[1]))
             except ValueError:
                 pass
@@ -749,10 +742,9 @@ class GenBankWriter(_InsdcWriter):
 
         self._write_single_line("ACCESSION", accession)
         if gi != ".":
-            self._write_single_line("VERSION", "%s  GI:%s"
-                                    % (acc_with_version, gi))
+            self._write_single_line("VERSION", "{0!s}  GI:{1!s}".format(acc_with_version, gi))
         else:
-            self._write_single_line("VERSION", "%s" % (acc_with_version))
+            self._write_single_line("VERSION", "{0!s}".format((acc_with_version)))
 
         # The NCBI only expect two types of link so far,
         # e.g. "Project:28471" and "Trace Assembly Archive:123456"
@@ -855,8 +847,7 @@ class EmblWriter(_InsdcWriter):
             g_count = data.count('G') + data.count('g')
             t_count = data.count('T') + data.count('t')
             other = seq_len - (a_count + c_count + g_count + t_count)
-            handle.write("SQ   Sequence %i BP; %i A; %i C; %i G; %i T; %i other;\n"
-                         % (seq_len, a_count, c_count, g_count, t_count, other))
+            handle.write("SQ   Sequence {0:d} BP; {1:d} A; {2:d} C; {3:d} G; {4:d} T; {5:d} other;\n".format(seq_len, a_count, c_count, g_count, t_count, other))
         else:
             handle.write("SQ   \n")
 
@@ -865,7 +856,7 @@ class EmblWriter(_InsdcWriter):
             for block in range(BLOCKS_PER_LINE):
                 index = LETTERS_PER_LINE * line_number + \
                     LETTERS_PER_BLOCK * block
-                handle.write((" %s" % data[index:index + LETTERS_PER_BLOCK]))
+                handle.write((" {0!s}".format(data[index:index + LETTERS_PER_BLOCK])))
             handle.write(str((line_number + 1)
                              * LETTERS_PER_LINE).rjust(POSITION_PADDING))
             handle.write("\n")
@@ -877,7 +868,7 @@ class EmblWriter(_InsdcWriter):
                 index = LETTERS_PER_LINE * line_number + \
                     LETTERS_PER_BLOCK * block
                 handle.write(
-                    (" %s" % data[index:index + LETTERS_PER_BLOCK]).ljust(11))
+                    (" {0!s}".format(data[index:index + LETTERS_PER_BLOCK])).ljust(11))
             handle.write(str(seq_len).rjust(POSITION_PADDING))
             handle.write("\n")
 
@@ -885,7 +876,7 @@ class EmblWriter(_InsdcWriter):
         assert len(tag) == 2
         line = tag + "   " + text
         if len(text) > self.MAX_WIDTH:
-            warnings.warn("Line %r too long" % line, BiopythonWarning)
+            warnings.warn("Line {0!r} too long".format(line), BiopythonWarning)
         self.handle.write(line + "\n")
 
     def _write_multi_line(self, tag, text):
@@ -908,12 +899,10 @@ class EmblWriter(_InsdcWriter):
                                                  just_first=True)
 
         if ";" in accession:
-            raise ValueError("Cannot have semi-colon in EMBL accession, %s"
-                             % repr(str(accession)))
+            raise ValueError("Cannot have semi-colon in EMBL accession, {0!s}".format(repr(str(accession))))
         if " " in accession:
             # This is out of practicallity... might it be allowed?
-            raise ValueError("Cannot have spaces in EMBL accession, %s"
-                             % repr(str(accession)))
+            raise ValueError("Cannot have spaces in EMBL accession, {0!s}".format(repr(str(accession))))
 
         # Get the molecule type
         # TODO - record this explicitly in the parser?
@@ -947,8 +936,7 @@ class EmblWriter(_InsdcWriter):
         # 5. Data class
         # 6. Taxonomic division
         # 7. Sequence length
-        self._write_single_line("ID", "%s; %s; ; %s; ; %s; %i %s."
-                                % (accession, version, mol_type,
+        self._write_single_line("ID", "{0!s}; {1!s}; ; {2!s}; ; {3!s}; {4:d} {5!s}.".format(accession, version, mol_type,
                                    division, len(record), units))
         handle.write("XX\n")
         self._write_single_line("AC", accession + ";")
@@ -1015,24 +1003,24 @@ class EmblWriter(_InsdcWriter):
             if not isinstance(ref, SeqFeature.Reference):
                 continue
             number += 1
-            self._write_single_line("RN", "[%i]" % number)
+            self._write_single_line("RN", "[{0:d}]".format(number))
             # TODO - support for RC line (needed in parser too)
             # TODO - support more complex record reference locations?
             if ref.location and len(ref.location) == 1:
                 self._write_single_line(
-                    "RP", "%i-%i" % (ref.location[0].nofuzzy_start + 1,
+                    "RP", "{0:d}-{1:d}".format(ref.location[0].nofuzzy_start + 1,
                                      ref.location[0].nofuzzy_end))
             # TODO - record any DOI or AGRICOLA identifier in the reference object?
             if ref.pubmed_id:
-                self._write_single_line("RX", "PUBMED; %s." % ref.pubmed_id)
+                self._write_single_line("RX", "PUBMED; {0!s}.".format(ref.pubmed_id))
             if ref.consrtm:
-                self._write_single_line("RG", "%s" % ref.consrtm)
+                self._write_single_line("RG", "{0!s}".format(ref.consrtm))
             if ref.authors:
                 # We store the AUTHORS data as a single string
                 self._write_multi_line("RA", ref.authors + ";")
             if ref.title:
                 # We store the title as a single string
-                self._write_multi_line("RT", '"%s";' % ref.title)
+                self._write_multi_line("RT", '"{0!s}";'.format(ref.title))
             if ref.journal:
                 # We store this as a single string - holds the journal name,
                 # volume, year, and page numbers of the citation
@@ -1148,23 +1136,21 @@ if __name__ == "__main__":
 
     def compare_record(old, new):
         if old.id != new.id and old.name != new.name:
-            raise ValueError("'%s' or '%s' vs '%s' or '%s' records"
-                             % (old.id, old.name, new.id, new.name))
+            raise ValueError("'{0!s}' or '{1!s}' vs '{2!s}' or '{3!s}' records".format(old.id, old.name, new.id, new.name))
         if len(old.seq) != len(new.seq):
-            raise ValueError("%i vs %i" % (len(old.seq), len(new.seq)))
+            raise ValueError("{0:d} vs {1:d}".format(len(old.seq), len(new.seq)))
         if str(old.seq).upper() != str(new.seq).upper():
             if len(old.seq) < 200:
-                raise ValueError("'%s' vs '%s'" % (old.seq, new.seq))
+                raise ValueError("'{0!s}' vs '{1!s}'".format(old.seq, new.seq))
             else:
                 raise ValueError(
-                    "'%s...' vs '%s...'" % (old.seq[:100], new.seq[:100]))
+                    "'{0!s}...' vs '{1!s}...'".format(old.seq[:100], new.seq[:100]))
         if old.features and new.features:
             return compare_features(old.features, new.features)
         # Just insist on at least one word in common:
         if (old.description or new.description) \
                 and not set(old.description.split()).intersection(new.description.split()):
-            raise ValueError("%s versus %s"
-                             % (repr(old.description), repr(new.description)))
+            raise ValueError("{0!s} versus {1!s}".format(repr(old.description), repr(new.description)))
         # TODO - check annotation
         if "contig" in old.annotations:
             assert old.annotations["contig"] == \
@@ -1175,7 +1161,7 @@ if __name__ == "__main__":
         """Check two lists of SeqRecords agree, raises a ValueError if mismatch."""
         if len(old_list) != len(new_list):
             raise ValueError(
-                "%i vs %i records" % (len(old_list), len(new_list)))
+                "{0:d} vs {1:d} records".format(len(old_list), len(new_list)))
         for old, new in zip(old_list, new_list):
             if not compare_record(old, new):
                 return False
@@ -1184,20 +1170,17 @@ if __name__ == "__main__":
     def compare_feature(old, new, ignore_sub_features=False):
         """Check two SeqFeatures agree."""
         if old.type != new.type:
-            raise ValueError("Type %s versus %s" % (old.type, new.type))
+            raise ValueError("Type {0!s} versus {1!s}".format(old.type, new.type))
         if old.location.nofuzzy_start != new.location.nofuzzy_start \
                 or old.location.nofuzzy_end != new.location.nofuzzy_end:
-            raise ValueError("%s versus %s:\n%s\nvs:\n%s"
-                             % (old.location, new.location, str(old), str(new)))
+            raise ValueError("{0!s} versus {1!s}:\n{2!s}\nvs:\n{3!s}".format(old.location, new.location, str(old), str(new)))
         if old.strand != new.strand:
             raise ValueError(
-                "Different strand:\n%s\nvs:\n%s" % (str(old), str(new)))
+                "Different strand:\n{0!s}\nvs:\n{1!s}".format(str(old), str(new)))
         if old.location.start != new.location.start:
-            raise ValueError("Start %s versus %s:\n%s\nvs:\n%s"
-                             % (old.location.start, new.location.start, str(old), str(new)))
+            raise ValueError("Start {0!s} versus {1!s}:\n{2!s}\nvs:\n{3!s}".format(old.location.start, new.location.start, str(old), str(new)))
         if old.location.end != new.location.end:
-            raise ValueError("End %s versus %s:\n%s\nvs:\n%s"
-                             % (old.location.end, new.location.end, str(old), str(new)))
+            raise ValueError("End {0!s} versus {1!s}:\n{2!s}\nvs:\n{3!s}".format(old.location.end, new.location.end, str(old), str(new)))
         if not ignore_sub_features:
             if len(old.sub_features) != len(new.sub_features):
                 raise ValueError("Different sub features")
@@ -1212,15 +1195,14 @@ if __name__ == "__main__":
                 # EMBL and GenBank files are use different references/notes/etc
                 continue
             if old.qualifiers[key] != new.qualifiers[key]:
-                raise ValueError("Qualifier mis-match for %s:\n%s\n%s"
-                                 % (key, old.qualifiers[key], new.qualifiers[key]))
+                raise ValueError("Qualifier mis-match for {0!s}:\n{1!s}\n{2!s}".format(key, old.qualifiers[key], new.qualifiers[key]))
         return True
 
     def compare_features(old_list, new_list, ignore_sub_features=False):
         """Check two lists of SeqFeatures agree, raises a ValueError if mismatch."""
         if len(old_list) != len(new_list):
             raise ValueError(
-                "%i vs %i features" % (len(old_list), len(new_list)))
+                "{0:d} vs {1:d} features".format(len(old_list), len(new_list)))
         for old, new in zip(old_list, new_list):
             # This assumes they are in the same order
             if not compare_feature(old, new, ignore_sub_features):
@@ -1252,7 +1234,7 @@ if __name__ == "__main__":
             continue
         print(filename)
 
-        with open("../../Tests/GenBank/%s" % filename) as handle:
+        with open("../../Tests/GenBank/{0!s}".format(filename)) as handle:
             records = list(GenBankIterator(handle))
 
         check_genbank_writer(records)
@@ -1263,7 +1245,7 @@ if __name__ == "__main__":
             continue
         print(filename)
 
-        with open("../../Tests/EMBL/%s" % filename) as handle:
+        with open("../../Tests/EMBL/{0!s}".format(filename)) as handle:
             records = list(EmblIterator(handle))
 
         check_genbank_writer(records)
@@ -1275,7 +1257,7 @@ if __name__ == "__main__":
             continue
         print(filename)
 
-        with open("../../Tests/SwissProt/%s" % filename) as handle:
+        with open("../../Tests/SwissProt/{0!s}".format(filename)) as handle:
             records = list(SeqIO.parse(handle, "swiss"))
 
         check_genbank_writer(records)

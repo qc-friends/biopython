@@ -29,11 +29,11 @@ class GenericPositionMatrix(dict):
         self._letters = sorted(self.alphabet.letters)
 
     def __str__(self):
-        words = ["%6d" % i for i in range(self.length)]
+        words = ["{0:6d}".format(i) for i in range(self.length)]
         line = "   " + " ".join(words)
         lines = [line]
         for letter in self._letters:
-            words = ["%6.2f" % value for value in self[letter]]
+            words = ["{0:6.2f}".format(value) for value in self[letter]]
             line = "%c: " % letter + " ".join(words)
             lines.append(line)
         text = "\n".join(lines) + "\n"
@@ -354,11 +354,9 @@ class PositionSpecificScoringMatrix(GenericPositionMatrix):
         """
         # TODO - Code itself tolerates ambiguous bases (as NaN).
         if not isinstance(self.alphabet, IUPAC.IUPACUnambiguousDNA):
-            raise ValueError("PSSM has wrong alphabet: %s - Use only with DNA motifs"
-                                 % self.alphabet)
+            raise ValueError("PSSM has wrong alphabet: {0!s} - Use only with DNA motifs".format(self.alphabet))
         if not isinstance(sequence.alphabet, IUPAC.IUPACUnambiguousDNA):
-            raise ValueError("Sequence has wrong alphabet: %r - Use only with DNA sequences"
-                                 % sequence.alphabet)
+            raise ValueError("Sequence has wrong alphabet: {0!r} - Use only with DNA sequences".format(sequence.alphabet))
 
         # TODO - Force uppercase here and optimise switch statement in C
         # by assuming upper case?

@@ -60,7 +60,7 @@ def _fastq_generic(in_handle, out_handle, mapping):
         qual = old_qual.translate(mapping)
         if null in qual:
             raise ValueError("Invalid character in quality string")
-        out_handle.write("@%s\n%s\n+\n%s\n" % (title, seq, qual))
+        out_handle.write("@{0!s}\n{1!s}\n+\n{2!s}\n".format(title, seq, qual))
     return count
 
 
@@ -80,7 +80,7 @@ def _fastq_generic2(in_handle, out_handle, mapping, truncate_char, truncate_msg)
             qual = qual.replace(truncate_char, chr(126))
             import warnings
             warnings.warn(truncate_msg)
-        out_handle.write("@%s\n%s\n+\n%s\n" % (title, seq, qual))
+        out_handle.write("@{0!s}\n{1!s}\n+\n{2!s}\n".format(title, seq, qual))
     return count
 
 
@@ -248,7 +248,7 @@ def _fastq_convert_fasta(in_handle, out_handle, alphabet=None):
     count = 0
     for title, seq, qual in FastqGeneralIterator(in_handle):
         count += 1
-        out_handle.write(">%s\n" % title)
+        out_handle.write(">{0!s}\n".format(title))
         # Do line wrapping
         for i in range(0, len(seq), 60):
             out_handle.write(seq[i:i + 60] + "\n")
@@ -269,7 +269,7 @@ def _fastq_convert_tab(in_handle, out_handle, alphabet=None):
     count = 0
     for title, seq, qual in FastqGeneralIterator(in_handle):
         count += 1
-        out_handle.write("%s\t%s\n" % (title.split(None, 1)[0], seq))
+        out_handle.write("{0!s}\t{1!s}\n".format(title.split(None, 1)[0], seq))
     return count
 
 
@@ -284,7 +284,7 @@ def _fastq_convert_qual(in_handle, out_handle, mapping):
     count = 0
     for title, seq, qual in FastqGeneralIterator(in_handle):
         count += 1
-        out_handle.write(">%s\n" % title)
+        out_handle.write(">{0!s}\n".format(title))
         # map the qual... note even with Sanger encoding max 2 digits
         try:
             qualities_strs = [mapping[ascii] for ascii in qual]

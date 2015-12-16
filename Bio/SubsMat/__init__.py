@@ -333,7 +333,7 @@ class SeqMat(dict):
                 if val == -999:
                     output += '  ND'
                 else:
-                    output += "%4d" % val
+                    output += "{0:4d}".format(val)
             output += '\n'
         output += '%4s' * n % tuple(alphabet) + "\n"
         return output
@@ -595,7 +595,7 @@ def two_mat_correlation(mat_1, mat_2):
         try:
             values.append((mat_1[ab_pair], mat_2[ab_pair]))
         except KeyError:
-            raise ValueError("%s is not a common key" % ab_pair)
+            raise ValueError("{0!s} is not a common key".format(ab_pair))
     correlation_matrix = numpy.corrcoef(values, rowvar=0)
     correlation = correlation_matrix[0, 1]
     return correlation

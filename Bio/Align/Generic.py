@@ -67,16 +67,14 @@ class Alignment(object):
         """
         if record.seq.__class__.__name__ == "CodonSeq":
             if len(record.seq) <= length:
-                return "%s %s" % (record.seq, record.id)
+                return "{0!s} {1!s}".format(record.seq, record.id)
             else:
-                return "%s...%s %s" \
-                       % (record.seq[:length - 3], record.seq[-3:], record.id)
+                return "{0!s}...{1!s} {2!s}".format(record.seq[:length - 3], record.seq[-3:], record.id)
         else:
             if len(record.seq) <= length:
-                return "%s %s" % (record.seq, record.id)
+                return "{0!s} {1!s}".format(record.seq, record.id)
             else:
-                return "%s...%s %s" \
-                       % (record.seq[:length - 6], record.seq[-3:], record.id)
+                return "{0!s}...{1!s} {2!s}".format(record.seq[:length - 6], record.seq[-3:], record.id)
 
     def __str__(self):
         """Returns a multi-line string summary of the alignment.
@@ -100,8 +98,7 @@ class Alignment(object):
         See also the alignment's format method.
         """
         rows = len(self._records)
-        lines = ["%s alignment with %i rows and %i columns"
-                 % (str(self._alphabet), rows, self.get_alignment_length())]
+        lines = ["{0!s} alignment with {1:d} rows and {2:d} columns".format(str(self._alphabet), rows, self.get_alignment_length())]
         if rows <= 20:
             lines.extend(self._str_line(rec) for rec in self._records)
         else:
@@ -125,8 +122,7 @@ class Alignment(object):
         """
         # A doctest for __repr__ would be nice, but __class__ comes out differently
         # if run via the __main__ trick.
-        return "<%s instance (%i records of length %i, %s) at %x>" % \
-               (self.__class__, len(self._records),
+        return "<{0!s} instance ({1:d} records of length {2:d}, {3!s}) at {4:x}>".format(self.__class__, len(self._records),
                 self.get_alignment_length(), repr(self._alphabet), id(self))
         # This version is useful for doing eval(repr(alignment)),
         # but it can be VERY long:

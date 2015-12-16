@@ -193,13 +193,13 @@ class FastaWriter(SequentialSequenceWriter):
                 # The description includes the id at the start
                 title = description
             elif description:
-                title = "%s %s" % (id, description)
+                title = "{0!s} {1!s}".format(id, description)
             else:
                 title = id
 
         assert "\n" not in title
         assert "\r" not in title
-        self.handle.write(">%s\n" % title)
+        self.handle.write(">{0!s}\n".format(title))
 
         data = self._get_seq_string(record)  # Catches sequence being None
 
@@ -237,11 +237,11 @@ if __name__ == "__main__":
         print("Descr:" + record.description)
         print(record.seq)
         for feature in record.annotations:
-            print('/%s=%s' % (feature, record.annotations[feature]))
+            print('/{0!s}={1!s}'.format(feature, record.annotations[feature]))
         if record.dbxrefs:
             print("Database cross references:")
             for x in record.dbxrefs:
-                print(" - %s" % x)
+                print(" - {0!s}".format(x))
 
     if os.path.isfile(fna_filename):
         print("--------")

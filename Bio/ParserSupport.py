@@ -118,7 +118,7 @@ class TaggingConsumer(AbstractConsumer):
     def _print_name(self, name, data=None):
         if data is None:
             # Write the name of a section.
-            self._handle.write("%s %s\n" % ("*" * self._colwidth, name))
+            self._handle.write("{0!s} {1!s}\n".format("*" * self._colwidth, name))
         else:
             # Write the tag and line.
             self._handle.write("%-*s: %s\n" % (
@@ -355,23 +355,23 @@ def _fails_conditions(line, start=None, end=None, contains=None, blank=None,
                       has_re=None):
     if start is not None:
         if line[:len(start)] != start:
-            return "Line does not start with '%s':\n%s" % (start, line)
+            return "Line does not start with '{0!s}':\n{1!s}".format(start, line)
     if end is not None:
         if line.rstrip()[-len(end):] != end:
-            return "Line does not end with '%s':\n%s" % (end, line)
+            return "Line does not end with '{0!s}':\n{1!s}".format(end, line)
     if contains is not None:
         if contains not in line:
-            return "Line does not contain '%s':\n%s" % (contains, line)
+            return "Line does not contain '{0!s}':\n{1!s}".format(contains, line)
     if blank is not None:
         if blank:
             if not is_blank_line(line):
-                return "Expected blank line, but got:\n%s" % line
+                return "Expected blank line, but got:\n{0!s}".format(line)
         else:
             if is_blank_line(line):
                 return "Expected non-blank line, but got a blank one"
     if has_re is not None:
         if has_re.search(line) is None:
-            return "Line does not match regex '%s':\n%s" % (
+            return "Line does not match regex '{0!s}':\n{1!s}".format(
                 has_re.pattern, line)
     return None
 

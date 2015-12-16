@@ -45,11 +45,10 @@ class FeatureValueCleaner(object):
         """
         if key_name in self._to_process:
             try:
-                cleaner = getattr(self, "_clean_%s" % key_name)
+                cleaner = getattr(self, "_clean_{0!s}".format(key_name))
                 value = cleaner(value)
             except AttributeError:
-                raise AssertionError("No function to clean key: %s"
-                                     % key_name)
+                raise AssertionError("No function to clean key: {0!s}".format(key_name))
         return value
 
     def _clean_translation(self, value):

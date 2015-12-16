@@ -85,7 +85,7 @@ class NeighborSearch(object):
          - level - char (A, R, C, M, S)
         """
         if level not in entity_levels:
-            raise PDBException("%s: Unknown level" % level)
+            raise PDBException("{0!s}: Unknown level".format(level))
         self.kdt.search(center, radius)
         indices = self.kdt.get_indices()
         n_atom_list = []
@@ -110,7 +110,7 @@ class NeighborSearch(object):
          - level - char (A, R, C, M, S)
         """
         if level not in entity_levels:
-            raise PDBException("%s: Unknown level" % level)
+            raise PDBException("{0!s}: Unknown level".format(level))
         self.kdt.all_search(radius)
         indices = self.kdt.all_get_indices()
         atom_list = self.atom_list
@@ -143,4 +143,4 @@ if __name__ == "__main__":
         # Make a list of 100 atoms
         al = [Atom() for j in range(100)]
         ns = NeighborSearch(al)
-        print("Found %i" % len(ns.search_all(5.0)))
+        print("Found {0:d}".format(len(ns.search_all(5.0))))

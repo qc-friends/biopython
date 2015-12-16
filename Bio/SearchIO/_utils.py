@@ -26,14 +26,14 @@ def get_processor(format, mapping):
         elif not isinstance(format, basestring):
             raise TypeError("Need a string for the file format (lower case)")
         elif format != format.lower():
-            raise ValueError("Format string %r should be lower case" %
-                    format)
+            raise ValueError("Format string {0!r} should be lower case".format(
+                    format))
         else:
             raise ValueError("Unknown format %r. Supported formats are "
                     "%r" % (format, "', '".join(mapping)))
 
     mod_name, obj_name = obj_info
-    mod = __import__('Bio.SearchIO.%s' % mod_name, fromlist=[''])
+    mod = __import__('Bio.SearchIO.{0!s}'.format(mod_name), fromlist=[''])
 
     return getattr(mod, obj_name)
 
@@ -118,7 +118,7 @@ def fragcascade(attr, seq_type, doc=''):
 
     """
     assert seq_type in ('hit', 'query')
-    attr_name = '_%s_%s' % (seq_type, attr)
+    attr_name = '_{0!s}_{1!s}'.format(seq_type, attr)
 
     def getter(self):
         return getattr(self, attr_name)

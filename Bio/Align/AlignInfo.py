@@ -306,8 +306,7 @@ class SummaryInfo(object):
 
                 # if we get a key error, then we've got a problem with alphabets
                 except KeyError:
-                    raise ValueError("Residues %s, %s not found in alphabet %s"
-                                     % (residue1, residue2,
+                    raise ValueError("Residues {0!s}, {1!s} not found in alphabet {2!s}".format(residue1, residue2,
                                         self.alignment._alphabet))
 
         return start_dict
@@ -424,8 +423,7 @@ class SummaryInfo(object):
                         score_dict[this_residue] += weight
                     # if we get a KeyError then we have an alphabet problem
                     except KeyError:
-                        raise ValueError("Residue %s not found in alphabet %s"
-                                     % (this_residue,
+                        raise ValueError("Residue {0!s} not found in alphabet {1!s}".format(this_residue,
                                         self.alignment._alphabet))
 
             pssm_info.append((left_seq[residue_num],
@@ -477,9 +475,8 @@ class SummaryInfo(object):
             chars_to_ignore = []
 
         if start < 0 or end > len(self.alignment[0].seq):
-            raise ValueError("Start (%s) and end (%s) are not in the \
-                    range %s to %s"
-                    % (start, end, 0, len(self.alignment[0].seq)))
+            raise ValueError("Start ({0!s}) and end ({1!s}) are not in the \
+                    range {2!s} to {3!s}".format(start, end, 0, len(self.alignment[0].seq)))
         # determine random expected frequencies, if necessary
         random_expected = None
         if not e_freq_table:
@@ -549,8 +546,7 @@ class SummaryInfo(object):
                     total_count += weight
             # getting a key error means we've got a problem with the alphabet
             except KeyError:
-                raise ValueError("Residue %s not found in alphabet %s"
-                                 % (record.seq[residue_num],
+                raise ValueError("Residue {0!s} not found in alphabet {1!s}".format(record.seq[residue_num],
                                     self.alignment._alphabet))
 
         if total_count == 0:
@@ -669,14 +665,14 @@ class PSSM(object):
 
         # first print out the top header
         for res in all_residues:
-            out += "   %s" % res
+            out += "   {0!s}".format(res)
         out += "\n"
 
         # for each item, write out the substitutions
         for item in self.pssm:
-            out += "%s " % item[0]
+            out += "{0!s} ".format(item[0])
             for res in all_residues:
-                out += " %.1f" % item[1][res]
+                out += " {0:.1f}".format(item[1][res])
 
             out += "\n"
         return out
@@ -695,7 +691,7 @@ def print_info_content(summary_info, fout=None, rep_record=0):
         summary_info.information_content()
     rep_sequence = summary_info.alignment[rep_record].seq
     for pos in sorted(summary_info.ic_vector):
-        fout.write("%d %s %.3f\n" % (pos, rep_sequence[pos],
+        fout.write("{0:d} {1!s} {2:.3f}\n".format(pos, rep_sequence[pos],
                    summary_info.ic_vector[pos]))
 
 if __name__ == "__main__":

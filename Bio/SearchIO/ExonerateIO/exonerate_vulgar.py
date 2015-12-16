@@ -50,7 +50,7 @@ def parse_vulgar_comp(hsp, vulgar_comp):
     for idx, match in enumerate(vcomps):
         label, qstep, hstep = match[0], int(match[1]), int(match[2])
         # check for label, must be recognized
-        assert label in 'MCGF53INS', "Unexpected vulgar label: %r" % label
+        assert label in 'MCGF53INS', "Unexpected vulgar label: {0!r}".format(label)
         # match, codon, or gaps
         if label in 'MCGS':
             # if the previous comp is not an MCGS block, it's the

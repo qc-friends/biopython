@@ -77,7 +77,7 @@ class CodonTable(object):
         """
 
         if self.id:
-            answer = "Table %i" % self.id
+            answer = "Table {0:d}".format(self.id)
         else:
             answer = "Table ID unknown"
         if self.names:
@@ -95,14 +95,14 @@ class CodonTable(object):
             letters = "UCAG"
 
         # Build the table...
-        answer += "\n\n  |" + "|".join("  %s      " % c2 for c2 in letters) + "|"
+        answer += "\n\n  |" + "|".join("  {0!s}      ".format(c2) for c2 in letters) + "|"
         answer += "\n--+" + "+".join("---------" for c2 in letters) + "+--"
         for c1 in letters:
             for c3 in letters:
                 line = c1 + " |"
                 for c2 in letters:
                     codon = c1 + c2 + c3
-                    line += " %s" % codon
+                    line += " {0!s}".format(codon)
                     if codon in self.stop_codons:
                         line += " Stop|"
                     else:
@@ -113,9 +113,9 @@ class CodonTable(object):
                         except TranslationError:
                             amino = "?"
                         if codon in self.start_codons:
-                            line += " %s(s)|" % amino
+                            line += " {0!s}(s)|".format(amino)
                         else:
-                            line += " %s   |" % amino
+                            line += " {0!s}   |".format(amino)
                 line += " " + c3
                 answer += "\n" + line
             answer += "\n--+" + "+".join("---------" for c2 in letters) + "+--"
@@ -206,7 +206,7 @@ def list_possible_proteins(codon, forward_table, ambiguous_nucleotide_values):
                         stops.append(y1 + y2 + y3)
         if stops:
             if possible:
-                raise TranslationError("ambiguous codon '%s' codes " % codon
+                raise TranslationError("ambiguous codon '{0!s}' codes ".format(codon)
                                        + "for both proteins and stop codons")
             # This is a true stop codon - tell the caller about it
             raise KeyError(codon)

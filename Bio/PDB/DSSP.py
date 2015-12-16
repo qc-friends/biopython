@@ -257,7 +257,7 @@ class DSSP(AbstractResiduePropertyMap):
 
         def resid2code(res_id):
             """Serialize a residue's resseq and icode for easy comparison."""
-            return '%s%s' % (res_id[1], res_id[2])
+            return '{0!s}{1!s}'.format(res_id[1], res_id[2])
 
         # Now create a dictionary that maps Residue objects to
         # secondary structure and accessibility, and a list of
@@ -367,7 +367,7 @@ class DSSP(AbstractResiduePropertyMap):
                     aa = 'C'
             # Take care of HETATM again
             if (resname != aa) and (res.id[0] == ' ' or aa != 'X'):
-                raise PDBException("Structure/DSSP mismatch at %s" % res)
+                raise PDBException("Structure/DSSP mismatch at {0!s}".format(res))
 
             dssp_vals = (dssp_index, aa, ss, rel_acc, phi, psi,
                             NH_O_1_relidx, NH_O_1_energy,
@@ -392,7 +392,7 @@ if __name__ == "__main__":
 
     for r in d:
         print(r)
-    print("Handled %i residues" % len(d))
+    print("Handled {0:d} residues".format(len(d)))
     print(sorted(d))
     if ('A', 1) in d:
         print(d[('A', 1)])

@@ -82,8 +82,7 @@ class StructureBuilder(object):
         """
         if self.model.has_id(chain_id):
             self.chain = self.model[chain_id]
-            warnings.warn("WARNING: Chain %s is discontinuous at line %i."
-                          % (chain_id, self.line_counter),
+            warnings.warn("WARNING: Chain {0!s} is discontinuous at line {1:d}.".format(chain_id, self.line_counter),
                           PDBConstructionWarning)
         else:
             self.chain = Chain(chain_id)
@@ -153,8 +152,7 @@ class StructureBuilder(object):
                         # if this exception is ignored, a residue will be missing
                         self.residue = None
                         raise PDBConstructionException(
-                            "Blank altlocs in duplicate residue %s ('%s', %i, '%s')"
-                            % (resname, field, resseq, icode))
+                            "Blank altlocs in duplicate residue {0!s} ('{1!s}', {2:d}, '{3!s}')".format(resname, field, resseq, icode))
                     self.chain.detach_child(res_id)
                     new_residue = Residue(res_id, resname, self.segid)
                     disordered_residue = DisorderedResidue(res_id)

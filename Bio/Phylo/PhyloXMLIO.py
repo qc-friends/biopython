@@ -150,7 +150,7 @@ def _split_namespace(tag):
 
 def _ns(tag, namespace=NAMESPACES['phy']):
     """Format an XML tag with the given namespace."""
-    return '{%s}%s' % (namespace, tag)
+    return '{{{0!s}}}{1!s}'.format(namespace, tag)
 
 
 def _get_child_as(parent, tag, construct):
@@ -652,7 +652,7 @@ def _handle_complex(tag, attribs, subnodes, has_text=False):
         if has_text:
             elem.text = _serialize(obj.value)
         return elem
-    wrapped.__doc__ = "Serialize a %s and its subnodes, in order." % tag
+    wrapped.__doc__ = "Serialize a {0!s} and its subnodes, in order.".format(tag)
     return wrapped
 
 
@@ -661,7 +661,7 @@ def _handle_simple(tag):
         elem = ElementTree.Element(tag)
         elem.text = _serialize(obj)
         return elem
-    wrapped.__doc__ = "Serialize a simple %s node." % tag
+    wrapped.__doc__ = "Serialize a simple {0!s} node.".format(tag)
     return wrapped
 
 

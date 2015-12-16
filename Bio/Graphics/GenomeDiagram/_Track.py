@@ -346,12 +346,12 @@ class Track(object):
             Returns a formatted string with information about the track
         """
         if not verbose:             # Return the short description
-            return "%s" % self      # Use __str__ method instead
+            return "{0!s}".format(self)      # Use __str__ method instead
         else:                       # Return the long description
-            outstr = ["\n<%s: %s>" % (self.__class__, self.name)]
-            outstr.append("%d sets" % len(self._sets))
+            outstr = ["\n<{0!s}: {1!s}>".format(self.__class__, self.name)]
+            outstr.append("{0:d} sets".format(len(self._sets)))
             for key in self._sets:
-                outstr.append("set: %s" % self._sets[key])
+                outstr.append("set: {0!s}".format(self._sets[key]))
             return "\n".join(outstr)
 
     def __getitem__(self, key):
@@ -368,8 +368,8 @@ class Track(object):
 
             Returns a formatted string with information about the Track
         """
-        outstr = ["\n<%s: %s>" % (self.__class__, self.name)]
-        outstr.append("%d sets" % len(self._sets))
+        outstr = ["\n<{0!s}: {1!s}>".format(self.__class__, self.name)]
+        outstr.append("{0:d} sets".format(len(self._sets)))
         return "\n".join(outstr)
 
 

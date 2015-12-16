@@ -19,7 +19,7 @@ class Structure(Entity):
     # Special methods
 
     def __repr__(self):
-        return "<Structure id=%s>" % self.get_id()
+        return "<Structure id={0!s}>".format(self.get_id())
 
     # Private methods
 

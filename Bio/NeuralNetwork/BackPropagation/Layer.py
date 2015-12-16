@@ -51,7 +51,7 @@ class AbstractLayer(object):
     def __str__(self):
         """Debugging output.
         """
-        return "weights: %s" % self.weights
+        return "weights: {0!s}".format(self.weights)
 
     def set_weight(self, this_node, next_node, value):
         """Set a weight value from one node to the next.

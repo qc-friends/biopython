@@ -87,7 +87,7 @@ class Chain(Entity):
         return Entity.__delitem__(self, id)
 
     def __repr__(self):
-        return "<Chain id=%s>" % self.get_id()
+        return "<Chain id={0!s}>".format(self.get_id())
 
     # Public methods
 

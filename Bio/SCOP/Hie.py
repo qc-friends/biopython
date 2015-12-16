@@ -46,7 +46,7 @@ class Record(object):
         line = line.rstrip()        # no trailing whitespace
         columns = line.split('\t')   # separate the tab-delineated cols
         if len(columns) != 3:
-            raise ValueError("I don't understand the format of %s" % line)
+            raise ValueError("I don't understand the format of {0!s}".format(line))
 
         sunid, parent, children = columns
 

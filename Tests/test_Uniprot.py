@@ -273,8 +273,7 @@ class TestUniprot(unittest.TestCase):
                 # TODO - Why is this a list vs str?
                 pass
             elif type(old.annotations[key]) != type(new.annotations[key]):
-                raise TypeError("%s gives %s vs %s" %
-                                 (key, old.annotations[key], new.annotations[key]))
+                raise TypeError("{0!s} gives {1!s} vs {2!s}".format(key, old.annotations[key], new.annotations[key]))
             elif key in ["organism"]:
                 if old.annotations[key] == new.annotations[key]:
                     pass
@@ -286,11 +285,9 @@ class TestUniprot(unittest.TestCase):
             and sorted(old.annotations[key]) == sorted(new.annotations[key]):
                 pass
             else:
-                raise ValueError("%s gives %s vs %s" %
-                                 (key, old.annotations[key], new.annotations[key]))
+                raise ValueError("{0!s} gives {1!s} vs {2!s}".format(key, old.annotations[key], new.annotations[key]))
         self.assertEqual(len(old.features), len(new.features),
-                         "Features in %s, %i vs %i" %
-                         (old.id, len(old.features), len(new.features)))
+                         "Features in {0!s}, {1:d} vs {2:d}".format(old.id, len(old.features), len(new.features)))
         for f1, f2 in zip(old.features, new.features):
             """
             self.assertEqual(f1.location.nofuzzy_start, f2.location.nofuzzy_start,
@@ -301,8 +298,7 @@ class TestUniprot(unittest.TestCase):
                              (f1.location, f1.type, f2.location, f2.type))
             """
             self.assertEqual(repr(f1.location), repr(f2.location),
-                            "%s %s vs %s %s" %
-                            (f1.location, f1.type, f2.location, f2.type))
+                            "{0!s} {1!s} vs {2!s} {3!s}".format(f1.location, f1.type, f2.location, f2.type))
 
     def test_Q13639(self):
         """Compare SwissProt text and uniprot XML versions of Q13639."""

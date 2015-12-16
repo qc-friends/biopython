@@ -331,7 +331,7 @@ class Hmmer3TextParser(object):
             if self.line.startswith('>>') or \
                     self.line.startswith('Internal pipeline'):
                 return hsp_list
-            assert self.line.startswith('  == domain %i' % (dom_counter + 1))
+            assert self.line.startswith('  == domain {0:d}'.format((dom_counter + 1)))
             # alias hsp to local var
             # but note that we're still changing the attrs of the actual
             # hsp inside the qresult as we're not creating a copy

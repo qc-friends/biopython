@@ -83,16 +83,14 @@ class Schema(object):
             try:
                 letter_matches = self._ambiguity_info[motif_letter]
             except KeyError:
-                raise KeyError("No match information for letter %s"
-                               % motif_letter)
+                raise KeyError("No match information for letter {0!s}".format(motif_letter))
 
             if len(letter_matches) > 1:
                 regexp_match = "[" + letter_matches + "]"
             elif len(letter_matches) == 1:
                 regexp_match = letter_matches
             else:
-                raise ValueError("Unexpected match information %s"
-                                 % letter_matches)
+                raise ValueError("Unexpected match information {0!s}".format(letter_matches))
 
             regexp_string += regexp_match
 
@@ -111,8 +109,7 @@ class Schema(object):
             try:
                 letter_matches = self._ambiguity_info[motif_letter]
             except KeyError:
-                raise KeyError("No match information for letter %s"
-                               % motif_letter)
+                raise KeyError("No match information for letter {0!s}".format(motif_letter))
 
             if len(letter_matches) > 1:
                 ambig_positions.append(motif_letter_pos)
@@ -683,8 +680,7 @@ class SchemaFactory(object):
 
             # check for big loops in which we can't find a new schema
             assert num_tries < 150, \
-                   "Could not generate schema in %s tries from %s with %s" \
-                   % (num_tries, motif_list, cur_schemas)
+                   "Could not generate schema in {0!s} tries from {1!s} with {2!s}".format(num_tries, motif_list, cur_schemas)
 
         return new_schema, matching_motifs
 

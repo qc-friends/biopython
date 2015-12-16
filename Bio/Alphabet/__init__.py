@@ -169,7 +169,7 @@ class AlphabetEncoder(object):
         return getattr(self.alphabet, key)
 
     def __repr__(self):
-        return "%s(%r, %r)" % (self.__class__.__name__, self.alphabet,
+        return "{0!s}({1!r}, {2!r})".format(self.__class__.__name__, self.alphabet,
                                self.new_letters)
 
     def contains(self, other):
@@ -242,7 +242,7 @@ def _get_base_alphabet(alphabet):
     while isinstance(a, AlphabetEncoder):
         a = a.alphabet
     assert isinstance(a, Alphabet), \
-           "Invalid alphabet found, %s" % repr(a)
+           "Invalid alphabet found, {0!s}".format(repr(a))
     return a
 
 

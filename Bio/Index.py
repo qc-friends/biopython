@@ -61,8 +61,7 @@ class _ShelveIndex(dict):
             if version is None:
                 raise IOError("Unrecognized index format")
             elif version != self.__version:
-                raise IOError("Version %s doesn't match my version %s"
-                              % (version, self.__version))
+                raise IOError("Version {0!s} doesn't match my version {1!s}".format(version, self.__version))
 
     def __del__(self):
         if 'data' in self.__dict__:
@@ -96,8 +95,7 @@ class _InMemoryIndex(dict):
             with open(indexname) as handle:
                 version = self._toobj(handle.readline().rstrip())
                 if version != self.__version:
-                    raise IOError("Version %s doesn't match my version %s"
-                                  % (version, self.__version))
+                    raise IOError("Version {0!s} doesn't match my version {1!s}".format(version, self.__version))
                 for line in handle:
                     key, value = line.split()
                     key, value = self._toobj(key), self._toobj(value)
@@ -123,10 +121,9 @@ class _InMemoryIndex(dict):
     def __del__(self):
         if self.__changed:
             with open(self._indexname, 'w') as handle:
-                handle.write("%s\n" % self._tostr(self.__version))
+                handle.write("{0!s}\n".format(self._tostr(self.__version)))
                 for key, value in self.items():
-                    handle.write("%s %s\n" %
-                                 (self._tostr(key), self._tostr(value)))
+                    handle.write("{0!s} {1!s}\n".format(self._tostr(key), self._tostr(value)))
 
     def _tostr(self, obj):
         # I need a representation of the object that's saveable to

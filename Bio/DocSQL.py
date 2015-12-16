@@ -68,8 +68,7 @@ class QueryRow(list):
         try:
             return self[self._names_hash[name]]
         except (KeyError, AttributeError):
-            raise AttributeError("'%s' object has no attribute '%s'"
-                                 % (self.__class__.__name__, name))
+            raise AttributeError("'{0!s}' object has no attribute '{1!s}'".format(self.__class__.__name__, name))
 
     def __setattr__(self, name, value):
         try:
@@ -114,7 +113,7 @@ class Query(object):
         return IterationCursor(self, self.connection)
 
     def __repr__(self):
-        return "%s(message=%s)" % (self.__class__.__name__, self.message)
+        return "{0!s}(message={1!s})".format(self.__class__.__name__, self.message)
 
     def cursor(self):
         return iter(self).cursor
@@ -137,8 +136,8 @@ class IterationCursor(object):
         self.cursor = connection.cursor()
         self.row_class = query.row_class
         if query.diagnostics:
-            sys.stderr.write("Query statement: %s\n" % query.statement)
-            sys.stderr.write("Query params: %s\n" % query.params)
+            sys.stderr.write("Query statement: {0!s}\n".format(query.statement))
+            sys.stderr.write("Query params: {0!s}\n".format(query.params))
         self.cursor.execute(query.statement, query.params)
 
     def __next__(self):

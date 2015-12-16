@@ -251,10 +251,10 @@ class GraphData(object):
 
             Returns a string describing the graph data
         """
-        outstr = ["\nGraphData: %s, ID: %s" % (self.name, self.id)]
-        outstr.append("Number of points: %d" % len(self.data))
-        outstr.append("Mean data value: %s" % self.mean())
-        outstr.append("Sample SD: %.3f" % self.stdev())
-        outstr.append("Minimum: %s\n1Q: %s\n2Q: %s\n3Q: %s\nMaximum: %s" % self.quartiles())
-        outstr.append("Sequence Range: %s..%s" % self.range())
+        outstr = ["\nGraphData: {0!s}, ID: {1!s}".format(self.name, self.id)]
+        outstr.append("Number of points: {0:d}".format(len(self.data)))
+        outstr.append("Mean data value: {0!s}".format(self.mean()))
+        outstr.append("Sample SD: {0:.3f}".format(self.stdev()))
+        outstr.append("Minimum: {0!s}\n1Q: {1!s}\n2Q: {2!s}\n3Q: {3!s}\nMaximum: {4!s}".format(*self.quartiles()))
+        outstr.append("Sequence Range: {0!s}..{1!s}".format(*self.range()))
         return "\n".join(outstr)

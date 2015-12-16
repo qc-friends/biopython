@@ -59,11 +59,11 @@ class RebaseUpdate(FancyURLopener):
 
     def getfiles(self, *files):
         for file in self.update(*files):
-            print('copying %s' % file)
+            print('copying {0!s}'.format(file))
             fn = os.path.basename(file)
             # filename = os.path.join(Rebase, fn)
             filename = os.path.join(os.getcwd(), fn)
-            print('to %s' % filename)
+            print('to {0!s}'.format(filename))
             self.retrieve(file, filename)
         self.close()
         return
@@ -93,8 +93,8 @@ class RebaseUpdate(FancyURLopener):
 class FtpNameError(ValueError):
 
     def __init__(self, which_server):
-        print(" In order to connect to %s ftp server, you must provide a name.\
-        \n Please edit Bio.Restriction.RanaConfig\n" % which_server)
+        print(" In order to connect to {0!s} ftp server, you must provide a name.\
+        \n Please edit Bio.Restriction.RanaConfig\n".format(which_server))
         sys.exit()
 
 
@@ -102,9 +102,9 @@ class FtpPasswordError(ValueError):
 
     def __init__(self, which_server):
         print("\n\
-        \n In order to connect to %s ftp server, you must provide a password.\
+        \n In order to connect to {0!s} ftp server, you must provide a password.\
         \n Use the --e-mail switch to enter your e-mail address.\
-        \n\n" % which_server)
+        \n\n".format(which_server))
         sys.exit()
 
 
@@ -112,11 +112,11 @@ class ConnectionError(IOError):
 
     def __init__(self, which_server):
         print('\
-        \n Unable to connect to the %s ftp server, make sure your computer\
+        \n Unable to connect to the {0!s} ftp server, make sure your computer\
         \n is connected to the internet and that you have correctly configured\
         \n the ftp proxy.\
         \n Use the --proxy switch to enter the address of your proxy\
-        \n' % which_server)
+        \n'.format(which_server))
         sys.exit()
 
 

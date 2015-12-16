@@ -48,16 +48,15 @@ class CreatePopulationTest(unittest.TestCase):
         new_pop = Organism.function_population(genome_generator,
                                                num_orgs, fitness_calculator)
 
-        assert len(new_pop) == num_orgs, "Expected %s organisms, got %s" \
-               % (num_orgs, len(new_pops))
+        assert len(new_pop) == num_orgs, "Expected {0!s} organisms, got {1!s}".format(num_orgs, len(new_pops))
 
         for org in new_pop:
             assert isinstance(org, Organism.Organism), \
-                   "Expected to get an organism, got %r" % org
+                   "Expected to get an organism, got {0!r}".format(org)
 
             exp_fit = fitness_calculator(org.genome)
             assert org.fitness == exp_fit, \
-                   "Expected fitness of %s, got %s" % (org.fitness, exp_fit)
+                   "Expected fitness of {0!s}, got {1!s}".format(org.fitness, exp_fit)
 
     def test_random_population(self):
         """Create a population randomly from a alphabet.
@@ -67,19 +66,18 @@ class CreatePopulationTest(unittest.TestCase):
         new_pop = Organism.random_population(self.alphabet, genome_size,
                                              num_orgs, fitness_calculator)
 
-        assert len(new_pop) == num_orgs, "Expected %s organisms, got %s" \
-               % (num_orgs, len(new_pops))
+        assert len(new_pop) == num_orgs, "Expected {0!s} organisms, got {1!s}".format(num_orgs, len(new_pops))
 
         for org in new_pop:
             assert isinstance(org, Organism.Organism), \
-                   "Expected to get an organism, got %r" % org
+                   "Expected to get an organism, got {0!r}".format(org)
 
             exp_fit = fitness_calculator(org.genome)
             assert org.fitness == exp_fit, \
-                   "Expected fitness of %s, got %s" % (org.fitness, exp_fit)
+                   "Expected fitness of {0!s}, got {1!s}".format(org.fitness, exp_fit)
 
             assert len(org.genome) == genome_size, \
-                   "Expected genome size of %s, got %s" % (len(org.genome),
+                   "Expected genome size of {0!s}, got {1!s}".format(len(org.genome),
                                                            genome_size)
 
     def test_random_population_types(self):
@@ -132,14 +130,14 @@ class OrganismTest(unittest.TestCase):
         """Test the ability to deal with the fitness of the genome.
         """
         assert self.organism.fitness == 1234, \
-               "Unexpected fitness %s" % self.organism.fitness
+               "Unexpected fitness {0!s}".format(self.organism.fitness)
 
         new_genome = MutableSeq("1111", self.alphabet)
         self.organism.genome = new_genome
         self.organism.recalculate_fitness()
 
         assert self.organism.fitness == 1111, \
-               "Unexpected fitness %s" % self.organism.fitness
+               "Unexpected fitness {0!s}".format(self.organism.fitness)
 
     def test_organism_copy(self):
         """Test copying of organisms.

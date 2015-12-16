@@ -199,7 +199,7 @@ class MarkovModelBuilder(object):
         # ensure that all referenced states are valid
         for state in initial_prob:
             assert state in self._state_alphabet.letters, \
-                   "State %s was not found in the sequence alphabet" % state
+                   "State {0!s} was not found in the sequence alphabet".format(state)
 
         # distribute the residual probability, if any
         num_states_not_set =\
@@ -348,7 +348,7 @@ class MarkovModelBuilder(object):
         # check the sanity of adding these states
         for state in [from_state, to_state]:
             assert state in self._state_alphabet.letters, \
-                   "State %s was not found in the sequence alphabet" % state
+                   "State {0!s} was not found in the sequence alphabet".format(state)
 
         # ensure that the states are not already set
         if (from_state, to_state) not in self.transition_prob and \
@@ -363,8 +363,7 @@ class MarkovModelBuilder(object):
                 pseudcount = self.DEFAULT_PSEUDO
             self.transition_pseudo[(from_state, to_state)] = pseudocount
         else:
-            raise KeyError("Transition from %s to %s is already allowed."
-                           % (from_state, to_state))
+            raise KeyError("Transition from {0!s} to {1!s} is already allowed.".format(from_state, to_state))
 
     def destroy_transition(self, from_state, to_state):
         """Restrict transitions between the two states.
@@ -376,8 +375,7 @@ class MarkovModelBuilder(object):
             del self.transition_prob[(from_state, to_state)]
             del self.transition_pseudo[(from_state, to_state)]
         except KeyError:
-            raise KeyError("Transition from %s to %s is already disallowed."
-                           % (from_state, to_state))
+            raise KeyError("Transition from {0!s} to {1!s} is already disallowed.".format(from_state, to_state))
 
     def set_transition_score(self, from_state, to_state, probability):
         """Set the probability of a transition between two states.
@@ -388,8 +386,7 @@ class MarkovModelBuilder(object):
         if (from_state, to_state) in self.transition_prob:
             self.transition_prob[(from_state, to_state)] = probability
         else:
-            raise KeyError("Transition from %s to %s is not allowed."
-                           % (from_state, to_state))
+            raise KeyError("Transition from {0!s} to {1!s} is not allowed.".format(from_state, to_state))
 
     def set_transition_pseudocount(self, from_state, to_state, count):
         """Set the default pseudocount for a transition.
@@ -406,8 +403,7 @@ class MarkovModelBuilder(object):
         if (from_state, to_state) in self.transition_pseudo:
             self.transition_pseudo[(from_state, to_state)] = count
         else:
-            raise KeyError("Transition from %s to %s is not allowed."
-                           % (from_state, to_state))
+            raise KeyError("Transition from {0!s} to {1!s} is not allowed.".format(from_state, to_state))
 
     # --- functions to deal with emissions from the sequence
 
@@ -420,8 +416,7 @@ class MarkovModelBuilder(object):
         if (seq_state, emission_state) in self.emission_prob:
             self.emission_prob[(seq_state, emission_state)] = probability
         else:
-            raise KeyError("Emission of %s from %s is not allowed."
-                           % (emission_state, seq_state))
+            raise KeyError("Emission of {0!s} from {1!s} is not allowed.".format(emission_state, seq_state))
 
     def set_emission_pseudocount(self, seq_state, emission_state, count):
         """Set the default pseudocount for an emission.
@@ -438,8 +433,7 @@ class MarkovModelBuilder(object):
         if (seq_state, emission_state) in self.emission_pseudo:
             self.emission_pseudo[(seq_state, emission_state)] = count
         else:
-            raise KeyError("Emission of %s from %s is not allowed."
-                           % (emission_state, seq_state))
+            raise KeyError("Emission of {0!s} from {1!s} is not allowed.".format(emission_state, seq_state))
 
 
 class HiddenMarkovModel(object):

@@ -61,8 +61,8 @@ def simple_matrix_print(matrix):
     versions of the underlying libraries or the compilation options
     they used).
     """
-    return "[%s]" % "\n ".join("[%s]" % " ".join("% 1.4f" % v for v in row)
-                               for row in matrix)
+    return "[{0!s}]".format("\n ".join("[{0!s}]".format(" ".join("{0: 1.4f}".format(v) for v in row))
+                               for row in matrix))
 
 
 # output results
@@ -70,4 +70,4 @@ print(simple_matrix_print(y_on_x1))
 print("")
 print(simple_matrix_print(y_on_x2))
 print("")
-print("%.2f" % rms)
+print("{0:.2f}".format(rms))

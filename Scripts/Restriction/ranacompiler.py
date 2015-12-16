@@ -287,12 +287,12 @@ class newenzyme(object):
         cls.charac = (cls.fst5, cls.fst3, cls.scd5, cls.scd3, cls.site)
         if not target[2] and cls.suppl:
             supp = ', '.join(suppliersdict[s][0] for s in cls.suppl)
-            print('WARNING : It seems that %s is both commercially available\
+            print('WARNING : It seems that {0!s} is both commercially available\
             \n\tand its characteristics are unknown. \
             \n\tThis seems counter-intuitive.\
             \n\tThere is certainly an error either in ranacompiler or\
             \n\tin this REBASE release.\
-            \n\tThe supplier is : %s.' % (name, supp))
+            \n\tThe supplier is : {1!s}.'.format(name, supp))
         return
 
 
@@ -348,10 +348,10 @@ class TypeCompiler(object):
 
             class klass(type):
                 def __new__(cls):
-                    return type.__new__(cls, 'type%i'%n, ty, dct)
+                    return type.__new__(cls, 'type{0:d}'.format(n), ty, dct)
 
                 def __init__(cls):
-                    super(klass, cls).__init__('type%i'%n, ty, dct)
+                    super(klass, cls).__init__('type{0:d}'.format(n), ty, dct)
 
             yield klass()
             n+=1
@@ -472,7 +472,7 @@ class DictionaryBuilder(object):
         #
         #   How many enzymes this time?
         #
-        print('\nThe new database contains %i enzymes.\n' % len(classdict))
+        print('\nThe new database contains {0:d} enzymes.\n'.format(len(classdict)))
         #
         #   the dictionaries are done. Build the file
         #
@@ -487,9 +487,9 @@ class DictionaryBuilder(object):
                 results.write("def _temp():\n")
                 results.write("    return {\n")
                 for key, value in classdict[name].items():
-                    results.write("        %s: %s,\n" % (repr(key), repr(value)))
+                    results.write("        {0!s}: {1!s},\n".format(repr(key), repr(value)))
                 results.write("    }\n")
-                results.write("rest_dict[%s] = _temp()\n" % repr(name))
+                results.write("rest_dict[{0!s}] = _temp()\n".format(repr(name)))
                 results.write("\n")
             print('OK.\n')
             print('Writing the dictionary containing the suppliers data...')
@@ -498,9 +498,9 @@ class DictionaryBuilder(object):
                 results.write("def _temp():\n")
                 results.write("    return (\n")
                 for value in suppliersdict[name]:
-                    results.write("        %s,\n" % repr(value))
+                    results.write("        {0!s},\n".format(repr(value)))
                 results.write("    )\n")
-                results.write("suppliers[%s] = _temp()\n" % repr(name))
+                results.write("suppliers[{0!s}] = _temp()\n".format(repr(name)))
                 results.write("\n")
             print('OK.\n')
             print('Writing the dictionary containing the Restriction types...')
@@ -509,9 +509,9 @@ class DictionaryBuilder(object):
                 results.write("def _temp():\n")
                 results.write("    return (\n")
                 for value in typedict[name]:
-                    results.write("        %s,\n" % repr(value))
+                    results.write("        {0!s},\n".format(repr(value)))
                 results.write("    )\n")
-                results.write("typedict[%s] = _temp()\n" % repr(name))
+                results.write("typedict[{0!s}] = _temp()\n".format(repr(name)))
                 results.write("\n")
             # I had wanted to do "del _temp" at each stage (just for clarity), but
             # that pushed the code size just over the Jython JVM limit. We include
@@ -568,7 +568,7 @@ class DictionaryBuilder(object):
             print('\
             \n\t WARNING : Impossible to install the new dictionary.\
             \n\t Are you sure you have write permission to the folder :\n\
-            \n\t %s ?\n\n' % os.path.split(old)[0])
+            \n\t {0!s} ?\n\n'.format(os.path.split(old)[0]))
             return self.no_install()
         return
 
@@ -597,12 +597,12 @@ class DictionaryBuilder(object):
         \n\t\tInstallation : No.\n\
         \n You will find the newly created 'Restriction_Dictionary.py' file\
         \n in the folder : \n\
-        \n\t%s\n\
+        \n\t{0!s}\n\
         \n Make a copy of 'Restriction_Dictionary.py' and place it with \
         \n the other Restriction libraries.\n\
         \n note : \
         \n This folder should be :\n\
-        \n\t%s\n" % places)
+        \n\t{1!s}\n".format(*places))
         print('\n ' +'*'*78 + '\n')
         return
 
@@ -630,7 +630,7 @@ class DictionaryBuilder(object):
             #
             #   nothing to be done
             #
-            print('\n Using the files : %s'% ', '.join(emboss_now))
+            print('\n Using the files : {0!s}'.format(', '.join(emboss_now)))
             return tuple(open(os.path.join(base, n)) for n in emboss_now)
         else:
             #
@@ -645,7 +645,7 @@ class DictionaryBuilder(object):
                 updt.getfiles()
                 updt.close()
                 print('\n Update complete. Creating the dictionaries.\n')
-                print('\n Using the files : %s'% ', '.join(emboss_now))
+                print('\n Using the files : {0!s}'.format(', '.join(emboss_now)))
                 return tuple(open(os.path.join(base, n)) for n in emboss_now)
             else:
                 #
@@ -663,7 +663,7 @@ class DictionaryBuilder(object):
                             pass
                         raise NotFoundError
                     except NotFoundError:
-                        print("\nNo %s file found. Upgrade is impossible.\n"%name)
+                        print("\nNo {0!s} file found. Upgrade is impossible.\n".format(name))
                         sys.exit()
                     continue
                 pass
@@ -689,18 +689,18 @@ class DictionaryBuilder(object):
             last[0], last[-1] = last[-1], last[0]
 
         for number in last:
-            files = [(name, name+'.%s'%number) for name in embossnames]
+            files = [(name, name+'.{0!s}'.format(number)) for name in embossnames]
             strmess = '\nLast EMBOSS files found are :\n'
             try:
                 for name, file in files:
                     if os.path.isfile(os.path.join(base, file)):
-                        strmess += '\t%s.\n'%file
+                        strmess += '\t{0!s}.\n'.format(file)
                     else:
                         raise ValueError
                 print(strmess)
-                emboss_e = open(os.path.join(base, 'emboss_e.%s'%number), 'r')
-                emboss_r = open(os.path.join(base, 'emboss_r.%s'%number), 'r')
-                emboss_s = open(os.path.join(base, 'emboss_s.%s'%number), 'r')
+                emboss_e = open(os.path.join(base, 'emboss_e.{0!s}'.format(number)), 'r')
+                emboss_r = open(os.path.join(base, 'emboss_r.{0!s}'.format(number)), 'r')
+                emboss_s = open(os.path.join(base, 'emboss_s.{0!s}'.format(number)), 'r')
                 return emboss_e, emboss_r, emboss_s
             except ValueError:
                 continue
@@ -751,9 +751,9 @@ class DictionaryBuilder(object):
             #   new enzymes be added, this might be modified.
             #
             print('\
-            \nWARNING : %s cut twice with different overhang length each time.\
+            \nWARNING : {0!s} cut twice with different overhang length each time.\
             \n\tUnable to deal with this behaviour. \
-            \n\tThis enzyme will not be included in the database. Sorry.' %name)
+            \n\tThis enzyme will not be included in the database. Sorry.'.format(name))
             print('\tChecking...')
             raise OverhangError
         if 0 <= fst5 <= size and 0 <= fst3 <= size:
@@ -962,9 +962,9 @@ class DictionaryBuilder(object):
                 except OverhangError:   # overhang error
                     n = name            # do not include the enzyme
                     if not bl[2]:
-                        print('Anyway, %s is not commercially available.\n' %n)
+                        print('Anyway, {0!s} is not commercially available.\n'.format(n))
                     else:
-                        print('Unfortunately, %s is commercially available.\n'%n)
+                        print('Unfortunately, {0!s} is commercially available.\n'.format(n))
 
                     continue
                 # Hyphens and dots can't be used as a Python name, nor as a
@@ -974,7 +974,7 @@ class DictionaryBuilder(object):
                     #
                     #   deal with TaqII and its two sites.
                     #
-                    print('\nWARNING : %s has two different sites.\n' % name)
+                    print('\nWARNING : {0!s} has two different sites.\n'.format(name))
                     other = line[0].replace("-", "_").replace(".", "_")
                     dna = Seq(line[1], generic_dna)
                     sense1 = regex(dna)

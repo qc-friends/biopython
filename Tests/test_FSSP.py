@@ -11,16 +11,15 @@ import os
 
 test_file = os.path.join('FSSP', '1cnv.fssp')
 f = sys.stdout
-f.write("\nRead in %s\n" % os.path.basename(test_file))
+f.write("\nRead in {0!s}\n".format(os.path.basename(test_file)))
 handle = open(test_file)
 head_rec, sum_rec, align_rec = FSSP.read_fssp(handle)
 handle.close()
 f.write("...1cnv.fssp read\n")
 for i in ["author", "compnd", "database", "header", "nalign",
           "pdbid", "seqlength", "source"]:
-    f.write('head_rec.%s %s\n' % (i, str(getattr(head_rec, i))))
-f.write("\nlen(sum_rec) = %d; head_rec.nalign = %d\n" %
-        (len(sum_rec), head_rec.nalign))
+    f.write('head_rec.{0!s} {1!s}\n'.format(i, str(getattr(head_rec, i))))
+f.write("\nlen(sum_rec) = {0:d}; head_rec.nalign = {1:d}\n".format(len(sum_rec), head_rec.nalign))
 f.write("The above two numbers should be the same\n")
 f.write("\nCreate a multiple alignment instance using Bio.Align\n")
 alignment = FSSPTools.mult_align(sum_rec, align_rec)
@@ -40,12 +39,12 @@ f.write("...Done\n")
 
 f.write("\nFilter by name\n")
 name_list = ['2hvm0', '1hvq0', '1nar0', '2ebn0']
-f.write("\nname list %s\n" % str(name_list))
+f.write("\nname list {0!s}\n".format(str(name_list)))
 sum_newnames, align_newnames = FSSPTools.name_filter(sum_rec, align_rec,
                                                      name_list)
 for key in sorted(sum_newnames):
-    f.write("%s : %s\n" % (key, sum_newnames[key]))
+    f.write("{0!s} : {1!s}\n".format(key, sum_newnames[key]))
 
 new_dict = align_newnames['0P168'].pos_align_dict
 for key in sorted(new_dict):
-    f.write("%s : %s\n" % (key, new_dict[key]))
+    f.write("{0!s} : {1!s}\n".format(key, new_dict[key]))

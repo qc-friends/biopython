@@ -47,7 +47,7 @@ def IgIterator(handle, alphabet=single_letter_alphabet):
         # Now iterate over the records
         if line[0] != ";":
             raise ValueError(
-                "Records should start with ';' and not:\n%s" % repr(line))
+                "Records should start with ';' and not:\n{0!s}".format(repr(line)))
 
         # Try and agree with SeqRecord convention from the GenBank parser,
         # (and followed in the SwissProt parser) which stores the comments
@@ -100,7 +100,7 @@ if __name__ == "__main__":
                 print("-" * len(filename))
                 with open(os.path.join(path, filename)) as handle:
                     for record in IgIterator(handle):
-                        print("%s %i" % (record.id, len(record)))
+                        print("{0!s} {1:d}".format(record.id, len(record)))
         print("Done")
     else:
         print("Could not find input files")

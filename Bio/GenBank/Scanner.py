@@ -176,7 +176,7 @@ class InsdcScanner(object):
                 line = self.handle.readline()
                 continue
             if len(line) < self.FEATURE_QUALIFIER_INDENT:
-                warnings.warn("line too short to contain a feature: %r" % line,
+                warnings.warn("line too short to contain a feature: {0!r}".format(line),
                               BiopythonParserWarning)
                 line = self.handle.readline()
                 continue
@@ -194,7 +194,7 @@ class InsdcScanner(object):
                     # over indenting the location and qualifiers.
                     feature_key, line = line[2:].strip().split(None, 1)
                     feature_lines = [line]
-                    warnings.warn("Overindented %s feature?" % feature_key,
+                    warnings.warn("Overindented {0!s} feature?".format(feature_key),
                                   BiopythonParserWarning)
                 else:
                     feature_key = line[2:self.FEATURE_QUALIFIER_INDENT].strip()
@@ -303,7 +303,7 @@ class InsdcScanner(object):
                     elif value == '"':
                         # One single quote
                         if self.debug:
-                            print("Single quote %s:%s" % (key, value))
+                            print("Single quote {0!s}:{1!s}".format(key, value))
                         # DO NOT remove the quote...
                         qualifiers.append((key, value))
                     elif value[0] == '"':
@@ -329,8 +329,7 @@ class InsdcScanner(object):
             return (feature_key, feature_location, qualifiers)
         except StopIteration:
             # Bummer
-            raise ValueError("Problem with '%s' feature:\n%s"
-                             % (feature_key, "\n".join(lines)))
+            raise ValueError("Problem with '{0!s}' feature:\n{1!s}".format(feature_key, "\n".join(lines)))
 
     def parse_footer(self):
         """returns a tuple containing a list of any misc strings, and the sequence"""
@@ -583,7 +582,7 @@ class EmblScanner(InsdcScanner):
     def parse_footer(self):
         """returns a tuple containing a list of any misc strings, and the sequence"""
         assert self.line[:self.HEADER_WIDTH].rstrip() in self.SEQUENCE_HEADERS, \
-            "Eh? '%s'" % self.line
+            "Eh? '{0!s}'".format(self.line)
 
         # Note that the SQ line can be split into several lines...
         misc_lines = []
@@ -595,7 +594,7 @@ class EmblScanner(InsdcScanner):
             self.line = self.line.rstrip()
 
         assert self.line[:self.HEADER_WIDTH] == " " * self.HEADER_WIDTH \
-            or self.line.strip() == '//', "Unexpected content after SQ or CO line: %r" % self.line
+            or self.line.strip() == '//', "Unexpected content after SQ or CO line: {0!r}".format(self.line)
 
         seq_lines = []
         line = self.line
@@ -713,7 +712,7 @@ class EmblScanner(InsdcScanner):
 
     def _feed_seq_length(self, consumer, text):
         length_parts = text.split()
-        assert len(length_parts) == 2, "Invalid sequence length string %r" % text
+        assert len(length_parts) == 2, "Invalid sequence length string {0!r}".format(text)
         assert length_parts[1].upper() in ["BP", "BP.", "AA", "AA."]
         consumer.size(length_parts[0])
 
@@ -757,7 +756,7 @@ class EmblScanner(InsdcScanner):
                 # and '160-550, 904-1055' becomes '(bases 160 to 550; 904 to 1055)'
                 # Note could be multi-line, and end with a comma
                 parts = [bases.replace("-", " to ").strip() for bases in data.split(",") if bases.strip()]
-                consumer.reference_bases("(bases %s)" % "; ".join(parts))
+                consumer.reference_bases("(bases {0!s})".format("; ".join(parts)))
             elif line_type == 'RT':
                 # Remove the enclosing quotes and trailing semi colon.
                 # Note the title can be split over multiple lines.
@@ -803,7 +802,7 @@ class EmblScanner(InsdcScanner):
                 parts = data.rstrip(".").split(";")
                 # Turn it into "database_identifier:primary_identifier" to
                 # mimic the GenBank parser. e.g. "MGI:98599"
-                consumer.dblink("%s:%s" % (parts[0].strip(),
+                consumer.dblink("{0!s}:{1!s}".format(parts[0].strip(),
                                            parts[1].strip()))
             elif line_type == 'RA':
                 # Remove trailing ; at end of authors list
@@ -834,7 +833,7 @@ class EmblScanner(InsdcScanner):
                 getattr(consumer, consumer_dict[line_type])(data)
             else:
                 if self.debug:
-                    print("Ignoring EMBL header line:\n%s" % line)
+                    print("Ignoring EMBL header line:\n{0!s}".format(line))
 
     def _feed_misc_lines(self, consumer, lines):
         # TODO - Should we do something with the information on the SQ line(s)?
@@ -980,7 +979,7 @@ class GenBankScanner(InsdcScanner):
     def parse_footer(self):
         """returns a tuple containing a list of any misc strings, and the sequence"""
         assert self.line[:self.HEADER_WIDTH].rstrip() in self.SEQUENCE_HEADERS, \
-            "Eh? '%s'" % self.line
+            "Eh? '{0!s}'".format(self.line)
 
         misc_lines = []
         while self.line[:self.HEADER_WIDTH].rstrip() in self.SEQUENCE_HEADERS \
@@ -993,7 +992,7 @@ class GenBankScanner(InsdcScanner):
             self.line = self.line
 
         assert self.line[:self.HEADER_WIDTH].rstrip() not in self.SEQUENCE_HEADERS, \
-            "Eh? '%s'" % self.line
+            "Eh? '{0!s}'".format(self.line)
 
         # Now just consume the sequence lines until reach the // marker
         # or a CONTIG line
@@ -1022,7 +1021,7 @@ class GenBankScanner(InsdcScanner):
                               BiopythonParserWarning)
                 line = line[1:]
                 if len(line) > 9 and line[9:10] != ' ':
-                    raise ValueError("Sequence line mal-formed, '%s'" % line)
+                    raise ValueError("Sequence line mal-formed, '{0!s}'".format(line))
             seq_lines.append(line[10:])  # remove spaces later
             line = self.handle.readline()
 
@@ -1426,7 +1425,7 @@ class GenBankScanner(InsdcScanner):
                             break
                 else:
                     if self.debug:
-                        print("Ignoring GenBank header line:\n" % line)
+                        print("Ignoring GenBank header line:\n".format(*line))
                     # Read in next line
                     line = next(line_iter)
         except StopIteration:
@@ -1820,22 +1819,22 @@ SQ   Sequence 1859 BP; 609 A; 314 C; 355 G; 581 T; 0 other;
     print("=================")
     g = GenBankScanner()
     for record in g.parse_records(StringIO(gbk_example), do_features=False):
-        print("%s %s %s" % (record.id, record.name, record.description))
+        print("{0!s} {1!s} {2!s}".format(record.id, record.name, record.description))
         print(record.seq)
 
     g = GenBankScanner()
     for record in g.parse_records(StringIO(gbk_example), do_features=True):
-        print("%s %s %s" % (record.id, record.name, record.description))
+        print("{0!s} {1!s} {2!s}".format(record.id, record.name, record.description))
         print(record.seq)
 
     g = GenBankScanner()
     for record in g.parse_records(StringIO(gbk_example2), do_features=False):
-        print("%s %s %s" % (record.id, record.name, record.description))
+        print("{0!s} {1!s} {2!s}".format(record.id, record.name, record.description))
         print(record.seq)
 
     g = GenBankScanner()
     for record in g.parse_records(StringIO(gbk_example2), do_features=True):
-        print("%s %s %s" % (record.id, record.name, record.description))
+        print("{0!s} {1!s} {2!s}".format(record.id, record.name, record.description))
         print(record.seq)
 
     print("")
@@ -1851,5 +1850,5 @@ SQ   Sequence 1859 BP; 609 A; 314 C; 355 G; 581 T; 0 other;
     print("==============")
     e = EmblScanner()
     for record in e.parse_records(StringIO(embl_example), do_features=True):
-        print("%s %s %s" % (record.id, record.name, record.description))
+        print("{0!s} {1!s} {2!s}".format(record.id, record.name, record.description))
         print(record.seq)

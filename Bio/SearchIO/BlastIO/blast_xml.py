@@ -322,7 +322,7 @@ class BlastXmlParser(object):
                                     (hit._blast_id, hit.id, query_id), BiopythonParserWarning)
                             # fallback to Blast-generated IDs, if the ID is already present
                             # and restore the desc, too
-                            hit.description = '%s %s' % (hit.id, hit.description)
+                            hit.description = '{0!s} {1!s}'.format(hit.id, hit.description)
                             hit.id = hit._blast_id
                             # and change the hit_id of the HSPs contained
                             for hsp in hit:
@@ -586,8 +586,8 @@ class BlastXmlIndexer(SearchIndexer):
                     block.append(line)
                 assert line.rstrip().endswith(qend_mark), line
                 block = _empty_bytes_string.join(block)
-            assert block.count(qstart_mark) == 1, "XML without line breaks? %r" % block
-            assert block.count(qend_mark) == 1, "XML without line breaks? %r" % block
+            assert block.count(qstart_mark) == 1, "XML without line breaks? {0!r}".format(block)
+            assert block.count(qend_mark) == 1, "XML without line breaks? {0!r}".format(block)
             # Now we have a full <Iteration>...</Iteration> block, find the ID
             regx = re.search(re_desc, block)
             try:
@@ -792,7 +792,7 @@ class BlastXmlWriter(object):
                     "found" % (elem, attr)
             else:
                 if elem == 'BlastOutput_version':
-                    content = '%s %s' % (qresult.program.upper(),
+                    content = '{0!s} {1!s}'.format(qresult.program.upper(),
                             qresult.version)
                 elif qresult._blast_id:
                     if elem == 'BlastOutput_query-ID':
@@ -878,8 +878,7 @@ class BlastXmlWriter(object):
                 # make sure any elements that is not present is optional
                 # in the DTD
                 except AttributeError:
-                    assert elem in _DTD_OPT, "Element %s (attribute %s) not found" \
-                            % (elem, attr)
+                    assert elem in _DTD_OPT, "Element {0!s} (attribute {1!s}) not found".format(elem, attr)
                 else:
                     xml.simpleElement(elem, str(content))
             self.hsp_counter += 1

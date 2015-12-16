@@ -63,7 +63,7 @@ def _test_parse_factory(source):
         trees = list(bp._io.parse(filename, 'nexml'))
         self.assertEqual(len(trees), count)
 
-    test_parse.__doc__ = "Parse the phylogenies in %s." % source
+    test_parse.__doc__ = "Parse the phylogenies in {0!s}.".format(source)
     return test_parse
 
 
@@ -97,7 +97,7 @@ def _test_write_factory(source):
         for prop_name in ('name', 'branch_length', 'confidence'):
             assert_property(prop_name)
 
-    test_write.__doc__ = "Write and re-parse the phylogenies in %s." % source
+    test_write.__doc__ = "Write and re-parse the phylogenies in {0!s}.".format(source)
     return test_write
 
 
@@ -106,7 +106,7 @@ class ParseTests(unittest.TestCase):
 
 for n, ex in enumerate(nexml_files):
     parse_test = _test_parse_factory(ex)
-    parse_test.__name__ = 'test_parse_%s' % n
+    parse_test.__name__ = 'test_parse_{0!s}'.format(n)
     setattr(ParseTests, parse_test.__name__, parse_test)
 
 
@@ -119,7 +119,7 @@ for n, ex in enumerate(nexml_files):
         count = tree_counts[ex]
     if count > 0:
         write_test = _test_write_factory(ex)
-        write_test.__name__ = 'test_write_%s' % n
+        write_test.__name__ = 'test_write_{0!s}'.format(n)
         setattr(WriterTests, write_test.__name__, write_test)
 
 

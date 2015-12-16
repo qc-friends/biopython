@@ -543,9 +543,9 @@ class IndexDictTests(unittest.TestCase):
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://uniprot.org/uniprot
                 http://www.uniprot.org/support/docs/uniprot.xsd">
-                %s
+                {0!s}
                 </uniprot>
-                """ % _bytes_to_string(raw)
+                """.format(_bytes_to_string(raw))
                 handle = StringIO(raw)
                 rec2 = SeqIO.read(handle, format, alphabet)
             else:
@@ -636,28 +636,25 @@ for filename, format, alphabet in tests:
 
         def funct(fn, fmt, alpha, c):
             f = lambda x: x.simple_check(fn, fmt, alpha, c)
-            f.__doc__ = "Index %s file %s defaults" % (fmt, fn)
+            f.__doc__ = "Index {0!s} file {1!s} defaults".format(fmt, fn)
             return f
-        setattr(IndexDictTests, "test_%s_%s_simple"
-                    % (format, filename.replace("/", "_").replace(".", "_")),
+        setattr(IndexDictTests, "test_{0!s}_{1!s}_simple".format(format, filename.replace("/", "_").replace(".", "_")),
                 funct(filename, format, alphabet, comp))
         del funct
 
         def funct(fn, fmt, alpha, c):
             f = lambda x: x.key_check(fn, fmt, alpha, c)
-            f.__doc__ = "Index %s file %s with key function" % (fmt, fn)
+            f.__doc__ = "Index {0!s} file {1!s} with key function".format(fmt, fn)
             return f
-        setattr(IndexDictTests, "test_%s_%s_keyf"
-                    % (format, filename.replace("/", "_").replace(".", "_")),
+        setattr(IndexDictTests, "test_{0!s}_{1!s}_keyf".format(format, filename.replace("/", "_").replace(".", "_")),
                 funct(filename, format, alphabet, comp))
         del funct
 
         def funct(fn, fmt, alpha, c):
             f = lambda x: x.get_raw_check(fn, fmt, alpha, c)
-            f.__doc__ = "Index %s file %s get_raw" % (fmt, fn)
+            f.__doc__ = "Index {0!s} file {1!s} get_raw".format(fmt, fn)
             return f
-        setattr(IndexDictTests, "test_%s_%s_get_raw"
-                    % (format, filename.replace("/", "_").replace(".", "_")),
+        setattr(IndexDictTests, "test_{0!s}_{1!s}_get_raw".format(format, filename.replace("/", "_").replace(".", "_")),
                 funct(filename, format, alphabet, comp))
         del funct
 
